@@ -1,4 +1,12 @@
-from flask import Blueprint, request, jsonify
+import mimetypes
+from flask import Blueprint, Response, request, jsonify
+from pathlib import Path
+
+from .services.validate import validate_upload
+from .services.decoder import decode_image
+from .services.encoder import encode_image
+from .services.processor import grayscale
+from .services.exceptions import ValidationError, EncodingError
 
 main = Blueprint("main", __name__)
 
@@ -10,21 +18,26 @@ def index():
 
 @main.route("/images", methods=["POST"])
 def images():
-    if "file" not in request.files:
-        return jsonify({"error": "No file uploaded"}), 400
+    try:
+        file = validate_upload(request)
+        data = file.read()
+        image = decode_image(data)
+    except ValidationError as err:
+        return jsonify({"error": str(err)}), 400
 
-    file = request.files["file"]
-    if file.filename == "":
-        return jsonify({"error": "File must have a name"}), 400
+    processed = grayscale(image)
+    extension = Path(file.filename).suffix.lower()
 
-    if not file.content_type.startswith("image/"):
-        return jsonify({"error": "File must be an image"}), 400
+    try:
+        encoded = encode_image(processed, extension)
+    except ValidationError as err:
+        return jsonify({"error": str(err)}), 400
+    except EncodingError as err:
+        return jsonify({"error": str(err)}), 500
 
-    data = file.read()
-    return jsonify(
-        {
-            "filename": file.filename,
-            "content_type": file.content_type,
-            "size": len(data),
-        }
+    mimetype, _ = mimetypes.guess_type(f"dummy{extension}")
+    return Response(
+        encoded,
+        mimetype=mimetype,
+        headers={"Content-Disposition": f'inline; filename="{file.filename}"'},
     )
