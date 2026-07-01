@@ -1,5 +1,5 @@
 import mimetypes
-from flask import Blueprint, Response, request, jsonify
+from flask import Blueprint, Response, request, jsonify, render_template
 from pathlib import Path
 
 from .services.validate import validate_upload
