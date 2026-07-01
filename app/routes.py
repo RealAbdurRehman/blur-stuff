@@ -5,7 +5,7 @@ from pathlib import Path
 from .services.validate import validate_upload
 from .services.decoder import decode_image
 from .services.encoder import encode_image
-from .services.processor import grayscale
+from .services.processor import anonymize
 from .services.exceptions import ValidationError, EncodingError
 
 main = Blueprint("main", __name__)
@@ -25,7 +25,7 @@ def images():
     except ValidationError as err:
         return jsonify({"error": str(err)}), 400
 
-    processed = grayscale(image)
+    processed = anonymize(image)
     extension = Path(file.filename).suffix.lower()
 
     try:

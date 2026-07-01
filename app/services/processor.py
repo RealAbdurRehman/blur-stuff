@@ -1,6 +1,7 @@
-import cv2
-import numpy as np
+from .detectors.faces import detect_faces
+from .effects.blur import blur_regions
 
 
-def grayscale(image):
-    return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+def anonymize(image):
+    boxes = detect_faces(image)
+    return blur_regions(image, boxes)
