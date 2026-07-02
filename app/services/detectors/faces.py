@@ -1,9 +1,12 @@
 from ultralytics import YOLO
 
-model = YOLO("models/faces.pt")
+try:
+    model = YOLO("models/faces.pt")
+except:
+    model = None
 
 FACE_SIZES = [960, 1280]
-FACE_CONFIDENCE_THRESHOLD = 0.125
+FACE_CONFIDENCE_THRESHOLD = 0.05
 
 
 def iou(a, b):
@@ -20,7 +23,7 @@ def iou(a, b):
     return inter_area / (area_a + area_b - inter_area + 1e-6)
 
 
-def non_max_suppression(boxes, iou_threshold=0.5):
+def non_max_suppression(boxes, iou_threshold=0.4):
     boxes = sorted(boxes, key=lambda x: x["confidence"], reverse=True)
     kept = []
 
@@ -34,6 +37,9 @@ def non_max_suppression(boxes, iou_threshold=0.5):
 
 
 def detect_faces(image):
+    if model is None:
+        raise RuntimeError("Face detector unavailable")
+
     boxes = []
     for size in FACE_SIZES:
         results = model(

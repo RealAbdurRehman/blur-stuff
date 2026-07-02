@@ -17,6 +17,7 @@ uploads/
 outputs/
 
 # AI models
+models/
 *.pt
 *.onnx
 
@@ -25,3 +26,6 @@ outputs/
 
 # Environment
 .env
+
+# Test Data
+test_data/

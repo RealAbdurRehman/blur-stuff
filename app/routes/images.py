@@ -1,31 +1,29 @@
 import mimetypes
-from flask import Blueprint, Response, request, jsonify, render_template
 from pathlib import Path
+from flask import Blueprint, Response, request, jsonify
 
-from .services.validate import validate_upload
-from .services.decoder import decode_image
-from .services.encoder import encode_image
-from .services.processor import anonymize
-from .services.exceptions import ValidationError, EncodingError
+from app.services.validate import validate_upload
+from app.services.decoder import decode_image
+from app.services.encoder import encode_image
+from app.services.processor import anonymize
+from app.services.exceptions import ValidationError, EncodingError
 
-main = Blueprint("main", __name__)
-
-
-@main.route("/")
-def index():
-    return jsonify({"status": "ok"})
+images_bp = Blueprint("images", __name__)
 
 
-@main.route("/images", methods=["POST"])
+@images_bp.post("/images/anonymize")
 def images():
     try:
         file = validate_upload(request)
-        data = file.read()
-        image = decode_image(data)
+        image = decode_image(file.read())
     except ValidationError as err:
         return jsonify({"error": str(err)}), 400
 
-    processed = anonymize(image)
+    try:
+        processed = anonymize(image)
+    except RuntimeError as err:
+        return jsonify({"error": str(err)}), 503
+
     extension = Path(file.filename).suffix.lower()
 
     try:
