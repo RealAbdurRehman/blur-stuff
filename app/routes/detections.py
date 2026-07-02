@@ -1,8 +1,8 @@
 from flask import Blueprint, request, jsonify
 
-from app.services.validate import validate_upload
+from app.services.validate import validate_upload, get_targets
 from app.services.decoder import decode_image
-from app.services.detector import detect
+from app.services.pipeline import detect
 from app.services.exceptions import ValidationError
 
 detections_bp = Blueprint("detections", __name__)
@@ -17,7 +17,7 @@ def detections():
         return jsonify({"error": str(err)}), 400
 
     try:
-        detections = detect(image)
+        detections = detect(image, get_targets(request))
     except RuntimeError as err:
         return jsonify({"error": str(err)}), 503
 
