@@ -29,7 +29,7 @@ def non_max_suppression(boxes, iou_threshold=0.4):
 
 
 class YoloDetector:
-    def __init__(self, model_path, imgsizes=[960, 1280], conf_threshold=0.05):
+    def __init__(self, model_path, imgsizes=[1280], conf_threshold=0.5, augment=True):
         self.ready = True
 
         try:
@@ -40,6 +40,7 @@ class YoloDetector:
 
         self.imgsizes = imgsizes
         self.conf_threshold = conf_threshold
+        self.augment = augment
 
     def detect(self, image):
         if self.model is None:
@@ -52,7 +53,7 @@ class YoloDetector:
                 image,
                 imgsz=size,
                 conf=self.conf_threshold,
-                augment=True,
+                augment=self.augment,
                 verbose=False,
             )
 

@@ -8,6 +8,9 @@ BLUR_CONFIG = {
     "plates": {
         "padding": 0.08,
     },
+    "words": {
+        "padding": 0.1,
+    },
 }
 
 

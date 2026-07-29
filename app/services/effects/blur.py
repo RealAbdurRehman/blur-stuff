@@ -7,9 +7,9 @@ def blur_regions(image, boxes, padding=0, fade_ratio=0.15, blocks=8):
 
     for box in boxes:
         x1, y1, x2, y2 = box["x1"], box["y1"], box["x2"], box["y2"]
+        bw, bh = x2 - x1, y2 - y1
 
         if padding:
-            bw, bh = x2 - x1, y2 - y1
             x1 -= int(bw * padding)
             y1 -= int(bh * padding)
             x2 += int(bw * padding)
@@ -28,7 +28,8 @@ def blur_regions(image, boxes, padding=0, fade_ratio=0.15, blocks=8):
         small = cv2.resize(roi, (blocks, blocks), interpolation=cv2.INTER_LINEAR)
         processed_roi = cv2.resize(small, (rw, rh), interpolation=cv2.INTER_NEAREST)
 
-        feather_px = max(1, int(min(full_w, full_h) * fade_ratio))
+        pad_px = int(min(bw, bh) * padding) if padding else 0
+        feather_px = max(1, min(int(min(full_w, full_h) * fade_ratio), pad_px or 1))
 
         off_x, off_y = cx1 - x1, cy1 - y1
 

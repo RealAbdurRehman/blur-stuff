@@ -15,7 +15,7 @@ def validate_upload(req):
     return file
 
 
-SUPPORTED_TARGETS = {"faces", "plates"}
+SUPPORTED_TARGETS = {"faces", "plates", "words"}
 
 
 def get_targets(request):
