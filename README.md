@@ -10,5 +10,5 @@ A tool that automatically detects and blurs sensitive information in images and 
 
 ## Some Planned Features
 
-- Document detection
 - Video Support
+- Much More
