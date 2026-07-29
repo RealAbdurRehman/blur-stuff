@@ -6,6 +6,7 @@ A tool that automatically detects and blurs sensitive information in images and 
 
 - Face blurring
 - License plate blurring
+- Text and PII blurring
 
 ## Some Planned Features
 
