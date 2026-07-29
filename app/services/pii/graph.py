@@ -1,24 +1,34 @@
+from dataclasses import dataclass
+
 from app.services.pii.token import Token
+from dataclasses import dataclass
+
+
+@dataclass
+class TokenLine:
+    tokens: list
+    text: str
 
 
 class TokenGraph:
-    def __init__(self, tokens: list[Token]):
+    def __init__(self, tokens):
         self.tokens = tokens
+        self.lines = []
 
     def build(self):
-        lines = self._group_lines()
-        for line_id, line in enumerate(lines):
-            self._connect_line(
-                line,
-                line_id,
+        self.lines = []
+        grouped = self._group_lines()
+        for line_id, line in enumerate(grouped):
+            self._connect_line(line, line_id)
+            self.lines.append(
+                TokenLine(
+                    tokens=line, text=" ".join(token.normalized for token in line)
+                )
             )
 
-        return self.tokens
+        return self
 
-    def _group_lines(
-        self,
-        y_threshold=15,
-    ):
+    def _group_lines(self, y_threshold=15):
         tokens = sorted(
             self.tokens,
             key=lambda t: (
@@ -30,6 +40,7 @@ class TokenGraph:
         lines = []
         current = []
         current_y = None
+
         for token in tokens:
             center = token.center_y
 
@@ -40,7 +51,9 @@ class TokenGraph:
 
             if abs(center - current_y) <= y_threshold:
                 current.append(token)
+
                 current_y = (current_y * (len(current) - 1) + center) / len(current)
+
             else:
                 lines.append(current)
 
@@ -52,18 +65,16 @@ class TokenGraph:
 
         return lines
 
-    def _connect_line(
-        self,
-        tokens,
-        line_id,
-    ):
+    def _connect_line(self, tokens, line_id):
         tokens.sort(key=lambda t: t.x1)
 
+        position = 0
         for index, token in enumerate(tokens):
             token.line_id = line_id
 
-            if index > 0:
-                token.previous = tokens[index - 1]
+            token.start = position
+            token.end = position + len(token.normalized)
 
-            if index < len(tokens) - 1:
-                token.next = tokens[index + 1]
+            position = token.end + 1
+            token.previous = tokens[index - 1] if index > 0 else None
+            token.next = tokens[index + 1] if index < len(tokens) - 1 else None

@@ -1,7 +1,7 @@
 from app.services.detectors.bounding_box import BoundingBox
 
 
-def merge_boxes(tokens):
+def tokens_to_box(tokens):
     return BoundingBox(
         id=tokens[0].id,
         x1=min(t.x1 for t in tokens),
@@ -12,28 +12,5 @@ def merge_boxes(tokens):
     )
 
 
-def map_match(match):
-    if "tokens" in match:
-        return [token for token in match["tokens"]]
-
-    start = match["start"]
-    end = match["end"]
-
-    tokens = []
-    for token in match["line"]["tokens"]:
-        if token["start"] < end and token["end"] > start:
-            tokens.append(token["token"])
-
-    return tokens
-
-
 def map_matches(matches):
-    boxes = []
-    for match in matches:
-        tokens = map_match(match)
-        if not tokens:
-            continue
-
-        boxes.append(merge_boxes(tokens))
-
-    return boxes
+    return [tokens_to_box(match.tokens) for match in matches]
