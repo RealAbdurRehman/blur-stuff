@@ -11,7 +11,7 @@ def health():
 
 @health_bp.get("/health/ready")
 def ready():
-    status = {name: model is not None for name, model in models.items()}
+    status = {name: model.ready for name, model in models.items()}
     ready = all(status.values())
 
     return jsonify({"status": "ready" if ready else "not_ready", "models": status}), (

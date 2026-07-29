@@ -2,13 +2,7 @@ import cv2
 import numpy as np
 
 
-def blur_regions(
-    image,
-    boxes,
-    padding=0,
-    fade_ratio=0.15,
-):
-    output = image.copy()
+def blur_regions(image, boxes, padding=0, fade_ratio=0.15, blocks=8):
     h, w = image.shape[:2]
 
     for box in boxes:
@@ -28,10 +22,9 @@ def blur_regions(
         if cx2 <= cx1 or cy2 <= cy1:
             continue
 
-        roi = output[cy1:cy2, cx1:cx2]
+        roi = image[cy1:cy2, cx1:cx2]
         rh, rw = roi.shape[:2]
 
-        blocks = 8
         small = cv2.resize(roi, (blocks, blocks), interpolation=cv2.INTER_LINEAR)
         processed_roi = cv2.resize(small, (rw, rh), interpolation=cv2.INTER_NEAREST)
 
@@ -55,6 +48,6 @@ def blur_regions(
             + processed_roi.astype(np.float32) * mask_3ch
         ).astype(np.uint8)
 
-        output[cy1:cy2, cx1:cx2] = blended
+        image[cy1:cy2, cx1:cx2] = blended
 
-    return output
+    return image
