@@ -2,6 +2,7 @@ from .detectors.email import EmailDetector
 from .detectors.phone import PhoneDetector
 from .detectors.card import CardDetector
 from .detectors.regex import RegexDetector
+from .detectors.presidio import PresidioDetector
 
 from .deduplicate import deduplicate
 
@@ -13,6 +14,7 @@ class DetectorManager:
             PhoneDetector(),
             CardDetector(),
             RegexDetector(),
+            PresidioDetector(),
         ]
 
     def detect(self, graph):

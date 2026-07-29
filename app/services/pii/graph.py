@@ -19,12 +19,8 @@ class TokenGraph:
         self.lines = []
         grouped = self._group_lines()
         for line_id, line in enumerate(grouped):
-            self._connect_line(line, line_id)
-            self.lines.append(
-                TokenLine(
-                    tokens=line, text=" ".join(token.normalized for token in line)
-                )
-            )
+            text = self._connect_line(line, line_id)
+            self.lines.append(TokenLine(tokens=line, text=text))
 
         return self
 
@@ -68,13 +64,20 @@ class TokenGraph:
     def _connect_line(self, tokens, line_id):
         tokens.sort(key=lambda t: t.x1)
 
+        parts = []
         position = 0
         for index, token in enumerate(tokens):
-            token.line_id = line_id
-
             token.start = position
-            token.end = position + len(token.normalized)
+            token.line_id = line_id
+            parts.append(token.normalized)
 
-            position = token.end + 1
+            position += len(token.normalized)
+            token.end = position
+
+            if index != len(tokens) - 1:
+                position += 1
+
             token.previous = tokens[index - 1] if index > 0 else None
             token.next = tokens[index + 1] if index < len(tokens) - 1 else None
+
+        return " ".join(parts)

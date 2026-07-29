@@ -12,3 +12,16 @@ class DetectionType(str, Enum):
     UUID = "UUID"
     IBAN = "IBAN"
     SSN = "SSN"
+
+    PERSON = "PERSON"
+    ORGANIZATION = "ORGANIZATION"
+    LOCATION = "LOCATION"
+    ADDRESS = "ADDRESS"
+    DATE = "DATE"
+    URL = "URL"
+    PASSPORT = "PASSPORT"
+
+    DRIVER_LICENSE = "DRIVER_LICENSE"
+    MEDICAL_LICENSE = "MEDICAL_LICENSE"
+    NRP = "NRP"
+    UNKNOWN = "UNKNOWN"

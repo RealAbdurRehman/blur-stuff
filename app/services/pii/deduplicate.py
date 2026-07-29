@@ -1,21 +1,31 @@
-def overlaps(a, b):
-    a_ids = {token.id for token in a.tokens}
-    b_ids = {token.id for token in b.tokens}
+from .mapper import tokens_to_box
 
-    return not a_ids.isdisjoint(b_ids)
+
+def overlaps(a, b):
+    a_ids = {t.id for t in a.tokens}
+    b_ids = {t.id for t in b.tokens}
+
+    token_overlap = len(a_ids & b_ids)
+    box_overlap = tokens_to_box(a.tokens).iou(tokens_to_box(b.tokens))
+
+    return token_overlap >= min(len(a_ids), len(b_ids)) or box_overlap > 0.8
 
 
 def score(detection):
     priority = {
-        "EMAIL": 5,
-        "PHONE": 4,
-        "CARD": 3,
-        "SSN": 3,
-        "UUID": 2,
-        "IPV4": 2,
-        "IPV6": 2,
-        "MAC": 2,
-        "IBAN": 2,
+        "EMAIL": 9,
+        "PHONE": 8,
+        "CARD": 8,
+        "SSN": 8,
+        "PERSON": 10,
+        "ADDRESS": 7,
+        "ORGANIZATION": 6,
+        "LOCATION": 5,
+        "IBAN": 4,
+        "IPV4": 3,
+        "IPV6": 3,
+        "MAC": 3,
+        "UUID": 3,
     }
 
     return (
