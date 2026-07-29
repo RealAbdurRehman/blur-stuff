@@ -15,6 +15,6 @@ def detect(image, targets):
     results = {}
 
     for target in targets:
-        results[target] = assign_ids(detect_faces(image), target)
+        results[target] = assign_ids(DETECTORS[target](image), target)
 
     return results
