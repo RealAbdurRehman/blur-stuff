@@ -8,8 +8,11 @@ BLUR_CONFIG = {
     "plates": {
         "padding": 0.08,
     },
-    "words": {
+    "text": {
         "padding": 0.1,
+    },
+    "pii": {
+        "padding": 0.2,
     },
 }
 

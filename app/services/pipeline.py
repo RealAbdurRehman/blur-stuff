@@ -4,16 +4,15 @@ from concurrent.futures import ThreadPoolExecutor
 
 from .detectors.faces import detect_faces
 from .detectors.plates import detect_plates
-from .detectors.words import detect_words
+from .detectors.text import detect_text
+from .detectors.pii import detect_pii
 
-DETECTORS = {"faces": detect_faces, "plates": detect_plates, "words": detect_words}
-
-
-def assign_ids(items, prefix):
-    for i, item in enumerate(items, start=1):
-        item["id"] = f"{prefix}_{i}"
-
-    return items
+DETECTORS = {
+    "faces": detect_faces,
+    "plates": detect_plates,
+    "text": detect_text,
+    "pii": detect_pii,
+}
 
 
 def detect(image, targets):
@@ -26,7 +25,7 @@ def detect(image, targets):
 
         for target, future in futures.items():
             start = time.time()
-            results[target] = assign_ids(future.result(), target)
+            results[target] = future.result()
             print(f"[timing] {target}: {time.time() - start:.2f}s", flush=True)
 
     return results

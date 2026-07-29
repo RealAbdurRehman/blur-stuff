@@ -6,7 +6,7 @@ def blur_regions(image, boxes, padding=0, fade_ratio=0.15, blocks=8):
     h, w = image.shape[:2]
 
     for box in boxes:
-        x1, y1, x2, y2 = box["x1"], box["y1"], box["x2"], box["y2"]
+        x1, y1, x2, y2 = box.x1, box.y1, box.x2, box.y2
         bw, bh = x2 - x1, y2 - y1
 
         if padding:
