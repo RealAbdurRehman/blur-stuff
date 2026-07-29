@@ -4,4 +4,4 @@ from .effects.blur import blur_regions
 
 def anonymize(image):
     boxes = detect_faces(image)
-    return blur_regions(image, boxes)
+    return blur_regions(image, boxes, padding=0.2)

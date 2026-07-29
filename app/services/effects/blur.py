@@ -1,90 +1,60 @@
 import cv2
 import numpy as np
 
-PADDING_RATIO = 0.8
 
-MASK_BLUR_KERNEL_SIZE = 23
-
-MASK_COLOR = 255
-MASK_RADIUS_X = 0.94
-MASK_RADIUS_Y = 0.8
-
-
-def add_padding(x1, y1, x2, y2, image_width, image_height):
-    pad_x = int((x2 - x1) * PADDING_RATIO)
-    pad_y = int((y2 - y1) * PADDING_RATIO)
-
-    return (
-        max(0, x1 - pad_x),
-        max(0, y1 - pad_y),
-        min(image_width, x2 + pad_x),
-        min(image_height, y2 + pad_y),
-    )
-
-
-def pixelate(roi, blocks=12):
-    h, w = roi.shape[:2]
-    temp = cv2.resize(roi, (blocks, blocks), interpolation=cv2.INTER_LINEAR)
-
-    return cv2.resize(temp, (w, h), interpolation=cv2.INTER_NEAREST)
-
-
-def create_mask(roi_height, roi_width, center, face_height, face_width):
-    mask = np.zeros((roi_height, roi_width), dtype=np.uint8)
-    axes = (
-        int(face_width * MASK_RADIUS_X),
-        int(face_height * MASK_RADIUS_Y),
-    )
-
-    cv2.ellipse(
-        mask,
-        center,
-        axes,
-        angle=0,
-        startAngle=0,
-        endAngle=360,
-        color=MASK_COLOR,
-        thickness=-1,
-    )
-
-    mask = cv2.GaussianBlur(mask, (MASK_BLUR_KERNEL_SIZE, MASK_BLUR_KERNEL_SIZE), 0)
-    mask = mask.astype(np.float32) / MASK_COLOR
-
-    return mask[..., np.newaxis]
-
-
-def blur_regions(image, boxes):
-    image_height, image_width = image.shape[:2]
+def blur_regions(
+    image,
+    boxes,
+    padding=0,
+    fade_ratio=0.15,
+):
+    output = image.copy()
+    h, w = image.shape[:2]
 
     for box in boxes:
-        fx1, fy1 = box["x1"], box["y1"]
-        fx2, fy2 = box["x2"], box["y2"]
+        x1, y1, x2, y2 = box["x1"], box["y1"], box["x2"], box["y2"]
 
-        x1, y1, x2, y2 = add_padding(
-            fx1,
-            fy1,
-            fx2,
-            fy2,
-            image_width,
-            image_height,
+        if padding:
+            bw, bh = x2 - x1, y2 - y1
+            x1 -= int(bw * padding)
+            y1 -= int(bh * padding)
+            x2 += int(bw * padding)
+            y2 += int(bh * padding)
+
+        full_w, full_h = x2 - x1, y2 - y1
+
+        cx1, cy1 = max(0, x1), max(0, y1)
+        cx2, cy2 = min(w, x2), min(h, y2)
+        if cx2 <= cx1 or cy2 <= cy1:
+            continue
+
+        roi = output[cy1:cy2, cx1:cx2]
+        rh, rw = roi.shape[:2]
+
+        blocks = 8
+        small = cv2.resize(roi, (blocks, blocks), interpolation=cv2.INTER_LINEAR)
+        processed_roi = cv2.resize(small, (rw, rh), interpolation=cv2.INTER_NEAREST)
+
+        feather_px = max(1, int(min(full_w, full_h) * fade_ratio))
+
+        off_x, off_y = cx1 - x1, cy1 - y1
+
+        yy, xx = np.mgrid[0:rh, 0:rw].astype(np.float32)
+        xx_full = xx + off_x
+        yy_full = yy + off_y
+
+        dist_to_edge = np.minimum(
+            np.minimum(xx_full, full_w - 1 - xx_full),
+            np.minimum(yy_full, full_h - 1 - yy_full),
         )
+        mask = np.clip(dist_to_edge / feather_px, 0, 1)
+        mask_3ch = cv2.merge([mask, mask, mask]).astype(np.float32)
 
-        roi = image[y1:y2, x1:x2]
-        blurred = pixelate(roi)
+        blended = (
+            roi.astype(np.float32) * (1 - mask_3ch)
+            + processed_roi.astype(np.float32) * mask_3ch
+        ).astype(np.uint8)
 
-        face_center_x = (fx1 + fx2) // 2 - x1
-        face_center_y = (fy1 + fy2) // 2 - y1
-        mask = create_mask(
-            roi.shape[0],
-            roi.shape[1],
-            (face_center_x, face_center_y),
-            fy2 - fy1,
-            fx2 - fx1,
-        )
+        output[cy1:cy2, cx1:cx2] = blended
 
-        result = roi.astype(np.float32) * (1 - mask) + blurred.astype(np.float32) * mask
-        result = result.astype(np.uint8)
-
-        image[y1:y2, x1:x2] = result
-
-    return image
+    return output
