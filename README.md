@@ -7,7 +7,7 @@ A tool that automatically detects and blurs sensitive information in images and 
 - Face blurring
 - License plate blurring
 
-## Planned Features
+## Some Planned Features
 
 - Document detection
 - Video Support
