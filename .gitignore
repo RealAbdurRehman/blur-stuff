@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual env
+.venv/
+
+# IDE
+.vscode/
+.idea/
+
+# macOS
+.DS_Store
+
+# uploads
+uploads/
+outputs/
+
+# AI models
+*.pt
+*.onnx
+
+# Logs
+*.log
+
+# Environment
+.env
