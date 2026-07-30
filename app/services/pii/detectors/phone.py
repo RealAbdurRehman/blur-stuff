@@ -4,7 +4,7 @@ from .base import BaseDetector
 from app.services.pii.types import DetectionType
 from app.services.pii.detection import Detection
 
-PHONE_PATTERN = re.compile(r"^\+?\d[\d()\-\s]{7,}\d$")
+PHONE_PATTERN = re.compile(r"^\+?(?:\(\d+\)|\d)[\d().\-\s]{5,}\d$")
 
 
 def clean_phone(text):
