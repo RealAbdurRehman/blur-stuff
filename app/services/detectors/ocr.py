@@ -1,23 +1,30 @@
+import os
 import cv2
-import easyocr
 from itertools import count
+from paddleocr import PaddleOCR
 
 from app.services.pii.token import Token
 
 
 def is_useful_token(token):
-    return any(ch.isalnum() for ch in token)
+    return bool(token.strip())
 
 
-def resize(image, max_side=1500):
+def enhance(image):
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+    enhanced = clahe.apply(gray)
+
+    return cv2.cvtColor(enhanced, cv2.COLOR_GRAY2BGR)
+
+
+def resize(image, max_side=960):
     h, w = image.shape[:2]
     longest = max(h, w)
-
     if longest <= max_side:
         return image, 1.0
 
     scale = max_side / longest
-
     resized = cv2.resize(
         image,
         (
@@ -33,116 +40,94 @@ def resize(image, max_side=1500):
 class OcrDetector:
     def __init__(
         self,
-        languages=("en",),
-        text_threshold=0.4,
-        low_text=0.2,
+        language="en",
     ):
         self.ready = True
 
         try:
-            self.model = easyocr.Reader(list(languages))
+            self.model = PaddleOCR(
+                lang=language,
+                text_detection_model_name="PP-OCRv6_small_det",
+                text_recognition_model_name="latin_PP-OCRv5_mobile_rec",
+                use_doc_orientation_classify=False,
+                use_doc_unwarping=False,
+                use_textline_orientation=False,
+            )
         except Exception:
             self.model = None
             self.ready = False
 
-        self.text_threshold = text_threshold
-        self.low_text = low_text
         self._ids = count(1)
 
     def detect(self, image):
-        if self.model is None:
-            raise RuntimeError("OCR unavailable")
-
-        resized, scale = resize(image)
-
-        results = self.model.readtext(
-            resized,
-            decoder="greedy",
-            paragraph=False,
-            text_threshold=self.text_threshold,
-            low_text=self.low_text,
-            mag_ratio=2,
-        )
+        enhanced = enhance(image)
+        resized, scale = resize(enhanced)
+        result = self.model.predict(resized)
 
         tokens = []
         inv_scale = 1.0 / scale
-        for box, text, confidence in results:
-            if not is_useful_token(text):
-                continue
+        for page in result:
+            boxes = page["rec_boxes"]
+            texts = page["rec_texts"]
+            scores = page["rec_scores"]
+            for box, text, confidence in zip(
+                boxes,
+                texts,
+                scores,
+            ):
+                if not is_useful_token(text):
+                    continue
 
-            tokens.extend(
-                self._split_token(
-                    text=text,
-                    box=box,
-                    confidence=confidence,
-                    inv_scale=inv_scale,
+                x1, y1, x2, y2 = box
+                tokens.append(
+                    Token(
+                        id=f"token_{next(self._ids)}",
+                        text=text,
+                        x1=int(x1 * inv_scale),
+                        y1=int(y1 * inv_scale),
+                        x2=int(x2 * inv_scale),
+                        y2=int(y2 * inv_scale),
+                        confidence=float(confidence),
+                    )
                 )
-            )
+
+        self._write_debug(result, tokens)
 
         return tokens
 
-    def _split_token(
+    def _write_debug(
         self,
-        text,
-        box,
-        confidence,
-        inv_scale,
+        result,
+        tokens,
     ):
-        parts = text.split()
-        if len(parts) == 1:
-            return [
-                self._create_token(
-                    text=text,
-                    box=box,
-                    confidence=confidence,
-                    inv_scale=inv_scale,
+        os.makedirs("debug", exist_ok=True)
+        with open(
+            "debug/ocr_debug.txt",
+            "w",
+            encoding="utf-8",
+        ) as f:
+            f.write("========== RAW OCR ==========\n\n")
+            for page in result:
+
+                for text, score, box in zip(
+                    page["rec_texts"],
+                    page["rec_scores"],
+                    page["rec_boxes"],
+                ):
+
+                    f.write(f"Text: {text}\n")
+                    f.write(f"Confidence: {score:.3f}\n")
+                    f.write(f"Box: {box}\n")
+                    f.write("\n")
+
+            f.write("\n========== TOKENS ==========\n\n")
+            for token in tokens:
+                f.write(
+                    f"Text: {token.text}\n"
+                    f"ID: {token.id}\n"
+                    f"Confidence: {token.confidence:.3f}\n"
+                    f"Bounding Box: "
+                    f"({token.x1}, {token.y1}) -> "
+                    f"({token.x2}, {token.y2})\n"
+                    f"{'-'*60}\n"
                 )
-            ]
-
-        x1 = min(point[0] for point in box)
-        y1 = min(point[1] for point in box)
-        x2 = max(point[0] for point in box)
-        y2 = max(point[1] for point in box)
-
-        tokens = []
-        cursor = x1
-        total_width = x2 - x1
-        for part in parts:
-            width_ratio = len(part) / len(text)
-            part_width = total_width * width_ratio
-
-            tokens.append(
-                Token(
-                    id=f"token_{next(self._ids)}",
-                    text=part,
-                    x1=int(cursor * inv_scale),
-                    y1=int(y1 * inv_scale),
-                    x2=int((cursor + part_width) * inv_scale),
-                    y2=int(y2 * inv_scale),
-                    confidence=confidence,
-                )
-            )
-
-            cursor += part_width
-
-        return tokens
-
-    def _create_token(
-        self,
-        text,
-        box,
-        confidence,
-        inv_scale,
-    ):
-        xs = [point[0] for point in box]
-        ys = [point[1] for point in box]
-
-        return Token(
-            id=f"token_{next(self._ids)}",
-            text=text,
-            x1=int(min(xs) * inv_scale),
-            y1=int(min(ys) * inv_scale),
-            x2=int(max(xs) * inv_scale),
-            y2=int(max(ys) * inv_scale),
-            confidence=confidence,
-        )
