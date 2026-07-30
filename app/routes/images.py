@@ -8,13 +8,19 @@ from app.services.encoder import encode_image
 from app.services.processor import anonymize
 from app.services.exceptions import ValidationError, EncodingError
 
+IMAGE_TYPES = {
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+}
+
 images_bp = Blueprint("images", __name__)
 
 
 @images_bp.post("/images/anonymize")
 def images():
     try:
-        file = validate_upload(request)
+        file = validate_upload(request, IMAGE_TYPES)
         image = decode_image(file.read())
     except ValidationError as err:
         return jsonify({"error": str(err)}), 400
