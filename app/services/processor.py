@@ -12,7 +12,7 @@ BLUR_CONFIG = {
         "padding": 0.1,
     },
     "pii": {
-        "padding": 0.2,
+        "padding": 0.1,
     },
 }
 
