@@ -91,6 +91,4 @@ class OcrDetector:
                     )
                 )
 
-        self._write_debug(result, tokens)
-
         return tokens
