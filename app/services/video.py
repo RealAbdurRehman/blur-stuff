@@ -5,10 +5,11 @@ from pathlib import Path
 
 class Video:
     def __init__(self, upload, suffix):
-        self._input = tempfile.NamedTemporaryFile(delete=False, suffix=suffix)
-        upload.save(self._input.name)
+        self.input = tempfile.NamedTemporaryFile(delete=False, suffix=suffix)
+        self.input_path = self.input.name
+        upload.save(self.input_path)
 
-        self.capture = cv2.VideoCapture(self._input.name)
+        self.capture = cv2.VideoCapture(self.input_path)
         if not self.capture.isOpened():
             raise RuntimeError("Invalid Video")
 

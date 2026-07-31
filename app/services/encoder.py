@@ -1,5 +1,6 @@
 import cv2
 
+from .audio import merge_audio
 from .exceptions import EncodingError, ValidationError
 
 
@@ -17,4 +18,6 @@ def encode_image(image, extension=".png"):
 
 def encode_video(video):
     video.close()
+    merged = merge_audio(video.input_path, video.output_path)
+
     return video.read()
