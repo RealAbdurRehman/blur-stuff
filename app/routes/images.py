@@ -8,12 +8,7 @@ from app.services.encoder import encode_image
 from app.services.processor import anonymize_image
 from app.services.exceptions import ValidationError, EncodingError
 
-IMAGE_TYPES = {
-    "image/jpeg",
-    "image/png",
-    "image/webp",
-}
-
+IMAGE_TYPES = {"image/jpeg", "image/png", "image/webp"}
 images_bp = Blueprint("images", __name__)
 
 

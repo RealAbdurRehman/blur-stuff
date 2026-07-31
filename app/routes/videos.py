@@ -19,10 +19,6 @@ videos_bp = Blueprint("videos", __name__)
 
 @videos_bp.post("/videos/anonymize")
 def videos():
-    print(file := request.files["file"])
-    print(file.filename)
-    print(file.mimetype)
-
     try:
         file = validate_upload(request, VIDEO_TYPES)
         video = decode_video(file)

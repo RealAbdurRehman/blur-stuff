@@ -17,12 +17,17 @@ def blur_regions(image, boxes, padding=0, fade_ratio=0.15, blocks=8):
 
         full_w, full_h = x2 - x1, y2 - y1
 
-        cx1, cy1 = max(0, x1), max(0, y1)
-        cx2, cy2 = min(w, x2), min(h, y2)
-        if cx2 <= cx1 or cy2 <= cy1:
+        fx1, fy1 = max(0.0, x1), max(0.0, y1)
+        fx2, fy2 = min(float(w), x2), min(float(h), y2)
+        if fx2 <= fx1 or fy2 <= fy1:
             continue
 
+        cx1 = int(round(fx1))
+        cy1 = int(round(fy1))
+        cx2 = int(round(fx2))
+        cy2 = int(round(fy2))
         roi = image[cy1:cy2, cx1:cx2]
+
         rh, rw = roi.shape[:2]
 
         small = cv2.resize(roi, (blocks, blocks), interpolation=cv2.INTER_LINEAR)
