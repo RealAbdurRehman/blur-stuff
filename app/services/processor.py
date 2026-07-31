@@ -17,7 +17,7 @@ BLUR_CONFIG = {
 }
 
 
-def anonymize(image, targets):
+def anonymize_image(image, targets):
     detections = detect(image, targets)
 
     for target in targets:
@@ -28,3 +28,11 @@ def anonymize(image, targets):
         )
 
     return image
+
+
+def anonymize_video(video, targets):
+    for frame in video.frames():
+        processed = anonymize_image(frame, targets)
+        video.write(processed)
+
+    return video

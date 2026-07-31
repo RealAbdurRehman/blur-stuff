@@ -13,3 +13,8 @@ def encode_image(image, extension=".png"):
         raise EncodingError("Could not encode image")
 
     return encoded.tobytes()
+
+
+def encode_video(video):
+    video.close()
+    return video.read()

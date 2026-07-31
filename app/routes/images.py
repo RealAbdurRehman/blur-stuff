@@ -5,7 +5,7 @@ from flask import Blueprint, Response, request, jsonify
 from app.services.validate import validate_upload, get_targets
 from app.services.decoder import decode_image
 from app.services.encoder import encode_image
-from app.services.processor import anonymize
+from app.services.processor import anonymize_image
 from app.services.exceptions import ValidationError, EncodingError
 
 IMAGE_TYPES = {
@@ -26,7 +26,7 @@ def images():
         return jsonify({"error": str(err)}), 400
 
     try:
-        processed = anonymize(image, get_targets(request))
+        processed = anonymize_image(image, get_targets(request))
     except RuntimeError as err:
         return jsonify({"error": str(err)}), 503
 
