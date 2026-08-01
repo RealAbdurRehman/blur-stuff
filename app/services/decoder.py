@@ -1,16 +1,21 @@
+import io
 import cv2
 import numpy as np
 
 from pathlib import Path
-from .video import Video
+from PIL import Image, ImageOps, UnidentifiedImageError
 
+from .video import Video
 from .exceptions import ValidationError
 
 
 def decode_image(data):
-    image = cv2.imdecode(np.frombuffer(data, dtype=np.uint8), cv2.IMREAD_COLOR)
-
-    if image is None:
+    try:
+        image = Image.open(io.BytesIO(data))
+        image = ImageOps.exif_transpose(image)
+        image = image.convert("RGB")
+        image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+    except (UnidentifiedImageError, OSError, ValueError):
         raise ValidationError("Invalid image")
 
     return image
