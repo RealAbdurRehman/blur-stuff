@@ -5,7 +5,7 @@ from .effects.pixelate import pixelate_regions
 from .effects.blur import blur_regions
 from .effects.solid import solid_regions
 from .effects.noise import noise_regions
-from .effects.emoji import emoji_regions
+from .overlays.emoji import emoji_regions
 
 ANONYMIZATION_CONFIG = {
     "faces": {
