@@ -5,6 +5,7 @@ from .effects.pixelate import pixelate_regions
 from .effects.blur import blur_regions
 from .effects.solid import solid_regions
 from .effects.noise import noise_regions
+from .effects.inpaint import inpaint_regions
 from .overlays.emoji import emoji_regions
 
 ANONYMIZATION_CONFIG = {
@@ -22,20 +23,40 @@ ANONYMIZATION_CONFIG = {
     },
 }
 
+MODE_OVERRIDES = {
+    "inpaint": {
+        "faces": {
+            "padding": 0.8,
+        },
+    }
+}
+
 ANONYMIZATION_MODES = {
     "pixelate": pixelate_regions,
     "blur": blur_regions,
     "solid": solid_regions,
     "noise": noise_regions,
     "emoji": emoji_regions,
+    "inpaint": inpaint_regions,
 }
+
+
+def get_effect_config(mode, target):
+    config = ANONYMIZATION_CONFIG[target].copy()
+    override = MODE_OVERRIDES.get(mode, {}).get(target, {})
+    config.update(override)
+
+    return config
 
 
 def apply_anonymization(image, detections, targets, mode):
     effect = ANONYMIZATION_MODES[mode]
-
     for target in targets:
-        effect(image, detections[target], **ANONYMIZATION_CONFIG[target])
+        config = get_effect_config(mode, target)
+        result = effect(image, detections[target], **config)
+
+        if result is not None:
+            image[:] = result
 
 
 def anonymize_image(image, targets, mode):
