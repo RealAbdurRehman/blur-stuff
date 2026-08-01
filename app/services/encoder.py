@@ -20,4 +20,5 @@ def encode_video(video):
     video.close()
     merged = merge_audio(video.input_path, video.output_path)
 
-    return video.read()
+    with open(merged, "rb") as f:
+        return f.read()

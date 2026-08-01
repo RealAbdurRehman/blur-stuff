@@ -37,10 +37,6 @@ class Video:
 
             yield frame
 
-    def read(self):
-        with open(self.output_path, "rb") as f:
-            return f.read()
-
     def write(self, frame):
         self.writer.write(frame)
 
