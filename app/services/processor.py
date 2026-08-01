@@ -1,5 +1,5 @@
 from .pipeline import detect
-from .effects.blur import blur_regions
+from .effects.pixelate import pixelate_regions
 from .video_state import VideoState
 
 BLUR_CONFIG = {
@@ -20,7 +20,7 @@ BLUR_CONFIG = {
 
 def apply_anonymization(image, detections, targets):
     for target in targets:
-        blur_regions(image, detections[target], **BLUR_CONFIG[target])
+        pixelate_regions(image, detections[target], **BLUR_CONFIG[target])
 
 
 def anonymize_image(image, targets):

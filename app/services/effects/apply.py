@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 
-def blur_regions(image, boxes, padding=0, fade_ratio=0.15, blocks=8):
+def apply_effect(image, boxes, effect, padding, fade_ratio):
     h, w = image.shape[:2]
 
     for box in boxes:
@@ -28,16 +28,14 @@ def blur_regions(image, boxes, padding=0, fade_ratio=0.15, blocks=8):
         cy2 = int(round(fy2))
         roi = image[cy1:cy2, cx1:cx2]
 
-        rh, rw = roi.shape[:2]
-
-        small = cv2.resize(roi, (blocks, blocks), interpolation=cv2.INTER_LINEAR)
-        processed_roi = cv2.resize(small, (rw, rh), interpolation=cv2.INTER_NEAREST)
+        processed_roi = effect(roi)
 
         pad_px = int(min(bw, bh) * padding) if padding else 0
         feather_px = max(1, min(int(min(full_w, full_h) * fade_ratio), pad_px or 1))
 
         off_x, off_y = cx1 - x1, cy1 - y1
 
+        rh, rw = roi.shape[:2]
         yy, xx = np.mgrid[0:rh, 0:rw].astype(np.float32)
         xx_full = xx + off_x
         yy_full = yy + off_y
