@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 
-def apply_effect(image, boxes, effect, padding, fade_ratio):
+def apply_effect(image, boxes, effect, padding=0, fade_ratio=0.15):
     h, w = image.shape[:2]
 
     for box in boxes:
