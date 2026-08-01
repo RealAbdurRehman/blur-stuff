@@ -10,6 +10,6 @@ A tool that automatically detects and blurs sensitive information in images and 
 - Video Support
 - EXIF Removal
 
-## Some Planned Features
+## In Progress
 
-- Multiple anonymization modes
+- Optimization
