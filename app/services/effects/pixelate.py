@@ -10,4 +10,4 @@ def pixelate_regions(image, boxes, padding=0, fade_ratio=0.15, blocks=8):
 
         return cv2.resize(small, (w, h), interpolation=cv2.INTER_NEAREST)
 
-    return apply_effect(image, boxes, pixelate, padding, fade_ratio)
+    return apply_effect(image, boxes, pixelate, padding, fade_ratio, elliptical=False)

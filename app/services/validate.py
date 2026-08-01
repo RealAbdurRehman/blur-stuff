@@ -33,7 +33,7 @@ def get_targets(request):
     return targets
 
 
-SUPPORTED_MODES = {"pixelate", "blur"}
+SUPPORTED_MODES = {"pixelate", "blur", "solid"}
 
 
 def get_mode(request):

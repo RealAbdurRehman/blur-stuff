@@ -2,7 +2,84 @@ import cv2
 import numpy as np
 
 
-def apply_effect(image, boxes, effect, padding=0, fade_ratio=0.15):
+def rectangular_mask(width, height, feathered, fade_ratio):
+    if not feathered:
+        return np.ones((height, width), np.float32)
+
+    yy, xx = np.mgrid[0:height, 0:width].astype(np.float32)
+    feather = max(1, min(int(min(width, height) * fade_ratio), min(width, height) // 2))
+    edge_dist = np.minimum.reduce([xx, width - 1 - xx, yy, height - 1 - yy])
+
+    return np.clip(edge_dist / feather, 0, 1)
+
+
+def elliptical_mask(
+    width,
+    height,
+    full_width,
+    full_height,
+    offset_x,
+    offset_y,
+    feathered,
+    fade_ratio,
+    padding_px,
+):
+    yy, xx = np.mgrid[0:height, 0:width].astype(np.float32)
+
+    xx += offset_x
+    yy += offset_y
+
+    rx = full_width / 2
+    ry = full_height / 2
+
+    distance = np.sqrt(((xx - rx) / rx) ** 2 + ((yy - ry) / ry) ** 2)
+    if not feathered:
+        return (distance <= 1).astype(np.float32)
+
+    feather = max(
+        1, min(int(min(full_width, full_height) * fade_ratio), padding_px or 1)
+    )
+
+    return np.clip(
+        (1 - distance) / (feather / min(rx, ry)),
+        0,
+        1,
+    )
+
+
+def build_mask(
+    shape,
+    *,
+    elliptical,
+    feathered,
+    fade_ratio,
+    full_size=None,
+    offset=None,
+    padding_px=0,
+):
+    h, w = shape
+    if not elliptical:
+        return rectangular_mask(w, h, feathered, fade_ratio)
+
+    full_w, full_h = full_size
+    off_x, off_y = offset
+
+    return elliptical_mask(
+        w,
+        h,
+        full_w,
+        full_h,
+        off_x,
+        off_y,
+        feathered,
+        fade_ratio,
+        padding_px,
+    )
+
+
+def apply_effect(
+    image, boxes, effect, padding=0, fade_ratio=0.15, feathered=True, elliptical=True
+):
     h, w = image.shape[:2]
 
     for box in boxes:
@@ -16,6 +93,7 @@ def apply_effect(image, boxes, effect, padding=0, fade_ratio=0.15):
             y2 += int(bh * padding)
 
         full_w, full_h = x2 - x1, y2 - y1
+        pad_px = int(min(bw, bh) * padding) if padding else 0
 
         fx1, fy1 = max(0.0, x1), max(0.0, y1)
         fx2, fy2 = min(float(w), x2), min(float(h), y2)
@@ -29,33 +107,23 @@ def apply_effect(image, boxes, effect, padding=0, fade_ratio=0.15):
         roi = image[cy1:cy2, cx1:cx2]
 
         processed_roi = effect(roi)
-
-        pad_px = int(min(bw, bh) * padding) if padding else 0
-        feather_px = max(1, min(int(min(full_w, full_h) * fade_ratio), pad_px or 1))
-
-        off_x, off_y = cx1 - x1, cy1 - y1
-
         rh, rw = roi.shape[:2]
-        yy, xx = np.mgrid[0:rh, 0:rw].astype(np.float32)
-        xx_full = xx + off_x
-        yy_full = yy + off_y
 
-        center_x = full_w / 2
-        center_y = full_h / 2
+        mask = build_mask(
+            (rh, rw),
+            elliptical=elliptical,
+            feathered=feathered,
+            fade_ratio=fade_ratio,
+            full_size=(full_w, full_h),
+            offset=(cx1 - x1, cy1 - y1),
+            padding_px=pad_px,
+        )
 
-        radius_x = full_w / 1.75
-        radius_y = full_h / 1.75
-
-        dx = (xx_full - center_x) / radius_x
-        dy = (yy_full - center_y) / radius_y
-
-        distance = np.sqrt(dx * dx + dy * dy)
-        mask = np.clip((1.0 - distance) / (feather_px / min(radius_x, radius_y)), 0, 1)
-        mask_3ch = cv2.merge([mask, mask, mask]).astype(np.float32)
+        mask = cv2.merge([mask] * 3)
 
         blended = (
-            roi.astype(np.float32) * (1 - mask_3ch)
-            + processed_roi.astype(np.float32) * mask_3ch
+            roi.astype(np.float32) * (1.0 - mask)
+            + processed_roi.astype(np.float32) * mask
         ).astype(np.uint8)
 
         image[cy1:cy2, cx1:cx2] = blended

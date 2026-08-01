@@ -1,7 +1,9 @@
 from .pipeline import detect
+from .video_state import VideoState
+
 from .effects.pixelate import pixelate_regions
 from .effects.blur import blur_regions
-from .video_state import VideoState
+from .effects.solid import solid
 
 ANONYMIZATION_CONFIG = {
     "faces": {
@@ -18,7 +20,11 @@ ANONYMIZATION_CONFIG = {
     },
 }
 
-ANONYMIZATION_MODES = {"pixelate": pixelate_regions, "blur": blur_regions}
+ANONYMIZATION_MODES = {
+    "pixelate": pixelate_regions,
+    "blur": blur_regions,
+    "solid": solid,
+}
 
 
 def apply_anonymization(image, detections, targets, mode):
