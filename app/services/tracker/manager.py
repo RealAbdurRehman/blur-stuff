@@ -5,7 +5,7 @@ from app.services.detectors.bounding_box import BoundingBox
 
 
 def create_tracker():
-    return cv2.TrackerCSRT_create()
+    return cv2.TrackerKCF_create()
 
 
 class TrackerManager:
