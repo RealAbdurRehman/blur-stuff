@@ -7,8 +7,8 @@ A tool that automatically detects and blurs sensitive information in images and 
 - Face blurring
 - License plate blurring
 - Text and PII blurring
+- Video Support
 
 ## Some Planned Features
 
-- Video Support
-- Much More
+- EXIF Removal
