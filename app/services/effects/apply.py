@@ -40,11 +40,17 @@ def apply_effect(image, boxes, effect, padding=0, fade_ratio=0.15):
         xx_full = xx + off_x
         yy_full = yy + off_y
 
-        dist_to_edge = np.minimum(
-            np.minimum(xx_full, full_w - 1 - xx_full),
-            np.minimum(yy_full, full_h - 1 - yy_full),
-        )
-        mask = np.clip(dist_to_edge / feather_px, 0, 1)
+        center_x = full_w / 2
+        center_y = full_h / 2
+
+        radius_x = full_w / 1.75
+        radius_y = full_h / 1.75
+
+        dx = (xx_full - center_x) / radius_x
+        dy = (yy_full - center_y) / radius_y
+
+        distance = np.sqrt(dx * dx + dy * dy)
+        mask = np.clip((1.0 - distance) / (feather_px / min(radius_x, radius_y)), 0, 1)
         mask_3ch = cv2.merge([mask, mask, mask]).astype(np.float32)
 
         blended = (
