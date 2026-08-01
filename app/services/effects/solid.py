@@ -3,7 +3,7 @@ import numpy as np
 from .apply import apply_effect
 
 
-def solid(image, boxes, padding=0, fade_ratio=0.15):
+def solid_regions(image, boxes, padding=0, fade_ratio=0.15):
     def solid(roi):
         return np.zeros_like(roi)
 

@@ -3,8 +3,9 @@ from .video_state import VideoState
 
 from .effects.pixelate import pixelate_regions
 from .effects.blur import blur_regions
-from .effects.solid import solid
-from .effects.noise import noise
+from .effects.solid import solid_regions
+from .effects.noise import noise_regions
+from .effects.emoji import emoji_regions
 
 ANONYMIZATION_CONFIG = {
     "faces": {
@@ -24,8 +25,9 @@ ANONYMIZATION_CONFIG = {
 ANONYMIZATION_MODES = {
     "pixelate": pixelate_regions,
     "blur": blur_regions,
-    "solid": solid,
-    "noise": noise,
+    "solid": solid_regions,
+    "noise": noise_regions,
+    "emoji": emoji_regions,
 }
 
 
