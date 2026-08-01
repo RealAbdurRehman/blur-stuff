@@ -17,8 +17,6 @@ BLUR_CONFIG = {
     },
 }
 
-DETECTION_INTERVAL = 60
-
 
 def apply_anonymization(image, detections, targets):
     for target in targets:
@@ -39,7 +37,8 @@ def anonymize_video(video, targets):
         if state.frame_number > 0:
             tracker_lost = state.tracker.update(frame)
 
-        if state.should_detect(frame, DETECTION_INTERVAL, tracker_lost):
+        interval = max(1, round(video.fps))
+        if state.should_detect(frame, interval, tracker_lost):
             detections = detect(frame, targets)
             state.tracker.initialize(frame, detections)
         else:
