@@ -3,9 +3,16 @@ import cv2
 from .tracked_object import TrackedObject
 from app.services.detectors.bounding_box import BoundingBox
 
+HEAD = "models/nanotrack_head_sim.onnx"
+BACKBONE = "models/nanotrack_backbone_sim.onnx"
+
 
 def create_tracker():
-    return cv2.TrackerKCF_create()
+    params = cv2.TrackerNano_Params()
+    params.neckhead = HEAD
+    params.backbone = BACKBONE
+
+    return cv2.TrackerNano_create(params)
 
 
 class TrackerManager:
