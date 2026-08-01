@@ -37,7 +37,6 @@ class BoundingBox:
         y2 = min(self.y2, other.y2)
 
         inter = max(0, x2 - x1) * max(0, y2 - y1)
-
         union = self.area + other.area - inter
 
         return inter / (union + 1e-6)
