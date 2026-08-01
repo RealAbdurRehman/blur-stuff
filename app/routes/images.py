@@ -2,7 +2,7 @@ import mimetypes
 from pathlib import Path
 from flask import Blueprint, Response, request, jsonify
 
-from app.services.validate import validate_upload, get_targets
+from app.services.validate import validate_upload, get_targets, get_mode
 from app.services.decoder import decode_image
 from app.services.encoder import encode_image
 from app.services.processor import anonymize_image
@@ -21,7 +21,7 @@ def images():
         return jsonify({"error": str(err)}), 400
 
     try:
-        processed = anonymize_image(image, get_targets(request))
+        processed = anonymize_image(image, get_targets(request), get_mode(request))
     except RuntimeError as err:
         return jsonify({"error": str(err)}), 503
 

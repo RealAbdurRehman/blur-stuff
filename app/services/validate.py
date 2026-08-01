@@ -19,7 +19,7 @@ SUPPORTED_TARGETS = {"faces", "plates", "text", "pii"}
 
 
 def get_targets(request):
-    value = request.form.get("targets")
+    value = request.args.get("targets")
 
     if value is None:
         return SUPPORTED_TARGETS.copy()
@@ -31,3 +31,16 @@ def get_targets(request):
         raise ValidationError(f"Unsupported targets: {', '.join(sorted(unknown))}")
 
     return targets
+
+
+SUPPORTED_MODES = {"pixelate", "blur"}
+
+
+def get_mode(request):
+    mode = request.args.get("mode", "pixelate").strip().lower()
+    if mode not in SUPPORTED_MODES:
+        raise ValidationError(
+            f"Unsupported mode '{mode}. Supported modes: {', '.join(sorted(SUPPORTED_MODES))}'"
+        )
+
+    return mode

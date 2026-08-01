@@ -1,8 +1,9 @@
 from .pipeline import detect
 from .effects.pixelate import pixelate_regions
+from .effects.blur import blur_regions
 from .video_state import VideoState
 
-BLUR_CONFIG = {
+ANONYMIZATION_CONFIG = {
     "faces": {
         "padding": 0.3,
     },
@@ -17,20 +18,24 @@ BLUR_CONFIG = {
     },
 }
 
+ANONYMIZATION_MODES = {"pixelate": pixelate_regions, "blur": blur_regions}
 
-def apply_anonymization(image, detections, targets):
+
+def apply_anonymization(image, detections, targets, mode):
+    effect = ANONYMIZATION_MODES[mode]
+
     for target in targets:
-        pixelate_regions(image, detections[target], **BLUR_CONFIG[target])
+        effect(image, detections[target], **ANONYMIZATION_CONFIG[target])
 
 
-def anonymize_image(image, targets):
+def anonymize_image(image, targets, mode):
     detections = detect(image, targets)
-    apply_anonymization(image, detections, targets)
+    apply_anonymization(image, detections, targets, mode)
 
     return image
 
 
-def anonymize_video(video, targets):
+def anonymize_video(video, targets, mode):
     state = VideoState()
     for frame in video.frames():
         tracker_lost = False
@@ -44,7 +49,7 @@ def anonymize_video(video, targets):
         else:
             detections = state.tracker.detections()
 
-        apply_anonymization(frame, detections, targets)
+        apply_anonymization(frame, detections, targets, mode)
         video.write(frame)
 
         state.next_frame(frame)
