@@ -59,9 +59,7 @@ networkx==3.6.1
 ninja==1.13.0
 numpy==2.3.5
 nvidia-ml-py==13.610.43
-opencv-contrib-python==4.13.0.92
-opencv-python==4.14.0.94
-opencv-python-headless==5.0.0.93
+opencv-contrib-python==5.0.0.93
 opt-einsum==3.3.0
 packaging==26.2
 paddleocr==3.7.0
@@ -84,6 +82,7 @@ pycryptodome==3.23.0
 pydantic==2.13.4
 pydantic_core==2.46.4
 Pygments==2.20.0
+pymupdf==1.28.0
 pyparsing==3.3.2
 pypdfium2==5.11.0
 PySocks==1.7.1
