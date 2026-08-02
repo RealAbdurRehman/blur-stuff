@@ -2,10 +2,12 @@ import cv2
 import numpy as np
 
 
-def inpaint_regions(image, boxes, padding=0, radius=3):
+def inpaint_regions(image, tracked_objects, radius=3):
     h, w = image.shape[:2]
     mask = np.zeros((h, w), dtype=np.uint8)
-    for box in boxes:
+    for tracked in tracked_objects:
+        box = tracked.box
+        padding = tracked.effect_config.get("padding", 0)
         x1, y1, x2, y2 = (int(box.x1), int(box.y1), int(box.x2), int(box.y2))
 
         bw = x2 - x1

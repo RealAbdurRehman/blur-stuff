@@ -49,7 +49,6 @@ def elliptical_mask(
 
 def build_mask(
     shape,
-    *,
     elliptical,
     feathered,
     fade_ratio,
@@ -78,54 +77,68 @@ def build_mask(
 
 
 def apply_effect(
-    image, boxes, effect, padding=0, fade_ratio=0.15, feathered=True, elliptical=True
+    image, tracked, effect, fade_ratio=0.15, feathered=True, elliptical=True
 ):
     h, w = image.shape[:2]
+    padding = tracked.effect_config.get("padding", 0)
 
-    for box in boxes:
-        x1, y1, x2, y2 = box.x1, box.y1, box.x2, box.y2
-        bw, bh = x2 - x1, y2 - y1
+    box = tracked.box
+    x1, y1, x2, y2 = box.x1, box.y1, box.x2, box.y2
+    bw, bh = x2 - x1, y2 - y1
 
-        if padding:
-            x1 -= int(bw * padding)
-            y1 -= int(bh * padding)
-            x2 += int(bw * padding)
-            y2 += int(bh * padding)
+    if padding:
+        x1 -= int(bw * padding)
+        y1 -= int(bh * padding)
+        x2 += int(bw * padding)
+        y2 += int(bh * padding)
 
-        full_w, full_h = x2 - x1, y2 - y1
-        pad_px = int(min(bw, bh) * padding) if padding else 0
+    full_w, full_h = x2 - x1, y2 - y1
+    pad_px = int(min(bw, bh) * padding) if padding else 0
 
-        fx1, fy1 = max(0.0, x1), max(0.0, y1)
-        fx2, fy2 = min(float(w), x2), min(float(h), y2)
-        if fx2 <= fx1 or fy2 <= fy1:
-            continue
+    fx1, fy1 = max(0.0, x1), max(0.0, y1)
+    fx2, fy2 = min(float(w), x2), min(float(h), y2)
+    if fx2 <= fx1 or fy2 <= fy1:
+        return
 
-        cx1 = int(round(fx1))
-        cy1 = int(round(fy1))
-        cx2 = int(round(fx2))
-        cy2 = int(round(fy2))
-        roi = image[cy1:cy2, cx1:cx2]
+    cx1 = int(round(fx1))
+    cy1 = int(round(fy1))
+    cx2 = int(round(fx2))
+    cy2 = int(round(fy2))
+    roi = image[cy1:cy2, cx1:cx2]
 
-        processed_roi = effect(roi)
-        rh, rw = roi.shape[:2]
+    processed_roi = effect(roi)
+    rh, rw = roi.shape[:2]
 
-        mask = build_mask(
+    offset = (cx1 - x1, cy1 - y1)
+
+    rebuild = (
+        tracked.mask is None
+        or tracked.mask_size != (rw, rh)
+        or tracked.mask_full_size != (full_w, full_h)
+        or tracked.mask_offset != offset
+    )
+
+    if rebuild:
+        tracked.mask = build_mask(
             (rh, rw),
-            elliptical=elliptical,
-            feathered=feathered,
-            fade_ratio=fade_ratio,
-            full_size=(full_w, full_h),
-            offset=(cx1 - x1, cy1 - y1),
-            padding_px=pad_px,
+            elliptical,
+            feathered,
+            fade_ratio,
+            (full_w, full_h),
+            offset,
+            pad_px,
         )
 
-        mask = cv2.merge([mask] * 3)
+        tracked.mask_rgb = cv2.merge([tracked.mask] * 3)
+        tracked.mask_size = (rw, rh)
+        tracked.mask_full_size = (full_w, full_h)
+        tracked.mask_offset = offset
 
-        blended = (
-            roi.astype(np.float32) * (1.0 - mask)
-            + processed_roi.astype(np.float32) * mask
-        ).astype(np.uint8)
+    mask = tracked.mask_rgb
+    blended = (
+        roi.astype(np.float32) * (1.0 - mask) + processed_roi.astype(np.float32) * mask
+    ).astype(np.uint8)
 
-        image[cy1:cy2, cx1:cx2] = blended
+    image[cy1:cy2, cx1:cx2] = blended
 
     return image

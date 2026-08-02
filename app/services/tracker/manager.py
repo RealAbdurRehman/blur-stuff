@@ -2,6 +2,7 @@ import cv2
 
 from .tracked_object import TrackedObject
 from app.services.detectors.bounding_box import BoundingBox
+from app.services.effects.config import get_effect_config
 
 HEAD = "models/nanotrack_head_sim.onnx"
 BACKBONE = "models/nanotrack_backbone_sim.onnx"
@@ -19,18 +20,18 @@ class TrackerManager:
     def __init__(self):
         self.objects = []
 
-    def initialize(self, frame, detections):
+    def initialize(self, frame, detections, mode):
         self.clear()
 
         for target, boxes in detections.items():
+            config = get_effect_config(mode, target)
             for box in boxes:
                 tracker = create_tracker()
                 tracker.init(
-                    frame,
-                    (int(box.x1), int(box.y1), int(box.width), int(box.height)),
+                    frame, (int(box.x1), int(box.y1), int(box.width), int(box.height))
                 )
 
-                self.add(TrackedObject(target, tracker, box))
+                self.add(TrackedObject(target, tracker, box, config))
 
     def add(self, tracked_object):
         self.objects.append(tracked_object)
@@ -60,13 +61,6 @@ class TrackerManager:
         self.objects = remaining
 
         return lost_any
-
-    def detections(self):
-        detections = {"faces": [], "plates": [], "text": [], "pii": []}
-        for tracked in self.objects:
-            detections[tracked.target].append(tracked.box)
-
-        return detections
 
     def __len__(self):
         return len(self.objects)

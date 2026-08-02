@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from app.services.detectors.bounding_box import BoundingBox
 
@@ -8,3 +8,11 @@ class TrackedObject:
     target: str
     tracker: object
     box: BoundingBox
+
+    effect_config: dict = field(default_factory=dict)
+
+    mask: object = None
+    mask_rgb: object = None
+    mask_size: tuple = None
+    mask_full_size: tuple = None
+    mask_offset: tuple = None
