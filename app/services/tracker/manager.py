@@ -1,7 +1,6 @@
 import cv2
 
 from .tracked_object import TrackedObject
-from app.services.detectors.bounding_box import BoundingBox
 from app.services.effects.config import get_effect_config
 
 HEAD = "models/nanotrack_head_sim.onnx"
