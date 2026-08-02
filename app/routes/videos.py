@@ -1,23 +1,16 @@
 from flask import Blueprint, Response, request, jsonify
 
+from app.services.media_types import VIDEO_TYPES
 from app.services.validate import validate_upload, get_targets, get_mode
 from app.services.decoder import decode_video
 from app.services.encoder import encode_video
-from app.services.processor import anonymize_video
+from app.services.anonymizer import anonymize_video
 from app.services.exceptions import ValidationError
 
-VIDEO_TYPES = {
-    "video/mp4",
-    "video/quicktime",
-    "video/x-msvideo",
-    "video/x-matroska",
-    "video/webm",
-}
-
-videos_bp = Blueprint("videos", __name__)
+videos_bp = Blueprint("videos", __name__, url_prefix="/videos")
 
 
-@videos_bp.post("/videos/anonymize")
+@videos_bp.post("/anonymize")
 def videos():
     try:
         file = validate_upload(request, VIDEO_TYPES)
