@@ -15,6 +15,7 @@ def validate_upload(req, allowed_types):
     return file
 
 
+DEFAULT_TARGETS = {"faces"}
 SUPPORTED_TARGETS = {"faces", "plates", "text", "pii"}
 
 
@@ -22,13 +23,16 @@ def get_targets(request):
     value = request.args.get("targets")
 
     if value is None:
-        return SUPPORTED_TARGETS.copy()
+        return DEFAULT_TARGETS.copy(t)
 
     targets = {target.strip().lower() for target in value.split(",") if target.strip()}
 
     unknown = targets - SUPPORTED_TARGETS
     if unknown:
         raise ValidationError(f"Unsupported targets: {', '.join(sorted(unknown))}")
+
+    if "text" in targets and "pii" in targets:
+        raise ValidationError("Targets 'text' and 'pii' cannot be used together")
 
     return targets
 
