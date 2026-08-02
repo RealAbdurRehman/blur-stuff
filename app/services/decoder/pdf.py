@@ -14,7 +14,8 @@ def decode_pdf(data):
 
     pages = []
     for number, pdf_page in enumerate(pdf, start=1):
-        pixmap = pdf_page.get_pixmap(alpha=False)
+        matrix = fitz.Matrix(3, 3)
+        pixmap = pdf_page.get_pixmap(matrix=matrix, alpha=False)
         image = np.frombuffer(pixmap.samples, dtype=np.uint8)
         image = image.reshape(pixmap.height, pixmap.width, pixmap.n)
         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
