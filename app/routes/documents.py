@@ -26,9 +26,8 @@ def documents():
         file = validate_upload(request, DOCUMENT_TYPES)
         extension = Path(file.filename).suffix.lower()
 
-        try:
-            handlers = DOCUMENT_HANDLERS[extension]
-        except KeyError:
+        handlers = DOCUMENT_HANDLERS.get(extension)
+        if handlers is None:
             raise ValidationError("Unsupported document format")
 
         document = handlers["decoder"](file.read())
