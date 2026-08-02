@@ -16,6 +16,6 @@ def encode_pdf(document):
             pdf_page = pdf.new_page(width=page.width, height=page.height)
             pdf_page.insert_image(pdf_page.rect, pixmap=image)
 
-            return pdf.tobytes()
+        return pdf.tobytes()
     finally:
         pdf.close()
