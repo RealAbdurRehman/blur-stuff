@@ -7,6 +7,7 @@ IMAGE_FORMATS = {
     ".tiff": "image/tiff",
     ".heic": "image/heic",
     ".heif": "image/heif",
+    ".gif": "image/gif",
 }
 
 VIDEO_FORMATS = {
