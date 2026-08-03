@@ -1,8 +1,7 @@
-import mimetypes
 from pathlib import Path
 from flask import Blueprint, Response, request, jsonify
 
-from app.services.media_types import IMAGE_TYPES
+from app.media.types import IMAGE_FORMATS
 from app.services.validate import validate_upload, get_targets, get_mode
 from app.services.decoder import decode_image
 from app.services.encoder import encode_image
@@ -15,7 +14,7 @@ images_bp = Blueprint("images", __name__, url_prefix="/images")
 @images_bp.post("/anonymize")
 def images():
     try:
-        file = validate_upload(request, IMAGE_TYPES)
+        file = validate_upload(request, IMAGE_FORMATS)
         media = decode_image(file.read())
     except ValidationError as err:
         return jsonify({"error": str(err)}), 400
@@ -34,7 +33,7 @@ def images():
     except EncodingError as err:
         return jsonify({"error": str(err)}), 500
 
-    mimetype, _ = mimetypes.guess_type(f"dummy{extension}")
+    mimetype = IMAGE_FORMATS[extension]
     return Response(
         encoded,
         mimetype=mimetype,

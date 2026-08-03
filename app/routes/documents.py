@@ -2,7 +2,7 @@ import mimetypes
 from pathlib import Path
 from flask import Blueprint, Response, request, jsonify
 
-from app.services.media_types import DOCUMENT_TYPES
+from app.media.types import DOCUMENT_FORMATS
 from app.services.validate import validate_upload, get_targets, get_mode
 from app.services.decoder import decode_pdf
 from app.services.encoder import encode_pdf
@@ -23,7 +23,7 @@ DOCUMENT_HANDLERS = {
 @documents_bp.post("/anonymize")
 def documents():
     try:
-        file = validate_upload(request, DOCUMENT_TYPES)
+        file = validate_upload(request, DOCUMENT_FORMATS)
         extension = Path(file.filename).suffix.lower()
 
         handlers = DOCUMENT_HANDLERS.get(extension)
@@ -46,7 +46,7 @@ def documents():
     except EncodingError as err:
         return jsonify({"error": str(err)}), 500
 
-    mimetype, _ = mimetypes.guess_type(file.filename)
+    mimetype = DOCUMENT_FORMATS[extension]
     return Response(
         encoded,
         mimetype=mimetype,

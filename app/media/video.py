@@ -1,6 +1,7 @@
 import cv2
 import tempfile
-from pathlib import Path
+
+from app.services.exceptions import ValidationError
 
 
 class Video:
@@ -11,7 +12,7 @@ class Video:
 
         self.capture = cv2.VideoCapture(self.input_path)
         if not self.capture.isOpened():
-            raise RuntimeError("Invalid Video")
+            raise ValidationError("Invalid Video")
 
         self.width = int(self.capture.get(cv2.CAP_PROP_FRAME_WIDTH))
         self.height = int(self.capture.get(cv2.CAP_PROP_FRAME_HEIGHT))

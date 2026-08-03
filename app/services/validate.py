@@ -1,7 +1,8 @@
+from pathlib import Path
 from .exceptions import ValidationError
 
 
-def validate_upload(req, allowed_types):
+def validate_upload(req, allowed_extensions):
     if "file" not in req.files:
         raise ValidationError("No file uploaded")
 
@@ -9,7 +10,8 @@ def validate_upload(req, allowed_types):
     if file.filename == "":
         raise ValidationError("File must have a name")
 
-    if file.content_type not in allowed_types:
+    extension = Path(file.filename).suffix.lower()
+    if extension not in allowed_extensions:
         raise ValidationError("Unsupported file type")
 
     return file
