@@ -12,4 +12,4 @@ A tool that automatically detects and blurs sensitive information in images and 
 
 ## In Progress
 
-- Support for more file types
+- Frontend
