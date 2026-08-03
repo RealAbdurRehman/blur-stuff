@@ -10,6 +10,8 @@ from app.services.exceptions import ValidationError, EncodingError
 
 images_bp = Blueprint("images", __name__, url_prefix="/images")
 
+OUTPUT_FORMATS = {".heic": ".png", ".heif": ".png"}
+
 
 @images_bp.post("/anonymize")
 def images():
@@ -24,18 +26,20 @@ def images():
     except RuntimeError as err:
         return jsonify({"error": str(err)}), 503
 
-    extension = Path(file.filename).suffix.lower()
+    input_extension = Path(file.filename).suffix.lower()
+    output_extension = OUTPUT_FORMATS.get(input_extension, input_extension)
 
     try:
-        encoded = encode_image(processed, extension)
+        encoded = encode_image(processed, output_extension)
     except ValidationError as err:
         return jsonify({"error": str(err)}), 400
     except EncodingError as err:
         return jsonify({"error": str(err)}), 500
 
-    mimetype = IMAGE_FORMATS[extension]
+    mimetype = IMAGE_FORMATS[output_extension]
+    output_filename = Path(file.filename).with_suffix(output_extension).name
     return Response(
         encoded,
         mimetype=mimetype,
-        headers={"Content-Disposition": f'inline; filename="{file.filename}"'},
+        headers={"Content-Disposition": f'inline; filename="{output_filename}"'},
     )

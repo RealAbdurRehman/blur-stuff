@@ -3,6 +3,9 @@ import cv2
 import numpy as np
 
 from PIL import Image as PILImage, ImageOps, UnidentifiedImageError
+from pillow_heif import register_heif_opener
+
+register_heif_opener()
 
 from app.media import Image
 from app.services.exceptions import ValidationError

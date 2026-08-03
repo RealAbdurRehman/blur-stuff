@@ -5,6 +5,8 @@ IMAGE_FORMATS = {
     ".webp": "image/webp",
     ".tif": "image/tiff",
     ".tiff": "image/tiff",
+    ".heic": "image/heic",
+    ".heif": "image/heif",
 }
 
 VIDEO_FORMATS = {

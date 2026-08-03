@@ -68,6 +68,7 @@ paddlex==3.7.2
 pandas==2.3.3
 phonenumbers==9.0.35
 pillow==12.3.0
+pillow_heif==1.5.0
 polars==1.42.1
 polars-runtime-32==1.42.1
 preshed==3.0.13
