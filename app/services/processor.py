@@ -40,3 +40,10 @@ def process_frame(image, state, targets, mode):
         state.tracker.initialize(image, detections, mode)
 
     apply_anonymization(image, state.tracker, mode)
+
+
+def process_frames(frames, state, targets, mode):
+    for frame in frames:
+        process_frame(frame, state, targets, mode)
+        yield frame
+        state.next_frame(frame)
