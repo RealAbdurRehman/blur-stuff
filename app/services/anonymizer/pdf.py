@@ -7,4 +7,4 @@ def anonymize_pdf(document, targets, mode):
         state = VideoState()
         process_frame(page.image, state, targets, mode)
 
-        return document
+    return document
