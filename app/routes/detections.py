@@ -5,10 +5,10 @@ from app.services.decoder import decode_image
 from app.services.pipeline import detect
 from app.services.exceptions import ValidationError
 
-detections_bp = Blueprint("detections", __name__)
+detections_bp = Blueprint("detections", __name__, url_prefix="/images")
 
 
-@detections_bp.post("/images/detections")
+@detections_bp.post("/detections")
 def detections():
     try:
         file = validate_upload(request)
