@@ -1,4 +1,3 @@
-import os
 import cv2
 from itertools import count
 from paddleocr import PaddleOCR

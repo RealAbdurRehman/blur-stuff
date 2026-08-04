@@ -1,4 +1,3 @@
-import mimetypes
 from pathlib import Path
 from flask import Blueprint, Response, request, jsonify
 

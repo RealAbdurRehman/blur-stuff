@@ -1,8 +1,5 @@
 from dataclasses import dataclass
 
-from app.services.pii.token import Token
-from dataclasses import dataclass
-
 
 @dataclass
 class TokenLine:
