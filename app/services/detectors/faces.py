@@ -1,6 +1,6 @@
 from .detector import YoloDetector
 
-model = YoloDetector(model_path="models/faces.pt", conf_threshold=0.25, prefix="face")
+model = YoloDetector(model_path="models/faces.pt", conf_threshold=0.4)
 
 
 def detect_faces(image):

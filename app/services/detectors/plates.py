@@ -1,6 +1,6 @@
 from .detector import YoloDetector
 
-model = YoloDetector(model_path="models/plates.pt", conf_threshold=0.5, prefix="plate")
+model = YoloDetector(model_path="models/plates.pt", conf_threshold=0.5)
 
 
 def detect_plates(image):

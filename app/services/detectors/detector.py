@@ -1,4 +1,3 @@
-from itertools import count
 from ultralytics import YOLO
 
 from .bounding_box import BoundingBox
@@ -19,9 +18,7 @@ def non_max_suppression(boxes, iou_threshold=0.4):
 
 
 class YoloDetector:
-    def __init__(
-        self, model_path, imgsizes=[1280], conf_threshold=0.5, augment=True, prefix=""
-    ):
+    def __init__(self, model_path, imgsizes=[1280], conf_threshold=0.5, augment=True):
         self.ready = True
 
         try:
@@ -33,8 +30,6 @@ class YoloDetector:
         self.imgsizes = imgsizes
         self.conf_threshold = conf_threshold
         self.augment = augment
-        self.prefix = prefix
-        self._ids = count(1)
 
     def detect(self, image):
         if self.model is None:
@@ -57,7 +52,6 @@ class YoloDetector:
 
                     boxes.append(
                         BoundingBox(
-                            id=f"{self.prefix}_{next(self._ids)}",
                             x1=int(x1),
                             y1=int(y1),
                             x2=int(x2),

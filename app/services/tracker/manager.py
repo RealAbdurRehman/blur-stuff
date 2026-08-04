@@ -1,4 +1,5 @@
 import cv2
+from itertools import count
 
 from .tracked_object import TrackedObject
 from app.services.effects.config import get_effect_config
@@ -18,19 +19,44 @@ def create_tracker():
 class TrackerManager:
     def __init__(self):
         self.objects = []
+        self.ids = count(1)
 
     def initialize(self, frame, detections, mode):
-        self.clear()
-
+        new_objects = []
+        available = self.objects.copy()
         for target, boxes in detections.items():
             config = get_effect_config(mode, target)
             for box in boxes:
+                tracked = self.find_match(available, box, target)
+
+                if tracked is not None:
+                    available.remove(tracked)
+                    box.id = tracked.box.id
+                else:
+                    box.id = f"{target}_{next(self.ids)}"
+
                 tracker = create_tracker()
                 tracker.init(
                     frame, (int(box.x1), int(box.y1), int(box.width), int(box.height))
                 )
 
-                self.add(TrackedObject(target, tracker, box, config))
+                new_objects.append(TrackedObject(target, tracker, box, config))
+
+        self.objects = new_objects
+
+    def find_match(self, available, box, target, threshold=0.3):
+        best = None
+        best_iou = threshold
+        for tracked in available:
+            if tracked.target != target:
+                continue
+
+            iou = tracked.box.iou(box)
+            if iou > best_iou:
+                best = tracked
+                best_iou = iou
+
+        return best
 
     def add(self, tracked_object):
         self.objects.append(tracked_object)

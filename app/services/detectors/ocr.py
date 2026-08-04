@@ -56,9 +56,8 @@ class OcrDetector:
             self.model = None
             self.ready = False
 
-        self._ids = count(1)
-
     def detect(self, image):
+        ids = count(1)
         enhanced = enhance(image)
         resized, scale = resize(enhanced)
         result = self.model.predict(resized)
@@ -78,16 +77,16 @@ class OcrDetector:
                     continue
 
                 x1, y1, x2, y2 = box
-                tokens.append(
-                    Token(
-                        id=f"token_{next(self._ids)}",
-                        text=text,
-                        x1=int(x1 * inv_scale),
-                        y1=int(y1 * inv_scale),
-                        x2=int(x2 * inv_scale),
-                        y2=int(y2 * inv_scale),
-                        confidence=float(confidence),
-                    )
+                token = Token(
+                    text=text,
+                    x1=int(x1 * inv_scale),
+                    y1=int(y1 * inv_scale),
+                    x2=int(x2 * inv_scale),
+                    y2=int(y2 * inv_scale),
+                    confidence=float(confidence),
                 )
+
+                token.id = f"token_{next(ids)}"
+                tokens.append(token)
 
         return tokens

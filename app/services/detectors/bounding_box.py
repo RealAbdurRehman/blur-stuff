@@ -1,14 +1,14 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 @dataclass(slots=True)
 class BoundingBox:
-    id: str
     x1: float
     y1: float
     x2: float
     y2: float
     confidence: float
+    id: str | None = field(default=None, kw_only=True)
 
     @property
     def width(self):
