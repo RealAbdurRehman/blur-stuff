@@ -1,28 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Test homepage for Blur Stuff." />
-    <title>Test Homepage</title>
-    <link rel="stylesheet" href="{{ url_for('frontend.static', filename='css/style.css') }}" />
-  </head>
-  <body>
-    <header>
-      <h1>Test Homepage</h1>
-    </header>
-    <main>
-      <h2>Blur Stuff</h2>
-      <p>Blur stuff using this application.</p>
-      <figure>
-        <img src="{{ url_for('frontend.static', filename='images/example.png') }}" alt="Test image." />
-        <figcaption>Test Image</figcaption>
-      </figure>
-      <button id="test-button">Test JavaScript</button>
-    </main>
-    <footer>
-      Blur Stuff - Name subject to change
-    </footer>
-    <script src="{{ url_for('frontend.static', filename='js/app.js') }}"></script>
-  </body>
-</html>
+{% extends "base.html" %}
+
+{% block description %}This is a test homepage.{% endblock %}
+
+{% block title %}
+Blur Stuff
+{% endblock %}
+
+{% block content %}
+<section class="mx-auto mt-24 max-w-3xl text-center">
+  <h1 class="text-5xl font-bold">
+    Blur Stuff
+  </h1>
+  <p class="mt-6 text-lg text-slate-600">
+    Blur faces, license plates, text, and PII from images, videos, and documents.
+  </p>
+  <button id="test-button" class="mt-10 rounded-xl bg-blue-600 px-6 py-3 text-white hover:bg-blue-700">
+    Test JavaScript
+  </button>
+</section>
+{% endblock %}

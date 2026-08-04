@@ -1,0 +1,26 @@
+{
+  "name": "blur-stuff",
+  "version": "1.0.0",
+  "description": "A tool that automatically detects and blurs sensitive information in images and videos.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx @tailwindcss/cli -i ./frontend/static/css/input.css -o ./frontend/static/css/output.css --watch",
+    "build": "npx @tailwindcss/cli -i ./frontend/static/css/input.css -o ./frontend/static/css/output.css --minify"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RealAbdurRehman/blur-stuff.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/RealAbdurRehman/blur-stuff/issues"
+  },
+  "homepage": "https://github.com/RealAbdurRehman/blur-stuff#readme",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "tailwindcss": "^4.3.3"
+  }
+}

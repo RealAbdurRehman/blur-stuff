@@ -32,3 +32,6 @@ test_data/
 
 # TODO
 TODO
+
+# Node
+node_modules/

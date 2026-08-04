@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{% block description %}{% endblock %}" />
+    <title>{% block title %}Blur Stuff{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('frontend.static', filename='css/output.css') }}" />
+    {% block head %}{% endblock %}
+  </head>
+  <body class="bg-slate-100">
+    {% include "components/header.html" %}
+    <main class="mx-auto mt-12 max-w-xl rounded-xl bg-white p-10 shadow-xl text-center">
+      {% block content %}{% endblock %}
+    </main>
+    {% include "components/footer.html" %}
+    <script src="{{ url_for('frontend.static', filename='js/app.js') }}"></script>
+    {% block scripts %}{% endblock %}
+  </body>
+</html>
