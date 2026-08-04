@@ -5,22 +5,6 @@ from app.services.processor import process_frame, process_frames
 
 
 def anonymize_image(media, targets, mode):
-    state = VideoState(60)
-    if media.animated:
-        processed = []
-        for frame in media.frames:
-            process_frame(frame, state, targets, mode)
-            processed.append(frame)
-            state.next_frame(frame)
-
-        media.frames = processed
-        return media
-
-    process_frame(media.image, state, targets, mode)
-    return media
-
-
-def anonymize_image(media, targets, mode):
     if media.animated:
         average_duration = statistics.mean(media.durations)
         fps = max(1, round(1000 / average_duration))
