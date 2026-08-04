@@ -1,5 +1,5 @@
 from flask import Flask
-from .routes import blueprints
+from .api.routes import blueprints
 
 
 def create_app():
