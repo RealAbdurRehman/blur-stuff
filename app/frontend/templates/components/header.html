@@ -1,8 +1,74 @@
-<nav class="bg-white shadow">
-  <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-    <a href="{{ url_for('frontend.index') }}" class="text-xl font-bold">Blur Stuff</a>
-    <div class="flex gap-8">
-      <a href="{{ url_for('frontend.index') }}">Home</a>
+<header class="sticky top-0 z-50 px-6 pt-6">
+  <nav
+    x-data="{ x: 0, y: 0 }"
+    @mousemove="
+        const r = $el.getBoundingClientRect();
+        $el.style.setProperty('--x', `${$event.clientX - r.left}px`);
+        $el.style.setProperty('--y', `${$event.clientY - r.top}px`);
+    "
+    @mouseleave="x = -1000; y = -1000"
+    class="group relative overflow-hidden mx-auto flex h-15 max-w-7xl items-center rounded-full border border-white/12 bg-zinc-900/20 px-5 backdrop-blur-xl"
+  >
+    <div
+      class="pointer-events-none absolute inset-0 rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+      style="
+        background: radial-gradient(
+          320px circle at var(--x) var(--y),
+          rgba(255, 255, 255, 0.06) 0%,
+          rgba(255, 255, 255, 0.03) 35%,
+          transparent 75%
+        );
+      "
+    ></div>
+    <a
+      href="{{ url_for('frontend.index') }}"
+      class="flex items-center gap-1 font-semibold text-white"
+    >
+      {% include "components/icons/logo.svg" %}
+      <span class="text-lg tracking-tight">Blur Stuff</span>
+    </a>
+    <ul class="mx-auto flex items-center gap-10">
+      <li>
+        <a
+          href="{{ url_for('frontend.index') }}"
+          class="text-sm font-medium text-zinc-400 transition hover:text-white"
+        >
+          Features
+        </a>
+      </li>
+      <li>
+        <a
+          href="{{ url_for('frontend.index') }}"
+          class="text-sm font-medium text-zinc-400 transition hover:text-white"
+        >
+          API
+        </a>
+      </li>
+      <li>
+        <a
+          href="{{ url_for('frontend.index') }}"
+          class="text-sm font-medium text-zinc-400 transition hover:text-white"
+        >
+          Docs
+        </a>
+      </li>
+      <li>
+        <a
+          href="{{ url_for('frontend.index') }}"
+          class="text-sm font-medium text-zinc-400 transition hover:text-white"
+        >
+          About
+        </a>
+      </li>
+    </ul>
+    <div class="flex items-center">
+      <a
+        href="{{ url_for('frontend.index') }}"
+        class="flex items-center gap-2 rounded-full bg-white px-5 py-2 text-sm font-medium text-black transition hover:bg-zinc-200"
+      >
+        <span>Upload Files</span>
+        {% include "components/icons/upload.svg" %}
+      </a>
     </div>
-  </div>
-</nav>
+  </nav>
+</header>

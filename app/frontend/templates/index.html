@@ -1,29 +1,11 @@
-{% extends "base.html" %}
-
-{% block description %}This is a test homepage.{% endblock %}
-
-{% block title %}
-Blur Stuff
-{% endblock %}
-
-{% block content %}
-<section class="mx-auto mt-24 max-w-3xl text-center">
-  <h1 class="text-5xl font-bold">
-    Blur Stuff
-  </h1>
-  <p class="mt-6 text-lg text-slate-600">
-    Blur faces, license plates, text, and PII from images, videos, and documents.
-  </p>
-  <button id="test-button" class="mt-10 rounded-xl bg-blue-600 px-6 py-3 text-white hover:bg-blue-700">
-    Test JavaScript
-  </button>
-  <div x-data="{ open: false }" class="p-8">
-    <button @click="open = !open" class="bg-blue-600 text-white px-4 py-2 rounded">
-      Toggle
-    </button>
-    <div x-show="open" class="mt-4" x-cloak>
-      🎉 Alpine is working!
-    </div>
-  </div>
+{% extends "base.html" %} {% block content %}
+<section>
+  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Distinctio laborum
+  quod error voluptatem. Cumque ex, exercitationem dolor ab sint vero vel
+  perspiciatis suscipit eius veniam impedit similique, libero laudantium
+  inventore. Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+  Reiciendis a doloribus praesentium animi provident cum pariatur nobis beatae
+  ut iure! Sapiente tempore obcaecati blanditiis! Reprehenderit voluptas
+  provident reiciendis earum accusantium!
 </section>
 {% endblock %}
