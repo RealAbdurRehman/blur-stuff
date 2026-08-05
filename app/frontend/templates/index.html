@@ -17,5 +17,13 @@ Blur Stuff
   <button id="test-button" class="mt-10 rounded-xl bg-blue-600 px-6 py-3 text-white hover:bg-blue-700">
     Test JavaScript
   </button>
+  <div x-data="{ open: false }" class="p-8">
+    <button @click="open = !open" class="bg-blue-600 text-white px-4 py-2 rounded">
+      Toggle
+    </button>
+    <div x-show="open" class="mt-4" x-cloak>
+      🎉 Alpine is working!
+    </div>
+  </div>
 </section>
 {% endblock %}
