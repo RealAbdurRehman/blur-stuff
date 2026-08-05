@@ -44,3 +44,6 @@ class Video:
     def close(self):
         self.capture.release()
         self.writer.release()
+
+        if not self.input.closed:
+            self.input.close()
