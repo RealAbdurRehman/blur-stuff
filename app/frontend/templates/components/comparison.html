@@ -1,0 +1,90 @@
+<section class="mx-auto mt-12 max-w-7xl px-6">
+  <div
+    x-data="{
+      position: 50,
+      dragging: false,
+
+      move(event) {
+        if (!this.dragging) return;
+
+        const rect = this.$refs.wrapper.getBoundingClientRect();
+
+        this.position = Math.min(
+          100,
+          Math.max(
+            0,
+            ((event.clientX - rect.left) / rect.width) * 100
+          )
+        );
+      }
+    }"
+    @mousemove.window="move($event)"
+    @mouseup.window="dragging = false"
+    @mouseleave.window="dragging = false"
+    class="rounded-3xl border border-white/10 bg-white/3 p-5 backdrop-blur-xl"
+  >
+    <h2 class="mb-5 text-center text-xl font-semibold text-white">
+      See it in action
+    </h2>
+    <div
+      x-ref="wrapper"
+      class="relative overflow-hidden rounded-2xl border border-white/10 select-none"
+    >
+      <img
+        src="{{ url_for('frontend.static', filename='images/anonymized.jpg') }}"
+        alt="Anonymized."
+        draggable="false"
+        class="h-105 w-full object-cover"
+      />
+      <div
+        class="absolute inset-0 overflow-hidden"
+        :style="`clip-path: inset(0 ${100-position}% 0 0)`"
+      >
+        <img
+          src="{{ url_for('frontend.static', filename='images/original.jpg') }}"
+          alt="Original."
+          draggable="false"
+          class="h-105 w-full object-cover"
+        />
+      </div>
+      <div
+        x-show="position > 10"
+        x-transition.opacity
+        class="absolute left-4 top-4 rounded-lg bg-black/60 px-3 py-1 text-sm text-white backdrop-blur"
+      >
+        Original
+      </div>
+      <div
+        x-show="position < 87"
+        x-transition.opacity
+        class="absolute right-4 top-4 rounded-lg bg-black/60 px-3 py-1 text-sm text-white backdrop-blur"
+      >
+        Anonymized
+      </div>
+      <div
+        class="absolute top-0 bottom-0 w-0.5 bg-white"
+        :style="`left:${position}%`"
+      ></div>
+      <div
+        class="absolute top-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 cursor-ew-resize items-center justify-center rounded-full border border-white/20 bg-black/70 text-xl text-white backdrop-blur transition hover:scale-110"
+        :style="`left:${position}%`"
+        @mousedown="dragging = true"
+      >
+        {% include "components/icons/move.svg" %}
+      </div>
+    </div>
+    <div class="mt-6 text-center">
+      <a
+        href="#"
+        class="group inline-flex items-center gap-2 text-indigo-400 transition-colors duration-300 hover:text-indigo-300"
+      >
+        <span>Try it now</span>
+        <span
+          class="transition-transform duration-300 group-hover:translate-x-1"
+        >
+          {% include "components/icons/arrow-right.svg" %}
+        </span>
+      </a>
+    </div>
+  </div>
+</section>

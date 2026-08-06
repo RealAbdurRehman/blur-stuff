@@ -1,0 +1,146 @@
+<section class="pb-10">
+  <div
+    x-data
+    @mousemove.window="
+        document.documentElement.style.setProperty('--mx', `${$event.clientX}px`);
+        document.documentElement.style.setProperty('--my', `${$event.clientY}px`);
+    "
+    class="fixed inset-0 -z-50 pointer-events-none"
+  >
+    <div
+      class="absolute inset-0"
+      style="
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+          linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.025) 1px,
+            transparent 1px
+          );
+        background-size: 50px 50px;
+      "
+    ></div>
+    <div
+      class="absolute inset-0"
+      style="
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+        background-size: 50px 50px;
+
+        mask-image: radial-gradient(
+          220px circle at var(--mx, -1000px) var(--my, -1000px),
+          black 0%,
+          transparent 100%
+        );
+
+        -webkit-mask-image: radial-gradient(
+          220px circle at var(--mx, -1000px) var(--my, -1000px),
+          black 0%,
+          transparent 100%
+        );
+      "
+    ></div>
+  </div>
+  <div class="relative">
+    <div
+      class="pointer-events-none absolute left-1/2 top-0 -z-10 h-125 w-200 -translate-x-1/2 rounded-full bg-indigo-500/10 blur-[120px]"
+    ></div>
+    <div
+      class="mx-auto flex max-w-5xl flex-col items-center px-6 pt-20 text-center"
+    >
+      <div
+        class="mb-8 flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-zinc-300 backdrop-blur-xl"
+      >
+        {% include "components/icons/lock.svg" %}
+        <span>Privacy-first</span>
+        {% include "components/icons/dot.svg" %}
+        <span>No data stored</span>
+        {% include "components/icons/dot.svg" %}
+        <span>Open source friendly</span>
+      </div>
+      <h1
+        class="max-w-4xl text-5xl font-bold tracking-tight text-white md:text-7xl"
+      >
+        Anonymize faces, plates,
+        <br />
+        text, and PII
+        <span
+          class="bg-linear-to-r from-indigo-400 via-purple-400 to-indigo-500 bg-clip-text text-transparent transition-all duration-300 hover:drop-shadow-[0_0_25px_rgba(99,102,241,0.6)]"
+        >
+          in seconds.
+        </span>
+      </h1>
+      <p class="mt-8 max-w-2xl text-lg leading-relaxed text-zinc-400">
+        Blur Stuff automatically detects and anonymizes
+        <br class="hidden md:block" />
+        sensitive information in images, videos, and documents
+        <br class="hidden md:block" />
+        — locally and securely.
+      </p>
+      <div class="mt-10 flex items-center gap-4">
+        <a
+          href="#"
+          class="flex items-center gap-2 rounded-xl bg-white px-7 py-3 text-sm font-semibold text-black transition hover:bg-zinc-200"
+        >
+          <span>Upload Files</span>
+          {% include "components/icons/upload.svg" %}
+        </a>
+        <a
+          href="#"
+          class="flex items-center gap-1 rounded-xl border border-white/15 bg-white/5 px-7 py-3 text-sm font-medium text-white backdrop-blur transition hover:bg-white/10"
+        >
+          {% include "components/icons/code.svg" %}
+          <span>View API Docs</span>
+        </a>
+      </div>
+      <div class="mt-8 flex items-center justify-center text-sm text-zinc-500">
+        <span>Images</span>
+        {% include "components/icons/dot.svg" %}
+        <span>Videos</span>
+        {% include "components/icons/dot.svg" %}
+        <span>Documents</span>
+      </div>
+      <div class="text-sm text-zinc-500">
+        PNG, JPG, TIFF, HEIC, MP4, PDF and more
+      </div>
+      <div
+        x-data
+        @mousemove="
+          const r = $el.getBoundingClientRect();
+          $el.style.setProperty('--x', `${$event.clientX-r.left}px`);
+          $el.style.setProperty('--y', `${$event.clientY-r.top}px`);
+        "
+        class="upload-glow relative mt-10 w-full max-w-4xl"
+      >
+        <div
+          class="upload-card group rounded-3xl border border-indigo-400/20 bg-[#101216] p-2 shadow-[0_0_80px_rgba(99,102,241,0.15)] backdrop-blur-xl"
+        >
+          <div
+            class="rounded-2xl border border-dashed border-white/15 py-14 transition group-hover:border-indigo-400/40"
+          >
+            <div
+              class="mx-auto mb-6 flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-white/5 transition-all duration-300 ease-out group-hover:scale-110"
+            >
+              <div
+                class="transition-transform duration-300 ease-out group-hover:-translate-y-0.5"
+              >
+                {% include "components/icons/arrow.svg" %}
+              </div>
+            </div>
+            <h3 class="text-lg font-medium text-white">
+              Drag & drop your file here
+            </h3>
+            <p class="mt-2 text-zinc-400">
+              or click to
+              <span class="text-indigo-400"> browse </span>
+            </p>
+            <p class="mt-5 text-sm text-zinc-500">
+              Your files are processed securely and never stored.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

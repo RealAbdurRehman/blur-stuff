@@ -1,11 +1,3 @@
-{% extends "base.html" %} {% block content %}
-<section>
-  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Distinctio laborum
-  quod error voluptatem. Cumque ex, exercitationem dolor ab sint vero vel
-  perspiciatis suscipit eius veniam impedit similique, libero laudantium
-  inventore. Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-  Reiciendis a doloribus praesentium animi provident cum pariatur nobis beatae
-  ut iure! Sapiente tempore obcaecati blanditiis! Reprehenderit voluptas
-  provident reiciendis earum accusantium!
-</section>
-{% endblock %}
+{% extends "base.html" %} {% block content %} {% include
+"components/hero.html"%} {% include "components/feature-cards.html" %} {%
+include "components/comparison.html" %} {% endblock %}
