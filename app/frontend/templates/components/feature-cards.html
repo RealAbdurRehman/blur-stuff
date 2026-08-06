@@ -1,1 +1,9 @@
-f
+<section class="mx-auto mt-10 max-w-7xl px-6">
+  <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+    {% for feature in features %} {% with title=feature.title,
+    description=feature.description, icon=feature.icon,
+    border_class=feature.border_class, bg_class=feature.bg_class,
+    text_class=feature.text_class %} {% include "components/feature-card.html"
+    %} {% endwith %} {% endfor %}
+  </div>
+</section>
