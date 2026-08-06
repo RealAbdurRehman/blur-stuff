@@ -1,0 +1,66 @@
+<section class="mx-auto mt-10 max-w-7xl px-6">
+  <div
+    class="group/card grid gap-8 rounded-3xl border border-white/10 bg-white/3 px-6 py-3 backdrop-blur-xl lg:grid-cols-[1fr_1.15fr]"
+  >
+    <div class="flex items-center gap-6">
+      <div
+        class="relative flex h-30 w-30 shrink-0 items-center justify-center overflow-hidden rounded-3xl border border-white/10 bg-[radial-gradient(circle_at_35%_30%,rgba(255,255,255,0.12),transparent_65%),radial-gradient(circle_at_70%_75%,rgba(139,92,246,0.10),transparent_75%)] transition-all duration-500 group-hover/card:scale-102 [&>svg]:relative [&>svg]:z-10 [&>svg]:h-15 [&>svg]:w-15 [&>svg]:transition-transform [&>svg]:duration-500 group-hover/card:[&>svg]:scale-105"
+      >
+        {% include "components/icons/code.svg" %}
+      </div>
+      <div>
+        <h2 class="text-3xl font-semibold text-white">
+          Powerful API for developers
+        </h2>
+        <p class="mt-3 max-w-sm leading-7 text-zinc-400">
+          Integrate privacy protection into your apps with a simple and powerful
+          REST API.
+        </p>
+      </div>
+    </div>
+    <div
+      class="relative overflow-hidden space-y-1 rounded-2xl border border-white/10 bg-[#090b10] p-6 font-mono text-sm"
+    >
+      <div
+        class="pointer-events-none absolute left-1/2 -top-32 h-112 w-7xl -translate-x-1/2 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.12)_0%,rgba(255,255,255,0.06)_18%,rgba(255,255,255,0.025)_38%,transparent_72%)] blur-3xl"
+      ></div>
+      <div
+        class="pointer-events-none absolute inset-x-0 top-0 h-50 bg-linear-to-b from-white/4 via-white/1.5 to-transparent"
+      ></div>
+      <div class="relative z-10">
+        <p class="mb-5 text-zinc-200">
+          POST <span class="text-white">/images/anonymize</span>
+        </p>
+        <div>
+          <span class="text-[#E4B1D6]">curl</span>
+          <span class="text-zinc-200">-X POST \</span>
+        </div>
+        <div class="pl-5 text-[#98C379]">
+          "https://blurstuff.com/api/v1/images/anonymize?targets=faces&amp;mode=pixelate"
+          \
+        </div>
+        <div class="pl-5">
+          <span class="text-zinc-200">-F</span>
+          <span class="text-[#98C379]">"file=@original.jpg"</span> \
+        </div>
+        <div class="pl-5">
+          <span class="text-zinc-200">--output</span>
+          <span class="text-zinc-200">anonymized.jpg</span>
+        </div>
+        <div class="mt-4 flex justify-end">
+          <a
+            href="#"
+            class="group inline-flex items-center gap-2 text-indigo-400 transition hover:text-indigo-300"
+          >
+            View API Docs
+            <span
+              class="transition-transform duration-300 group-hover:translate-x-1"
+            >
+              {% include "components/icons/arrow-right.svg" %}
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -39,6 +39,7 @@
       <div
         class="absolute inset-0 overflow-hidden"
         :style="`clip-path: inset(0 ${100-position}% 0 0)`"
+        style="clip-path: inset(0 50% 0 0)"
       >
         <img
           src="{{ url_for('frontend.static', filename='images/original.jpg') }}"
@@ -64,10 +65,12 @@
       <div
         class="absolute top-0 bottom-0 w-0.5 bg-white"
         :style="`left:${position}%`"
+        style="left: 50%"
       ></div>
       <div
         class="absolute top-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 cursor-ew-resize items-center justify-center rounded-full border border-white/20 bg-black/70 text-xl text-white backdrop-blur transition hover:scale-110"
         :style="`left:${position}%`"
+        style="left: 50%"
         @mousedown="dragging = true"
       >
         {% include "components/icons/move.svg" %}

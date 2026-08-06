@@ -4,6 +4,12 @@
   --color-background: #05070a;
 }
 
+@layer base {
+  ::selection {
+    background: rgba(99, 102, 241, 0.35);
+  }
+}
+
 [x-cloak] {
   display: none !important;
 }
