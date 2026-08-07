@@ -52,7 +52,7 @@
       <div
         class="mb-8 flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-zinc-300 backdrop-blur-xl"
       >
-        {% include "components/icons/lock.svg" %}
+        {% include "components/icons/lock1.svg" %}
         <span>Privacy-first</span>
         {% include "components/icons/dot.svg" %}
         <span>No data stored</span>
@@ -80,7 +80,7 @@
       </p>
       <div class="mt-10 flex items-center gap-4">
         <a
-          href="#"
+          href="{{ url_for('frontend.anonymize') }}"
           class="flex items-center gap-2 rounded-xl bg-white px-7 py-3 text-sm font-semibold text-black transition hover:bg-zinc-200"
         >
           <span>Upload Files</span>
@@ -104,43 +104,7 @@
       <div class="text-sm text-zinc-500">
         PNG, JPG, TIFF, HEIC, MP4, PDF and more
       </div>
-      <div
-        x-data
-        @mousemove="
-          const r = $el.getBoundingClientRect();
-          $el.style.setProperty('--x', `${$event.clientX-r.left}px`);
-          $el.style.setProperty('--y', `${$event.clientY-r.top}px`);
-        "
-        class="upload-glow relative mt-10 w-full max-w-4xl"
-      >
-        <div
-          class="upload-card group rounded-3xl border border-indigo-400/20 bg-[#101216] p-2 shadow-[0_0_80px_rgba(99,102,241,0.15)] backdrop-blur-xl"
-        >
-          <div
-            class="rounded-2xl border border-dashed border-white/15 py-14 transition group-hover:border-indigo-400/40"
-          >
-            <div
-              class="mx-auto mb-6 flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-white/5 transition-all duration-300 ease-out group-hover:scale-110"
-            >
-              <div
-                class="transition-transform duration-300 ease-out group-hover:-translate-y-0.5"
-              >
-                {% include "components/icons/arrow.svg" %}
-              </div>
-            </div>
-            <h3 class="text-lg font-medium text-white">
-              Drag & drop your file here
-            </h3>
-            <p class="mt-2 text-zinc-400">
-              or click to
-              <span class="text-indigo-400"> browse </span>
-            </p>
-            <p class="mt-5 text-sm text-zinc-500">
-              Your files are processed securely and never stored.
-            </p>
-          </div>
-        </div>
-      </div>
+      {% include "components/upload-box.html" %}
     </div>
   </div>
 </section>

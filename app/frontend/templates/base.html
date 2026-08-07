@@ -32,8 +32,8 @@
   >
     {% include "components/header.html" %}
     <main>{% block content %}{% endblock %}</main>
-    {% include "components/footer.html" %}
+    {% block footer %} {% include "components/footer.html" %} {% endblock %} {%
+    block scripts %}{% endblock %}
     <script src="{{ url_for('frontend.static', filename='js/app.js') }}"></script>
-    {% block scripts %}{% endblock %}
   </body>
 </html>

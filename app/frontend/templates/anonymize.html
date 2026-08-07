@@ -1,0 +1,19 @@
+{% extends "base.html" %} {% set upload_button_text = "New Upload" %} {% block
+content %}
+
+<section class="mx-auto mt-10 max-w-7xl px-6">
+  {% include "components/anonymize-intro.html" %}
+  <div
+    class="mt-10 grid items-start gap-6 2xl:grid-cols-[minmax(0,1.6fr)_minmax(380px,1fr)]"
+  >
+    <div class="min-w-0">
+      {% include "components/file-preview.html" %} {% include
+      "components/supported-formats.html" %}
+    </div>
+    <div class="min-w-0">
+      {% include "components/anonymize-settings.html" %}
+    </div>
+  </div>
+</section>
+
+{% endblock %} {% block footer %}{% endblock %}

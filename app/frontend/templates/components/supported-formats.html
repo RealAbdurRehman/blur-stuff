@@ -1,0 +1,54 @@
+<div
+  class="mt-7 overflow-hidden rounded-3xl border border-white/10 bg-[#0d1014] px-8 py-6"
+>
+  <h2 class="text-center text-lg font-semibold text-white">
+    Supported Formats
+  </h2>
+  <div class="mt-5 grid grid-cols-3 divide-x divide-white/10">
+    <div class="flex items-center gap-5 px-5 first:pl-0">
+      <div
+        class="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-indigo-400/40 bg-indigo-500/10 shadow-[0_0_25px_rgba(99,102,241,0.08)]"
+      >
+        <span class="text-indigo-400 [&>svg]:h-7 [&>svg]:w-7">
+          {% include "components/icons/image.svg" %}
+        </span>
+      </div>
+      <div>
+        <h3 class="text-sm font-semibold text-white">Images</h3>
+        <p class="mt-2 text-sm leading-relaxed text-zinc-500">
+          PNG, JPG, JPEG, WEBP, HEIC, TIFF, BMP, GIF
+        </p>
+      </div>
+    </div>
+    <div class="flex items-center gap-5 px-7">
+      <div
+        class="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-emerald-400/40 bg-emerald-500/10 shadow-[0_0_25px_rgba(52,211,153,0.06)]"
+      >
+        <span class="text-emerald-400 [&>svg]:h-7 [&>svg]:w-7">
+          {% include "components/icons/video.svg" %}
+        </span>
+      </div>
+      <div>
+        <h3 class="text-sm font-semibold text-white">Videos</h3>
+        <p class="mt-2 text-sm leading-relaxed text-zinc-500">
+          MP4, MOV, AVI, MKV, WEBM, M4V, 3GP
+        </p>
+      </div>
+    </div>
+    <div class="flex items-center gap-5 px-7 last:pr-0">
+      <div
+        class="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-amber-400/40 bg-amber-500/10 shadow-[0_0_25px_rgba(251,191,36,0.06)]"
+      >
+        <span class="text-amber-400 [&>svg]:h-7 [&>svg]:w-7">
+          {% include "components/icons/file.svg" %}
+        </span>
+      </div>
+      <div>
+        <h3 class="text-sm font-semibold text-white">Documents</h3>
+        <p class="mt-2 text-sm leading-relaxed text-zinc-500">
+          PDF, DOCX, PPTX, TXT, XLSX
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

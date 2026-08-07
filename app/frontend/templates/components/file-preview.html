@@ -1,0 +1,229 @@
+<div
+  x-init="init()"
+  x-data="filePreview()"
+  class="overflow-hidden rounded-3xl border border-indigo-400/20 bg-[#0d1014] shadow-[0_0_60px_rgba(99,102,241,0.08)]"
+>
+  <div class="grid min-h-160 lg:grid-cols-2">
+    <div
+      class="p-6 lg:p-8"
+      @dragover.prevent="isDragging = true"
+      @dragleave.prevent="isDragging = false"
+      @drop.prevent="handleDrop($event)"
+    >
+      <div
+        @click="$refs.fileInput.click()"
+        class="group relative flex h-full min-h-140 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl border border-dashed border-white/20 bg-white/1 transition-all duration-300 ease-out"
+        :class="
+      isDragging
+        ? 'border-indigo-400/70 bg-indigo-500/10 shadow-[inset_0_0_80px_rgba(99,102,241,0.08),0_0_30px_rgba(99,102,241,0.10)]'
+        : 'hover:border-indigo-400/40 hover:bg-white/2'
+    "
+      >
+        <div
+          class="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300"
+          :class="isDragging ? 'opacity-100' : ''"
+          style="
+            background: linear-gradient(
+              135deg,
+              rgba(99, 102, 241, 0.08),
+              transparent 40%,
+              rgba(99, 102, 241, 0.05)
+            );
+          "
+        ></div>
+        <div
+          class="pointer-events-none absolute inset-2 rounded-xl border border-indigo-400/0 transition-all duration-300"
+          :class="isDragging ? 'border-indigo-400/20' : ''"
+        ></div>
+        <div
+          class="pointer-events-none absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-indigo-500/5 blur-3xl transition-all duration-300"
+          :class="isDragging ? 'scale-110 bg-indigo-500/10' : ''"
+        ></div>
+        <div
+          class="relative flex h-20 w-20 items-center justify-center rounded-2xl border border-indigo-400/15 bg-indigo-500/6 shadow-[0_0_35px_rgba(99,102,241,0.12)] transition-all duration-300 ease-out"
+          :class="
+        isDragging
+          ? 'scale-110 border-indigo-400/35 bg-indigo-500/12 shadow-[0_0_45px_rgba(99,102,241,0.20)]'
+          : 'group-hover:scale-105 group-hover:-translate-y-1 group-hover:border-indigo-400/25 group-hover:bg-indigo-500/8'
+      "
+        >
+          <div
+            class="transition-transform duration-300 ease-out"
+            :class="
+            isDragging
+                ? '-translate-y-1'
+                : 'group-hover:-translate-y-0.5'
+            "
+          >
+            <span class="text-[#AB96F9] [&>svg]:h-10 [&>svg]:w-10"
+              >{% include "components/icons/upload.svg" %}</span
+            >
+          </div>
+        </div>
+        <h3 class="relative mt-7 text-2xl font-medium text-white">
+          Drag & drop your file here
+        </h3>
+        <p class="relative mt-2 text-base text-zinc-400">
+          or click to
+          <span class="text-indigo-400"> browse </span>
+        </p>
+        <div class="relative mt-8 flex items-center gap-8 text-zinc-500">
+          <div class="flex flex-col items-center gap-2">
+            {% include "components/icons/image.svg" %}
+            <span class="text-xs">Images</span>
+          </div>
+          <div class="flex flex-col items-center gap-2">
+            {% include "components/icons/video.svg" %}
+            <span class="text-xs">Videos</span>
+          </div>
+          <div class="flex flex-col items-center gap-2">
+            {% include "components/icons/file.svg" %}
+            <span class="text-xs">Documents</span>
+          </div>
+        </div>
+        <p class="relative mt-8 text-sm text-zinc-500">
+          Supports images, videos and documents.
+        </p>
+      </div>
+      <input
+        x-ref="fileInput"
+        type="file"
+        @change="handleFile($event)"
+        accept="
+        .jpg,.jpeg,.png,.webp,.tif,.tiff,.heic,.heif,.gif,
+        .mp4,.mov,.avi,.mkv,.webm,
+        .pdf,.docx,.pptx,.xlsx
+        "
+        class="hidden"
+      />
+    </div>
+    <div class="border-t border-white/10 p-6 lg:border-l lg:border-t-0 lg:p-8">
+      <div class="flex h-full flex-col">
+        <h2 class="text-2xl font-semibold text-white">File Preview</h2>
+        <div
+          class="mt-7 overflow-hidden rounded-2xl border border-white/10 bg-black/30"
+        >
+          <template x-if="!file">
+            <div class="flex aspect-video items-center justify-center">
+              <div class="text-center">
+                <div
+                  class="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-white/5"
+                >
+                  {% include "components/icons/file.svg" %}
+                </div>
+
+                <p class="mt-3 text-sm text-zinc-600">No file selected</p>
+              </div>
+            </div>
+          </template>
+          <template x-if="file && previewType === 'image'">
+            <div class="aspect-video bg-black">
+              <img
+                :src="previewUrl"
+                :alt="file.name"
+                class="h-full w-full object-contain"
+              />
+            </div>
+          </template>
+          <template x-if="file && previewType === 'video'">
+            <div class="aspect-video bg-black">
+              <video
+                :src="previewUrl"
+                controls
+                class="h-full w-full object-contain"
+              ></video>
+            </div>
+          </template>
+          <template x-if="file && previewType === 'file'">
+            <div
+              class="flex aspect-video flex-col items-center justify-center bg-black/20"
+            >
+              <div
+                class="flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-500/10"
+              >
+                <template x-if="fileType === 'image'">
+                  {% include "components/icons/image.svg" %}
+                </template>
+                <template x-if="fileType === 'video'">
+                  {% include "components/icons/video.svg" %}
+                </template>
+                <template x-if="fileType === 'document'">
+                  {% include "components/icons/file.svg" %}
+                </template>
+              </div>
+              <p
+                class="mt-4 max-w-xs truncate text-sm font-medium text-white"
+                x-text="file.name"
+              ></p>
+              <p
+                class="mt-1 text-xs text-zinc-500"
+                x-text="fileTypeLabel()"
+              ></p>
+              <p class="mt-2 text-xs text-zinc-600">
+                File ready for processing
+              </p>
+            </div>
+          </template>
+        </div>
+        <div
+          x-show="file"
+          x-cloak
+          class="mt-6 flex items-center justify-between"
+        >
+          <div class="flex min-w-0 items-center gap-3">
+            <div
+              class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/3"
+            >
+              <template x-if="fileType === 'image'">
+                {% include "components/icons/image.svg" %}
+              </template>
+              <template x-if="fileType === 'video'">
+                {% include "components/icons/video.svg" %}
+              </template>
+              <template x-if="fileType === 'document'">
+                {% include "components/icons/file.svg" %}
+              </template>
+            </div>
+            <div class="min-w-0">
+              <p
+                class="truncate text-sm font-medium text-white"
+                x-text="file?.name"
+              ></p>
+              <p class="mt-1 text-xs text-zinc-500">
+                <span x-text="fileTypeLabel()"></span>
+                <span class="mx-1">•</span>
+                <span x-text="formatSize(file?.size)"></span>
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            @click="$refs.fileInput.click()"
+            class="ml-4 flex shrink-0 cursor-pointer items-center gap-2 rounded-xl border border-white/10 bg-white/2 px-4 py-3 text-sm text-zinc-300 transition hover:bg-white/5 hover:text-white"
+          >
+            {% include "components/icons/replace.svg" %}
+            <span>Replace</span>
+          </button>
+        </div>
+        <div class="mt-auto pt-8">
+          <div
+            class="flex gap-4 rounded-2xl border border-indigo-400/30 bg-indigo-500/[0.035] px-5 py-5 shadow-[0_0_35px_rgba(99,102,241,0.05)]"
+          >
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center">
+              {% include "components/icons/lock2.svg" %}
+            </div>
+            <div>
+              <p class="text-sm font-medium text-zinc-200">
+                We never store your files.
+              </p>
+              <p class="mt-2 text-sm text-zinc-500">
+                Your file is temporarily kept in your browser while you
+                configure it.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
