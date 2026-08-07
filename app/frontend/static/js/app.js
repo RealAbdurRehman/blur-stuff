@@ -1,91 +1,3 @@
-function filePreview() {
-  return {
-    file: null,
-    previewUrl: null,
-    fileType: null,
-    previewType: null,
-    isDragging: false,
-    async init() {
-      const storedFile = await getUploadedFile();
-
-      if (storedFile) {
-        this.setFile(storedFile);
-        await deleteUploadedFile();
-      }
-    },
-    handleFile(event) {
-      const file = event.target.files?.[0];
-
-      if (!file) return;
-      this.setFile(file);
-
-      event.target.value = "";
-    },
-    handleDrop(event) {
-      this.isDragging = false;
-
-      const file = event.dataTransfer.files?.[0];
-      if (!file) return;
-
-      this.setFile(file);
-    },
-    setFile(file) {
-      this.file = file;
-
-      if (this.previewUrl) URL.revokeObjectURL(this.previewUrl);
-      this.previewUrl = URL.createObjectURL(file);
-
-      const extension = this.getExtension(file);
-      const previewableImages = ["jpg", "jpeg", "png", "webp", "gif"];
-      const videoFormats = ["mp4", "mov", "avi", "mkv", "webm"];
-      const imageFormats = [
-        "jpg",
-        "jpeg",
-        "png",
-        "webp",
-        "tif",
-        "tiff",
-        "heic",
-        "heif",
-        "gif",
-      ];
-
-      if (previewableImages.includes(extension)) {
-        this.fileType = "image";
-        this.previewType = "image";
-      } else if (videoFormats.includes(extension)) {
-        this.fileType = "video";
-        this.previewType = "video";
-      } else if (imageFormats.includes(extension)) {
-        this.fileType = "image";
-        this.previewType = "file";
-      } else {
-        this.fileType = "document";
-        this.previewType = "file";
-      }
-    },
-    getExtension(file) {
-      return file.name.split(".").pop().toLowerCase();
-    },
-    fileTypeLabel() {
-      if (!this.file) return "";
-
-      const extension = this.getExtension(this.file).toUpperCase();
-      if (this.fileType === "image") return `${extension} Image`;
-      if (this.fileType === "video") return `${extension} Video`;
-
-      return `${extension} Document`;
-    },
-    formatSize(bytes) {
-      if (!bytes) return "";
-      if (bytes < 1024) return `${bytes} B`;
-      if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-
-      return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-    },
-  };
-}
-
 function openFileDatabase() {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open("blurStuff", 1);
@@ -205,6 +117,110 @@ function uploadBox() {
       } catch (error) {
         console.error("Failed to store file:", error);
       }
+    },
+  };
+}
+
+function anonymizeApp() {
+  return {
+    file: null,
+    previewUrl: null,
+    fileType: null,
+    previewType: null,
+    isDragging: false,
+    targets: {
+      faces: true,
+      plates: false,
+      text: false,
+      pii: false,
+    },
+    mode: "blur",
+    canProcess() {
+      return (
+        this.file &&
+        this.mode &&
+        (this.targets.faces ||
+          this.targets.plates ||
+          this.targets.text ||
+          this.targets.pii)
+      );
+    },
+    async init() {
+      const storedFile = await getUploadedFile();
+
+      if (storedFile) {
+        this.setFile(storedFile);
+        await deleteUploadedFile();
+      }
+    },
+    handleFile(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+
+      this.setFile(file);
+      event.target.value = "";
+    },
+    handleDrop(event) {
+      this.isDragging = false;
+
+      const file = event.dataTransfer.files?.[0];
+      if (!file) return;
+
+      this.setFile(file);
+    },
+    setFile(file) {
+      this.file = file;
+
+      if (this.previewUrl) URL.revokeObjectURL(this.previewUrl);
+      this.previewUrl = URL.createObjectURL(file);
+
+      const extension = this.getExtension(file);
+      const previewableImages = ["jpg", "jpeg", "png", "webp", "gif"];
+      const videoFormats = ["mp4", "mov", "avi", "mkv", "webm"];
+      const imageFormats = [
+        "jpg",
+        "jpeg",
+        "png",
+        "webp",
+        "tif",
+        "tiff",
+        "heic",
+        "heif",
+        "gif",
+      ];
+
+      if (previewableImages.includes(extension)) {
+        this.fileType = "image";
+        this.previewType = "image";
+      } else if (videoFormats.includes(extension)) {
+        this.fileType = "video";
+        this.previewType = "video";
+      } else if (imageFormats.includes(extension)) {
+        this.fileType = "image";
+        this.previewType = "file";
+      } else {
+        this.fileType = "document";
+        this.previewType = "file";
+      }
+    },
+    getExtension(file) {
+      return file.name.split(".").pop().toLowerCase();
+    },
+    fileTypeLabel() {
+      if (!this.file) return "";
+
+      const extension = this.getExtension(this.file).toUpperCase();
+      if (this.fileType === "image") return `${extension} Image`;
+      if (this.fileType === "video") return `${extension} Video`;
+
+      return `${extension} Document`;
+    },
+    formatSize(bytes) {
+      if (!bytes) return "";
+      if (bytes < 1024) return `${bytes} B`;
+      if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+
+      return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
     },
   };
 }

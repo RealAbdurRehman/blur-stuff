@@ -1,13 +1,4 @@
 <div
-  x-data="{
-    targets: {
-      faces: true,
-      plates: false,
-      text: false,
-      pii: false
-    },
-    mode: 'blur'
-  }"
   class="overflow-hidden rounded-3xl border border-white/10 bg-[#0d1014] p-6 shadow-[0_0_40px_rgba(0,0,0,0.15)] lg:p-6"
 >
   <div>
@@ -374,9 +365,13 @@
   </div>
   <button
     type="button"
-    class="group mt-6 flex w-full cursor-pointer items-center justify-center gap-1 rounded-xl bg-white px-5 py-4 text-base font-semibold text-zinc-900 shadow-[0_0_25px_rgba(255,255,255,0.08)] transition-all duration-200 hover:bg-zinc-100 hover:shadow-[0_0_35px_rgba(255,255,255,0.12)] active:scale-[0.99]"
+    :disabled="!canProcess()"
+    :class="!canProcess()
+    ? 'cursor-not-allowed bg-white/10 text-zinc-600 shadow-none'
+    : 'cursor-pointer bg-white text-zinc-900 shadow-[0_0_25px_rgba(255,255,255,0.08)] hover:bg-zinc-100 hover:shadow-[0_0_35px_rgba(255,255,255,0.12)] active:scale-[0.99]'"
+    class="group mt-6 flex w-full items-center justify-center gap-1 rounded-xl px-5 py-4 text-base font-semibold transition-all duration-200"
   >
-    <span>Process File</span>
+    <span>Detect Sensitive Content</span>
     <span
       class="transition-transform duration-200 ease-out group-hover:translate-x-1"
     >
