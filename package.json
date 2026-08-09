@@ -4,8 +4,8 @@
   "description": "A tool that automatically detects and blurs sensitive information in images and videos.",
   "main": "index.js",
   "scripts": {
-    "dev": "npx @tailwindcss/cli -i ./frontend/static/css/input.css -o ./frontend/static/css/output.css --watch",
-    "build": "npx @tailwindcss/cli -i ./frontend/static/css/input.css -o ./frontend/static/css/output.css --minify"
+    "dev": "npx @tailwindcss/cli -i app/frontend/static/css/input.css -o app/frontend/static/css/output.css --watch",
+    "build": "npx @tailwindcss/cli -i app/frontend/static/css/input.css -o app/frontend/static/css/output.css --minify"
   },
   "repository": {
     "type": "git",

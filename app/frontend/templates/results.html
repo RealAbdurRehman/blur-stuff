@@ -1,0 +1,25 @@
+{% extends "base.html" %} {% block page_title %}Customize{% endblock %} {% block
+description %} Review detected faces, license plates, text, and personal
+information before anonymizing your file. {% endblock %} {% block og_title %}
+Customize - Blur Stuff {% endblock %} {% set upload_button_text = "New Upload"
+%} {% block content %}
+
+<section x-data="resultsApp()" class="mx-auto mt-10 max-w-7xl px-6 pb-12">
+  <div class="mb-6">
+    <h1 class="text-2xl font-semibold tracking-tight text-white">
+      Customization
+    </h1>
+    <p class="mt-1 text-sm text-zinc-500">
+      Review detected content in your file. Select what you want to anonymize.
+    </p>
+  </div>
+  <div class="grid items-start gap-5">
+    <div class="min-w-0">{# include "components/detection-panel.html" #}</div>
+    <div class="min-w-0">{% include "components/results-preview.html" %}</div>
+    <div class="min-w-0">
+      {# include "components/anonymization-settings.html" #}
+    </div>
+  </div>
+</section>
+
+{% endblock %} {% block footer %}{% endblock %}

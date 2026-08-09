@@ -1,0 +1,231 @@
+<div
+  class="overflow-hidden rounded-3xl border border-white/10 bg-[#0d1014] p-6 shadow-[0_0_40px_rgba(0,0,0,0.15)] lg:p-6"
+>
+  <div>
+    <div class="flex items-start gap-4">
+      <div
+        class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/3 text-zinc-300"
+      >
+        {% include "components/icons/target.svg" %}
+      </div>
+      <div>
+        <h2 class="text-base font-semibold text-white">Detection Targets</h2>
+        <p class="mt-1 text-sm text-zinc-500">Choose what to detect.</p>
+      </div>
+    </div>
+    <div class="mt-5 space-y-2">
+      <button
+        type="button"
+        @click="targets.faces = !targets.faces"
+        class="group flex w-full cursor-pointer items-center gap-4 rounded-xl border border-white/10 bg-white/3 px-4 py-3 text-left transition-all duration-200 hover:border-white/15 hover:bg-white/5"
+        :class="targets.faces
+          ? 'border-white/10 bg-white/[0.035]'
+          : 'opacity-60'"
+      >
+        <div
+          class="flex h-6 w-6 shrink-0 items-center justify-center rounded-md border transition-all duration-200"
+          :class="targets.faces
+            ? 'border-indigo-400 bg-indigo-500 text-white'
+            : 'border-white/20 bg-transparent'"
+        >
+          <svg
+            x-show="targets.faces"
+            x-cloak
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="none"
+            class="h-4 w-4"
+          >
+            <path
+              d="M4 10.5 8 14l8-8"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+        <div
+          class="flex h-7 w-7 shrink-0 items-center justify-center text-zinc-300"
+        >
+          {% include "components/icons/scan.svg" %}
+        </div>
+        <div class="min-w-0 flex-1">
+          <p class="text-sm font-medium text-white">Faces</p>
+          <p class="mt-0.5 text-xs text-zinc-500">Detect human faces.</p>
+        </div>
+      </button>
+      <button
+        type="button"
+        @click="targets.plates = !targets.plates"
+        class="group flex w-full cursor-pointer items-center gap-4 rounded-xl border border-white/10 bg-white/3 px-4 py-3 text-left transition-all duration-200 hover:border-white/15 hover:bg-white/5"
+        :class="targets.plates
+          ? 'border-white/10 bg-white/[0.035]'
+          : 'opacity-60'"
+      >
+        <div
+          class="flex h-6 w-6 shrink-0 items-center justify-center rounded-md border transition-all duration-200"
+          :class="targets.plates
+            ? 'border-indigo-400 bg-indigo-500 text-white'
+            : 'border-white/20 bg-transparent'"
+        >
+          <svg
+            x-show="targets.plates"
+            x-cloak
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="none"
+            class="h-4 w-4"
+          >
+            <path
+              d="M4 10.5 8 14l8-8"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+        <div
+          class="flex h-7 w-7 shrink-0 items-center justify-center text-zinc-300"
+        >
+          {% include "components/icons/car.svg" %}
+        </div>
+        <div class="min-w-0 flex-1">
+          <p class="text-sm font-medium text-white">License Plates</p>
+          <p class="mt-0.5 text-xs text-zinc-500">
+            Detect vehicle license plates.
+          </p>
+        </div>
+      </button>
+      <button
+        type="button"
+        @click="targets.text = !targets.text"
+        class="group flex w-full cursor-pointer items-center gap-4 rounded-xl border border-white/10 bg-white/3 px-4 py-3 text-left transition-all duration-200 hover:border-white/15 hover:bg-white/5"
+        :class="targets.text
+          ? 'border-white/10 bg-white/[0.035]'
+          : 'opacity-60'"
+      >
+        <div
+          class="flex h-6 w-6 shrink-0 items-center justify-center rounded-md border transition-all duration-200"
+          :class="targets.text
+            ? 'border-indigo-400 bg-indigo-500 text-white'
+            : 'border-white/20 bg-transparent'"
+        >
+          <svg
+            x-show="targets.text"
+            x-cloak
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="none"
+            class="h-4 w-4"
+          >
+            <path
+              d="M4 10.5 8 14l8-8"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+        <div
+          class="flex h-7 w-7 shrink-0 items-center justify-center text-zinc-300"
+        >
+          {% include "components/icons/text.svg" %}
+        </div>
+        <div class="min-w-0 flex-1">
+          <p class="text-sm font-medium text-white">Text</p>
+          <p class="mt-0.5 text-xs text-zinc-500">Detect visible text.</p>
+        </div>
+      </button>
+      <button
+        type="button"
+        @click="targets.pii = !targets.pii"
+        class="group flex w-full cursor-pointer items-center gap-4 rounded-xl border border-white/10 bg-white/3 px-4 py-3 text-left transition-all duration-200 hover:border-white/15 hover:bg-white/5"
+        :class="targets.pii
+          ? 'border-white/10 bg-white/[0.035]'
+          : 'opacity-60'"
+      >
+        <div
+          class="flex h-6 w-6 shrink-0 items-center justify-center rounded-md border transition-all duration-200"
+          :class="targets.pii
+            ? 'border-indigo-400 bg-indigo-500 text-white'
+            : 'border-white/20 bg-transparent'"
+        >
+          <svg
+            x-show="targets.pii"
+            x-cloak
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="none"
+            class="h-4 w-4"
+          >
+            <path
+              d="M4 10.5 8 14l8-8"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+        <div
+          class="flex h-7 w-7 shrink-0 items-center justify-center text-zinc-300"
+        >
+          {% include "components/icons/pii.svg" %}
+        </div>
+        <div class="min-w-0 flex-1">
+          <p class="text-sm font-medium text-white">
+            Personal Information (PII)
+          </p>
+          <p class="mt-0.5 text-xs text-zinc-500">
+            Detect emails, phones, names and more.
+          </p>
+        </div>
+      </button>
+    </div>
+  </div>
+  <button
+    type="button"
+    @click="detect()"
+    :disabled="!canDetect() || isDetecting"
+    :class="!canDetect() || isDetecting
+    ? 'cursor-not-allowed bg-white/10 text-zinc-500 shadow-none'
+    : 'cursor-pointer bg-white text-zinc-900 shadow-[0_0_25px_rgba(255,255,255,0.08)] hover:bg-zinc-100 hover:shadow-[0_0_35px_rgba(255,255,255,0.12)] active:scale-[0.99]'"
+    class="group mt-6 flex w-full items-center justify-center gap-2 rounded-xl px-5 py-4 text-base font-semibold transition-all duration-200"
+  >
+    <template x-if="isDetecting">
+      <span class="flex items-center gap-2">
+        <svg class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="9"
+            stroke="currentColor"
+            stroke-width="3"
+          />
+          <path
+            class="opacity-90"
+            d="M21 12a9 9 0 0 1-9 9"
+            stroke="currentColor"
+            stroke-width="3"
+            stroke-linecap="round"
+          />
+        </svg>
+        <span>Detecting...</span>
+      </span>
+    </template>
+    <template x-if="!isDetecting">
+      <span class="flex items-center gap-1">
+        <span>Detect Sensitive Content</span>
+        <span
+          class="transition-transform duration-200 ease-out group-hover:translate-x-1"
+        >
+          {% include "components/icons/arrow-right.svg" %}
+        </span>
+      </span>
+    </template>
+  </button>
+</div>

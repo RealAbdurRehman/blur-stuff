@@ -115,6 +115,24 @@
               </div>
             </div>
           </template>
+          <template x-if="file && isPreviewLoading">
+            <div
+              class="flex aspect-video flex-col items-center justify-center bg-black"
+            >
+              <div
+                class="h-10 w-10 animate-spin rounded-full border-2 border-white/10 border-t-indigo-400"
+              ></div>
+              <p class="mt-4 text-sm font-medium text-zinc-300">
+                Preparing preview
+              </p>
+              <p
+                class="mt-1 text-xs text-zinc-600"
+                x-text="fileType === 'image'
+                ? 'Converting your image for browser preview...'
+                : 'Converting your document for browser preview...'"
+              ></p>
+            </div>
+          </template>
           <template x-if="file && previewType === 'image'">
             <div class="aspect-video bg-black">
               <img
@@ -131,6 +149,15 @@
                 controls
                 class="h-full w-full object-contain"
               ></video>
+            </div>
+          </template>
+          <template x-if="file && previewType === 'pdf'">
+            <div class="aspect-video bg-zinc-950">
+              <iframe
+                :src="previewUrl"
+                class="h-full w-full"
+                title="Document preview"
+              ></iframe>
             </div>
           </template>
           <template x-if="file && previewType === 'file'">

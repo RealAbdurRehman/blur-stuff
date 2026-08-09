@@ -39,6 +39,24 @@ def load_document():
     return file, document, handlers, extension
 
 
+@documents_bp.post("/preview")
+def preview():
+    try:
+        _, document, handlers, _ = load_document()
+    except ValidationError as err:
+        return jsonify({"error": str(err)}), 400
+
+    try:
+        encoded = handlers["encoder"](document)
+    except EncodingError as err:
+        return jsonify({"error": str(err)}), 500
+
+    return Response(
+        encoded,
+        mimetype="application/pdf",
+    )
+
+
 @documents_bp.post("/detect")
 def detect():
     try:

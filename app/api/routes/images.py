@@ -4,7 +4,7 @@ from flask import Blueprint, Response, request, jsonify
 from app.media.types import IMAGE_FORMATS
 from app.services.validate import validate_upload, get_targets, get_mode
 from app.services.decoder import decode_image
-from app.services.encoder import encode_image
+from app.services.encoder import encode_image, encode_preview
 from app.services.anonymizer import anonymize_image
 from app.services.detector import detect_image
 from app.services.exceptions import ValidationError, EncodingError
@@ -19,6 +19,24 @@ def load_image():
     media = decode_image(file.read())
 
     return file, media
+
+
+@images_bp.post("/preview")
+def preview():
+    try:
+        _, media = load_image()
+    except ValidationError as err:
+        return jsonify({"error": str(err)}), 400
+
+    try:
+        encoded = encode_preview(media)
+    except EncodingError as err:
+        return jsonify({"error": str(err)}), 500
+
+    return Response(
+        encoded,
+        mimetype="image/png",
+    )
 
 
 @images_bp.post("/detect")

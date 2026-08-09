@@ -1,2 +1,2 @@
 from . import home
-from . import anonymize
+from . import detect

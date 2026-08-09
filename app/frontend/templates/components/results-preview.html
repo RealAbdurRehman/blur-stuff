@@ -1,0 +1,161 @@
+<div class="overflow-hidden rounded-2xl border border-white/10 bg-[#080b10]">
+  <div
+    class="flex items-center justify-between border-b border-white/10 px-5 py-4"
+  >
+    <div class="flex min-w-0 items-center gap-3">
+      <div
+        class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-indigo-400/20 bg-indigo-500/10"
+      >
+        <template x-if="fileType === 'image'">
+          {% include "components/icons/image.svg" %}
+        </template>
+        <template x-if="fileType === 'video'">
+          {% include "components/icons/video.svg" %}
+        </template>
+        <template x-if="isDocument()">
+          {% include "components/icons/file.svg" %}
+        </template>
+      </div>
+      <div class="min-w-0">
+        <p
+          class="truncate text-sm font-semibold text-white"
+          x-text="file?.name || 'No file selected'"
+        ></p>
+        <p x-show="file" class="mt-1 text-xs text-zinc-500">
+          <span x-text="fileTypeLabel()"></span>
+          <span class="mx-1">•</span>
+          <span x-text="formatSize(file?.size)"></span>
+          <template x-if="fileType === 'image' && imageDimensions">
+            <span>
+              <span class="mx-1">•</span>
+              <span x-text="imageDimensions"></span>
+            </span>
+          </template>
+          <template x-if="fileType === 'video' && videoDuration">
+            <span>
+              <span class="mx-1">•</span>
+              <span x-text="formatDuration(videoDuration)"></span>
+            </span>
+          </template>
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="relative bg-black">
+    <template x-if="isLoading">
+      <div class="flex aspect-video items-center justify-center">
+        <div class="text-center">
+          <div
+            class="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-white/10 border-t-indigo-400"
+          ></div>
+          <p class="mt-3 text-sm text-zinc-500">Loading preview...</p>
+        </div>
+      </div>
+    </template>
+    <!-- <template x-if="!isLoading && fileType === 'image'">
+      <div class="relative aspect-video bg-black">
+        <img
+          :src="previewUrl"
+          :alt="file?.name"
+          class="h-full w-full object-contain"
+          @load="handleImageLoad($event)"
+        />
+        <div
+          x-show="showDetections"
+          class="pointer-events-none absolute inset-0"
+        >
+          <template
+            x-for="detection in visibleDetections()"
+            :key="detection.id"
+          >
+            <div
+              class="absolute border-2 border-indigo-400"
+              :style="boxStyle(detection)"
+            >
+              <span
+                class="absolute -top-6 left-0 rounded-md bg-indigo-500 px-1.5 py-0.5 text-[10px] font-medium text-white"
+                x-text="detection.label"
+              ></span>
+            </div>
+          </template>
+        </div>
+      </div>
+    </template> -->
+    <template x-if="!isLoading && fileType === 'image'">
+      <div class="relative aspect-video bg-black">
+        <div class="relative h-full w-full">
+          <img
+            :src="previewUrl"
+            :alt="file?.name"
+            class="h-full w-full object-contain"
+            @load="handleImageLoad($event)"
+          />
+          <div
+            x-show="showDetections"
+            class="pointer-events-none absolute inset-0"
+          >
+            <template
+              x-for="detection in visibleDetections()"
+              :key="detection.id"
+            >
+              <div
+                class="absolute border-2 border-indigo-400"
+                :style="boxStyle(detection)"
+              >
+                <span
+                  class="absolute -top-6 left-0 rounded-md bg-indigo-500 px-1.5 py-0.5 text-[10px] font-medium text-white"
+                  x-text="detection.label"
+                ></span>
+              </div>
+            </template>
+          </div>
+        </div>
+      </div>
+    </template>
+    <template x-if="!isLoading && fileType === 'video'">
+      <div class="aspect-video bg-black">
+        <video
+          x-ref="video"
+          :src="previewUrl"
+          controls
+          playsinline
+          class="h-full w-full object-contain"
+          @loadedmetadata="handleVideoMetadata($event)"
+        ></video>
+      </div>
+    </template>
+    <template x-if="!isLoading && fileType === 'pdf'">
+      <div class="aspect-video bg-zinc-950">
+        <iframe
+          :src="previewUrl"
+          class="h-full w-full"
+          title="Document preview"
+        ></iframe>
+      </div>
+    </template>
+    <!-- <template x-if="!isLoading && fileType === 'document'">
+      <div
+        class="flex aspect-video flex-col items-center justify-center bg-black/20"
+      >
+        <div
+          class="flex h-20 w-20 items-center justify-center rounded-2xl border border-white/10 bg-white/3"
+        >
+          {% include "components/icons/file.svg" %}
+        </div>
+        <p
+          class="mt-5 max-w-sm truncate text-sm font-medium text-white"
+          x-text="file?.name"
+        ></p>
+        <p class="mt-1 text-xs text-zinc-500" x-text="fileTypeLabel()"></p>
+        <p class="mt-3 text-xs text-zinc-600">
+          Document preview is not available for this format.
+        </p>
+      </div>
+    </template> -->
+    <template x-if="!isLoading && !file">
+      <div class="flex aspect-video flex-col items-center justify-center">
+        <p class="text-sm text-zinc-500">No file available</p>
+      </div>
+    </template>
+  </div>
+</div>

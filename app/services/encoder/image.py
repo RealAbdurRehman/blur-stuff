@@ -38,3 +38,14 @@ def encode_image(media, extension=".png"):
         raise EncodingError("Could not encode image")
 
     return encoded.tobytes()
+
+
+def encode_preview(media):
+    output = io.BytesIO()
+    if media.animated:
+        image = PILImage.fromarray(cv2.cvtColor(media.frames[0], cv2.COLOR_BGR2RGB))
+    else:
+        image = PILImage.fromarray(cv2.cvtColor(media.image, cv2.COLOR_BGR2RGB))
+
+    image.save(output, format="PNG")
+    return output.getvalue()
