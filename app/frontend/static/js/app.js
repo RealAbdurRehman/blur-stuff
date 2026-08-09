@@ -413,10 +413,13 @@ function resultsApp() {
     previewUrl: null,
     fileType: null,
     detections: null,
+    cropUrls: {},
     selectedDetections: [],
     isLoading: true,
     error: null,
     imageDimensions: null,
+    imageWidth: 0,
+    imageHeight: 0,
     videoDuration: null,
     showDetections: true,
     async init() {
@@ -434,6 +437,8 @@ function resultsApp() {
         this.file = storedFile.file;
         this.detections = storedFile.detections || null;
         await this.setPreview(this.file);
+
+        if (this.fileType === "image") await this.generateDetectionCrops();
       } catch (error) {
         console.error("Failed to load results:", error);
         this.error = "Failed to load the file.";
@@ -555,6 +560,9 @@ function resultsApp() {
     },
     handleImageLoad(event) {
       const image = event.target;
+
+      this.imageWidth = image.naturalWidth;
+      this.imageHeight = image.naturalHeight;
       this.imageDimensions = `${image.naturalWidth} × ${image.naturalHeight}`;
     },
     handleVideoMetadata(event) {
@@ -637,52 +645,6 @@ function resultsApp() {
 
       return "text-red-400";
     },
-    // detectionGroups() {
-    //   const empty = {
-    //     faces: [],
-    //     plates: [],
-    //     text: [],
-    //     pii: [],
-    //   };
-
-    //   if (!this.detections) return empty;
-    //   if (!Array.isArray(this.detections))
-    //     return {
-    //       faces: this.detections.faces || [],
-    //       plates: this.detections.plates || [],
-    //       text: this.detections.text || [],
-    //       pii: this.detections.pii || [],
-    //     };
-
-    //   if (
-    //     this.detections.length > 0 &&
-    //     this.detections[0] &&
-    //     typeof this.detections[0] === "object" &&
-    //     !Array.isArray(this.detections[0])
-    //   ) {
-    //     const grouped = this.detections[0];
-    //     if (
-    //       "faces" in grouped ||
-    //       "plates" in grouped ||
-    //       "text" in grouped ||
-    //       "pii" in grouped
-    //     ) {
-    //       return {
-    //         faces: grouped.faces || [],
-    //         plates: grouped.plates || [],
-    //         text: grouped.text || [],
-    //         pii: grouped.pii || [],
-    //       };
-    //     }
-    //   }
-
-    //   return {
-    //     faces: this.detections.filter((d) => d.target === "faces"),
-    //     plates: this.detections.filter((d) => d.target === "plates"),
-    //     text: this.detections.filter((d) => d.target === "text"),
-    //     pii: this.detections.filter((d) => d.target === "pii"),
-    //   };
-    // },
     detectionGroups() {
       const empty = {
         faces: [],
@@ -692,14 +654,25 @@ function resultsApp() {
       };
 
       if (!this.detections) return empty;
-      if (!Array.isArray(this.detections)) {
+      if (!Array.isArray(this.detections))
         return {
-          faces: this.detections.faces || [],
-          plates: this.detections.plates || [],
-          text: this.detections.text || [],
-          pii: this.detections.pii || [],
+          faces: (this.detections.faces || []).map((detection) => ({
+            ...detection,
+            target: "faces",
+          })),
+          plates: (this.detections.plates || []).map((detection) => ({
+            ...detection,
+            target: "plates",
+          })),
+          text: (this.detections.text || []).map((detection) => ({
+            ...detection,
+            target: "text",
+          })),
+          pii: (this.detections.pii || []).map((detection) => ({
+            ...detection,
+            target: "pii",
+          })),
         };
-      }
 
       const grouped = {
         faces: [],
@@ -713,13 +686,13 @@ function resultsApp() {
         const frame = frameResult.frame;
         for (const target of ["faces", "plates", "text", "pii"]) {
           const detections = frameResult.detections[target] || [];
-          for (const detection of detections) {
+          for (const detection of detections)
             grouped[target].push({
               ...detection,
+              target,
               frame,
               uniqueId: `${frame}-${detection.id}`,
             });
-          }
         }
       }
 
@@ -772,11 +745,146 @@ function resultsApp() {
       const end = this.formatDuration(detection.end_time);
 
       let result = `${start} → ${end}`;
-
       if (detection.frame_count != null)
         result += ` (${detection.frame_count} frames)`;
 
       return result;
+    },
+    isCropDetection(detection) {
+      const target = detection.target;
+      return (
+        this.fileType === "image" && (target === "faces" || target === "plates")
+      );
+    },
+    async generateDetectionCrops() {
+      if (this.fileType !== "image" || !this.previewUrl) return;
+
+      const detections = [
+        ...this.detectionsFor("faces"),
+        ...this.detectionsFor("plates"),
+      ];
+
+      if (!detections.length) return;
+      const image = new Image();
+
+      await new Promise((resolve, reject) => {
+        image.onload = resolve;
+        image.onerror = reject;
+        image.src = this.previewUrl;
+      });
+
+      for (const detection of detections) {
+        const key = detection.uniqueId || detection.id;
+        try {
+          const cropUrl = await this.createDetectionCrop(image, detection);
+          if (cropUrl) this.cropUrls[key] = cropUrl;
+        } catch (error) {
+          console.error("Failed to create crop:", detection, error);
+        }
+      }
+    },
+    createDetectionCrop(image, detection) {
+      return new Promise((resolve) => {
+        let x1 = Number(detection.x1);
+        let y1 = Number(detection.y1);
+        let x2 = Number(detection.x2);
+        let y2 = Number(detection.y2);
+
+        if (
+          !Number.isFinite(x1) ||
+          !Number.isFinite(y1) ||
+          !Number.isFinite(x2) ||
+          !Number.isFinite(y2)
+        ) {
+          resolve(null);
+          return;
+        }
+
+        const boxWidth = x2 - x1;
+        const boxHeight = y2 - y1;
+
+        if (boxWidth <= 0 || boxHeight <= 0) {
+          resolve(null);
+          return;
+        }
+
+        const padding = 0.6;
+        x1 -= boxWidth * padding;
+        y1 -= boxHeight * padding;
+        x2 += boxWidth * padding;
+        y2 += boxHeight * padding;
+
+        let cropWidth = x2 - x1;
+        let cropHeight = y2 - y1;
+
+        const centerX = (x1 + x2) / 2;
+        const centerY = (y1 + y2) / 2;
+
+        const cropSize = Math.max(cropWidth, cropHeight);
+        x1 = centerX - cropSize / 2;
+        x2 = centerX + cropSize / 2;
+        y1 = centerY - cropSize / 2;
+        y2 = centerY + cropSize / 2;
+
+        if (x1 < 0) {
+          x2 -= x1;
+          x1 = 0;
+        }
+
+        if (y1 < 0) {
+          y2 -= y1;
+          y1 = 0;
+        }
+
+        if (x2 > image.naturalWidth) {
+          const overflow = x2 - image.naturalWidth;
+          x1 -= overflow;
+          x2 = image.naturalWidth;
+        }
+
+        if (y2 > image.naturalHeight) {
+          const overflow = y2 - image.naturalHeight;
+          y1 -= overflow;
+          y2 = image.naturalHeight;
+        }
+
+        x1 = Math.max(0, x1);
+        y1 = Math.max(0, y1);
+        x2 = Math.min(image.naturalWidth, x2);
+        y2 = Math.min(image.naturalHeight, y2);
+
+        cropWidth = x2 - x1;
+        cropHeight = y2 - y1;
+
+        if (cropWidth <= 0 || cropHeight <= 0) {
+          resolve(null);
+          return;
+        }
+
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.round(cropWidth);
+        canvas.height = Math.round(cropHeight);
+
+        const context = canvas.getContext("2d");
+        if (!context) {
+          resolve(null);
+          return;
+        }
+
+        context.drawImage(
+          image,
+          x1,
+          y1,
+          cropWidth,
+          cropHeight,
+          0,
+          0,
+          canvas.width,
+          canvas.height,
+        );
+
+        resolve(canvas.toDataURL("image/jpeg", 0.9));
+      });
     },
     destroy() {
       if (this.previewUrl) URL.revokeObjectURL(this.previewUrl);

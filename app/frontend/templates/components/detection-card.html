@@ -32,6 +32,30 @@
         />
       </svg>
     </div>
+    <template x-if="isCropDetection(detection)">
+      <div
+        class="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg border border-white/10 bg-black/30"
+      >
+        <template x-if="!cropUrls[detection.uniqueId || detection.id]">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div
+              class="h-5 w-5 animate-spin rounded-full border-2 border-white/10 border-t-indigo-400"
+            ></div>
+          </div>
+        </template>
+        <template x-if="cropUrls[detection.uniqueId || detection.id]">
+          <img
+            :src="cropUrls[detection.uniqueId || detection.id]"
+            alt=""
+            class="h-full w-full object-cover"
+            draggable="false"
+          />
+        </template>
+        <div
+          class="pointer-events-none absolute inset-0 rounded-lg ring-1 ring-indigo-400/60"
+        ></div>
+      </div>
+    </template>
     <div class="min-w-0 flex-1">
       <template x-if="detection.text">
         <p
