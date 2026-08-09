@@ -283,7 +283,6 @@ function anonymizeApp() {
       if (previewableImages.includes(extension)) {
         this.fileType = "image";
         this.previewType = "image";
-
         this.previewUrl = URL.createObjectURL(file);
       } else if (videoFormats.includes(extension)) {
         this.fileType = "video";
@@ -414,6 +413,7 @@ function resultsApp() {
     previewUrl: null,
     fileType: null,
     detections: null,
+    selectedDetections: [],
     isLoading: true,
     error: null,
     imageDimensions: null,
@@ -488,7 +488,7 @@ function resultsApp() {
         this.fileType = "video";
         this.previewUrl = URL.createObjectURL(file);
       } else if (documentFormats.includes(extension)) {
-        this.fileType = "pdf";
+        this.fileType = "document";
 
         try {
           const preview = await fetchPreview(file, "document");
@@ -597,6 +597,186 @@ function resultsApp() {
         width: `${width * 100}%`,
         height: `${height * 100}%`,
       };
+    },
+    detectionName(detection) {
+      if (detection.label) return detection.label;
+
+      const target = detection.target || detection.type;
+      const names = {
+        faces: "Face",
+        plates: "License Plate",
+        text: "Text",
+        pii: "Personal Information",
+      };
+
+      return names[target] || "Detection";
+    },
+    detectionTargetLabel(detection) {
+      const target = detection.target || detection.type;
+      const names = {
+        faces: "Face",
+        plates: "Plate",
+        text: "Text",
+        pii: "PII",
+      };
+
+      return names[target] || "Detection";
+    },
+    confidenceLabel(confidence) {
+      if (confidence == null) return "";
+
+      const percentage = `${(confidence * 100).toFixed(1)}%`;
+      if (confidence >= 0.8) return `${percentage} confidence · High`;
+      if (confidence >= 0.5) return `${percentage} confidence · Medium`;
+
+      return `${percentage} confidence · Low`;
+    },
+    confidenceClass(confidence) {
+      if (confidence >= 0.8) return "text-emerald-400";
+      if (confidence >= 0.5) return "text-amber-400";
+
+      return "text-red-400";
+    },
+    // detectionGroups() {
+    //   const empty = {
+    //     faces: [],
+    //     plates: [],
+    //     text: [],
+    //     pii: [],
+    //   };
+
+    //   if (!this.detections) return empty;
+    //   if (!Array.isArray(this.detections))
+    //     return {
+    //       faces: this.detections.faces || [],
+    //       plates: this.detections.plates || [],
+    //       text: this.detections.text || [],
+    //       pii: this.detections.pii || [],
+    //     };
+
+    //   if (
+    //     this.detections.length > 0 &&
+    //     this.detections[0] &&
+    //     typeof this.detections[0] === "object" &&
+    //     !Array.isArray(this.detections[0])
+    //   ) {
+    //     const grouped = this.detections[0];
+    //     if (
+    //       "faces" in grouped ||
+    //       "plates" in grouped ||
+    //       "text" in grouped ||
+    //       "pii" in grouped
+    //     ) {
+    //       return {
+    //         faces: grouped.faces || [],
+    //         plates: grouped.plates || [],
+    //         text: grouped.text || [],
+    //         pii: grouped.pii || [],
+    //       };
+    //     }
+    //   }
+
+    //   return {
+    //     faces: this.detections.filter((d) => d.target === "faces"),
+    //     plates: this.detections.filter((d) => d.target === "plates"),
+    //     text: this.detections.filter((d) => d.target === "text"),
+    //     pii: this.detections.filter((d) => d.target === "pii"),
+    //   };
+    // },
+    detectionGroups() {
+      const empty = {
+        faces: [],
+        plates: [],
+        text: [],
+        pii: [],
+      };
+
+      if (!this.detections) return empty;
+      if (!Array.isArray(this.detections)) {
+        return {
+          faces: this.detections.faces || [],
+          plates: this.detections.plates || [],
+          text: this.detections.text || [],
+          pii: this.detections.pii || [],
+        };
+      }
+
+      const grouped = {
+        faces: [],
+        plates: [],
+        text: [],
+        pii: [],
+      };
+
+      for (const frameResult of this.detections) {
+        if (!frameResult?.detections) continue;
+        const frame = frameResult.frame;
+        for (const target of ["faces", "plates", "text", "pii"]) {
+          const detections = frameResult.detections[target] || [];
+          for (const detection of detections) {
+            grouped[target].push({
+              ...detection,
+              frame,
+              uniqueId: `${frame}-${detection.id}`,
+            });
+          }
+        }
+      }
+
+      return grouped;
+    },
+    detectionsFor(target) {
+      return this.detectionGroups()[target] || [];
+    },
+    totalDetectionCount() {
+      const groups = this.detectionGroups();
+      return (
+        groups.faces.length +
+        groups.plates.length +
+        groups.text.length +
+        groups.pii.length
+      );
+    },
+    isDetectionSelected(detection) {
+      return this.selectedDetections.some((item) => item.id === detection.id);
+    },
+    toggleDetection(detection) {
+      const index = this.selectedDetections.findIndex(
+        (item) => item.id === detection.id,
+      );
+
+      if (index === -1) this.selectedDetections.push(detection);
+      else this.selectedDetections.splice(index, 1);
+    },
+    allDetections() {
+      const groups = this.detectionGroups();
+      return [...groups.faces, ...groups.plates, ...groups.text, ...groups.pii];
+    },
+    allDetectionsSelected() {
+      const all = this.allDetections();
+      return (
+        all.length > 0 &&
+        all.every((detection) => this.isDetectionSelected(detection))
+      );
+    },
+    toggleSelectAll() {
+      if (this.allDetectionsSelected()) {
+        this.selectedDetections = [];
+        return;
+      }
+
+      this.selectedDetections = [...this.allDetections()];
+    },
+    formatDetectionTimeRange(detection) {
+      const start = this.formatDuration(detection.start_time);
+      const end = this.formatDuration(detection.end_time);
+
+      let result = `${start} → ${end}`;
+
+      if (detection.frame_count != null)
+        result += ` (${detection.frame_count} frames)`;
+
+      return result;
     },
     destroy() {
       if (this.previewUrl) URL.revokeObjectURL(this.previewUrl);

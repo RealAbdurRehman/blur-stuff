@@ -1,0 +1,147 @@
+<div class="overflow-hidden rounded-2xl border border-white/10 bg-[#080b10]">
+  <div class="flex border-b border-white/10">
+    <button
+      type="button"
+      class="relative flex-1 px-4 py-4 text-xs font-medium text-white cursor-pointer"
+    >
+      Detections
+      <span
+        class="ml-1.5 rounded-md bg-indigo-500/15 px-1.5 py-0.5 text-[10px] text-indigo-300"
+        x-text="totalDetectionCount()"
+      ></span>
+      <span class="absolute inset-x-0 bottom-0 h-px bg-indigo-500"></span>
+    </button>
+  </div>
+  <div class="max-h-[calc(100vh-13rem)] overflow-y-auto p-3">
+    <div
+      class="flex items-center justify-between border-b border-white/5 px-3 py-3"
+    >
+      <span class="text-xs text-zinc-500">
+        <span x-text="totalDetectionCount()"></span>
+        detections found
+      </span>
+      <button
+        type="button"
+        class="text-xs font-medium text-indigo-400 transition hover:text-indigo-300 cursor-pointer"
+        @click="toggleSelectAll()"
+        x-text="allDetectionsSelected() ? 'Clear all' : 'Select all'"
+      ></button>
+    </div>
+    <template x-if="detectionsFor('faces').length">
+      <div class="mb-3">
+        <div class="mb-2 flex items-center justify-between px-2 py-1">
+          <div class="flex items-center gap-2">
+            <div
+              class="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-300"
+            >
+              <span class="[&>svg]:h-5 [&>svg]:w-5"
+                >{% include "components/icons/scan.svg" %}</span
+              >
+            </div>
+            <span class="text-xs font-medium text-white"> Faces </span>
+          </div>
+          <span
+            class="rounded-md bg-white/5 px-1.5 py-0.5 text-[10px] text-zinc-400"
+            x-text="detectionsFor('faces').length"
+          ></span>
+        </div>
+        <div class="space-y-2">
+          <template
+            x-for="detection in detectionsFor('faces')"
+            :key="detection.uniqueId || detection.id"
+          >
+            {% include "components/detection-card.html" %}
+          </template>
+        </div>
+      </div>
+    </template>
+    <template x-if="detectionsFor('plates').length">
+      <div class="mb-3 border-t border-white/5 pt-3">
+        <div class="mb-2 flex items-center justify-between px-2 py-1">
+          <div class="flex items-center gap-2">
+            <div
+              class="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-300"
+            >
+              <span class="[&>svg]:h-5 [&>svg]:w-5"
+                >{% include "components/icons/car.svg" %}</span
+              >
+            </div>
+            <span class="text-xs font-medium text-white"> License Plates </span>
+          </div>
+          <span
+            class="rounded-md bg-white/5 px-1.5 py-0.5 text-[10px] text-zinc-400"
+            x-text="detectionsFor('plates').length"
+          ></span>
+        </div>
+        <div class="space-y-2">
+          <template
+            x-for="detection in detectionsFor('plates')"
+            :key="detection.uniqueId || detection.id"
+          >
+            {% include "components/detection-card.html" %}
+          </template>
+        </div>
+      </div>
+    </template>
+    <template x-if="detectionsFor('text').length">
+      <div class="mb-3 border-t border-white/5 pt-3">
+        <div class="mb-2 flex items-center justify-between px-2 py-1">
+          <div class="flex items-center gap-2">
+            <div
+              class="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-300"
+            >
+              <span class="[&>svg]:h-5 [&>svg]:w-5"
+                >{% include "components/icons/text.svg" %}</span
+              >
+            </div>
+
+            <span class="text-xs font-medium text-white"> Text </span>
+          </div>
+          <span
+            class="rounded-md bg-white/5 px-1.5 py-0.5 text-[10px] text-zinc-400"
+            x-text="detectionsFor('text').length"
+          ></span>
+        </div>
+        <div class="space-y-2">
+          <template
+            x-for="detection in detectionsFor('text')"
+            :key="detection.uniqueId || detection.id"
+          >
+            {% include "components/detection-card.html" %}
+          </template>
+        </div>
+      </div>
+    </template>
+    <template x-if="detectionsFor('pii').length">
+      <div class="border-t border-white/5 pt-3">
+        <div class="mb-2 flex items-center justify-between px-2 py-1">
+          <div class="flex items-center gap-2">
+            <div
+              class="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-300"
+            >
+              <span class="[&>svg]:h-5 [&>svg]:w-5"
+                >{% include "components/icons/pii.svg" %}</span
+              >
+            </div>
+
+            <span class="text-xs font-medium text-white">
+              Personal Information
+            </span>
+          </div>
+          <span
+            class="rounded-md bg-white/5 px-1.5 py-0.5 text-[10px] text-zinc-400"
+            x-text="detectionsFor('pii').length"
+          ></span>
+        </div>
+        <div class="space-y-2">
+          <template
+            x-for="detection in detectionsFor('pii')"
+            :key="detection.uniqueId || detection.id"
+          >
+            {% include "components/detection-card.html" %}
+          </template>
+        </div>
+      </div>
+    </template>
+  </div>
+</div>

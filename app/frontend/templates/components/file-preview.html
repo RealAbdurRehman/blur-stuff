@@ -133,7 +133,7 @@
               ></p>
             </div>
           </template>
-          <template x-if="file && previewType === 'image'">
+          <template x-if="file && !isPreviewLoading && previewType === 'image'">
             <div class="aspect-video bg-black">
               <img
                 :src="previewUrl"
@@ -142,7 +142,7 @@
               />
             </div>
           </template>
-          <template x-if="file && previewType === 'video'">
+          <template x-if="file && !isPreviewLoading && previewType === 'video'">
             <div class="aspect-video bg-black">
               <video
                 :src="previewUrl"
@@ -151,7 +151,7 @@
               ></video>
             </div>
           </template>
-          <template x-if="file && previewType === 'pdf'">
+          <template x-if="file && !isPreviewLoading && previewType === 'pdf'">
             <div class="aspect-video bg-zinc-950">
               <iframe
                 :src="previewUrl"
@@ -160,7 +160,7 @@
               ></iframe>
             </div>
           </template>
-          <template x-if="file && previewType === 'file'">
+          <template x-if="file && !isPreviewLoading && previewType === 'file'">
             <div
               class="flex aspect-video flex-col items-center justify-center bg-black/20"
             >

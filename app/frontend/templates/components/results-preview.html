@@ -52,35 +52,6 @@
         </div>
       </div>
     </template>
-    <!-- <template x-if="!isLoading && fileType === 'image'">
-      <div class="relative aspect-video bg-black">
-        <img
-          :src="previewUrl"
-          :alt="file?.name"
-          class="h-full w-full object-contain"
-          @load="handleImageLoad($event)"
-        />
-        <div
-          x-show="showDetections"
-          class="pointer-events-none absolute inset-0"
-        >
-          <template
-            x-for="detection in visibleDetections()"
-            :key="detection.id"
-          >
-            <div
-              class="absolute border-2 border-indigo-400"
-              :style="boxStyle(detection)"
-            >
-              <span
-                class="absolute -top-6 left-0 rounded-md bg-indigo-500 px-1.5 py-0.5 text-[10px] font-medium text-white"
-                x-text="detection.label"
-              ></span>
-            </div>
-          </template>
-        </div>
-      </div>
-    </template> -->
     <template x-if="!isLoading && fileType === 'image'">
       <div class="relative aspect-video bg-black">
         <div class="relative h-full w-full">
@@ -124,7 +95,7 @@
         ></video>
       </div>
     </template>
-    <template x-if="!isLoading && fileType === 'pdf'">
+    <template x-if="!isLoading && fileType === 'document'">
       <div class="aspect-video bg-zinc-950">
         <iframe
           :src="previewUrl"
@@ -133,25 +104,6 @@
         ></iframe>
       </div>
     </template>
-    <!-- <template x-if="!isLoading && fileType === 'document'">
-      <div
-        class="flex aspect-video flex-col items-center justify-center bg-black/20"
-      >
-        <div
-          class="flex h-20 w-20 items-center justify-center rounded-2xl border border-white/10 bg-white/3"
-        >
-          {% include "components/icons/file.svg" %}
-        </div>
-        <p
-          class="mt-5 max-w-sm truncate text-sm font-medium text-white"
-          x-text="file?.name"
-        ></p>
-        <p class="mt-1 text-xs text-zinc-500" x-text="fileTypeLabel()"></p>
-        <p class="mt-3 text-xs text-zinc-600">
-          Document preview is not available for this format.
-        </p>
-      </div>
-    </template> -->
     <template x-if="!isLoading && !file">
       <div class="flex aspect-video flex-col items-center justify-center">
         <p class="text-sm text-zinc-500">No file available</p>

@@ -13,9 +13,9 @@ Customize - Blur Stuff {% endblock %} {% set upload_button_text = "New Upload"
       Review detected content in your file. Select what you want to anonymize.
     </p>
   </div>
-  <div class="grid items-start gap-5">
-    <div class="min-w-0">{# include "components/detection-panel.html" #}</div>
+  <div class="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_360px]">
     <div class="min-w-0">{% include "components/results-preview.html" %}</div>
+    <div class="min-w-0">{% include "components/detection-panel.html" %}</div>
     <div class="min-w-0">
       {# include "components/anonymization-settings.html" #}
     </div>

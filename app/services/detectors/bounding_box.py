@@ -9,6 +9,7 @@ class BoundingBox:
     y2: float
     confidence: float
     id: str | None = field(default=None, kw_only=True)
+    text: str | None = field(default=None, kw_only=True)
 
     @property
     def width(self):
