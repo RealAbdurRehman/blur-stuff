@@ -22,11 +22,19 @@ ID_PREFIXES = {
 }
 
 
-def assign_detection_ids(results):
+def assign_detection_ids(results, counters=None):
+    if counters is None:
+        counters = {}
+
     for target, items in results.items():
         prefix = ID_PREFIXES[target]
-        for i, item in enumerate(items, start=1):
-            item.id = f"{prefix}_{i}"
+        counters.setdefault(target, 0)
+
+        for item in items:
+            counters[target] += 1
+            item.id = f"{prefix}_{counters[target]}"
+
+    return counters
 
 
 def detect(image, targets, assign_ids=True):

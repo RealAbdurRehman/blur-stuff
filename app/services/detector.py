@@ -1,4 +1,4 @@
-from .pipeline import detect
+from .pipeline import detect, assign_detection_ids
 from .processor import process_frame
 from .video_state import VideoState
 
@@ -21,4 +21,11 @@ def detect_video(video, targets):
 
 
 def detect_document(document, targets):
-    return [detect(page.image, targets) for page in document]
+    results = []
+    counters = {}
+    for page in document:
+        detections = detect(page.image, targets, assign_ids=False)
+        assign_detection_ids(detections, counters)
+        results.append({**detections, "page": page.number})
+
+    return results
