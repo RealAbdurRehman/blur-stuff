@@ -50,3 +50,21 @@ def get_mode(request):
         )
 
     return mode
+
+
+DEFAULT_PADDING = 0.2
+MIN_PADDING = 0.0
+MAX_PADDING = 1.0
+
+
+def get_padding(request):
+    value = request.args.get("padding", type=float)
+    if value is None:
+        return DEFAULT_PADDING
+
+    if not MIN_PADDING <= value <= MAX_PADDING:
+        raise ValidationError(
+            f"Padding must be between {MIN_PADDING} and {MAX_PADDING}"
+        )
+
+    return value

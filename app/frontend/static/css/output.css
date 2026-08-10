@@ -369,6 +369,9 @@
   .mx-auto {
     margin-inline: auto;
   }
+  .my-5 {
+    margin-block: calc(var(--spacing) * 5);
+  }
   .mt-0\.5 {
     margin-top: calc(var(--spacing) * 0.5);
   }
@@ -458,6 +461,9 @@
   }
   .h-1 {
     height: var(--spacing);
+  }
+  .h-1\.5 {
+    height: calc(var(--spacing) * 1.5);
   }
   .h-2\.5 {
     height: calc(var(--spacing) * 2.5);
@@ -554,6 +560,9 @@
   }
   .w-1 {
     width: var(--spacing);
+  }
+  .w-1\.5 {
+    width: calc(var(--spacing) * 1.5);
   }
   .w-2\.5 {
     width: calc(var(--spacing) * 2.5);
@@ -739,6 +748,12 @@
   .cursor-pointer {
     cursor: pointer;
   }
+  .appearance-none {
+    appearance: none;
+  }
+  .grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
   .grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -774,6 +789,9 @@
   }
   .gap-2 {
     gap: calc(var(--spacing) * 2);
+  }
+  .gap-2\.5 {
+    gap: calc(var(--spacing) * 2.5);
   }
   .gap-3 {
     gap: calc(var(--spacing) * 3);
@@ -959,6 +977,12 @@
       border-color: color-mix(in oklab, var(--color-indigo-400) 70%, transparent);
     }
   }
+  .border-indigo-500\/20 {
+    border-color: color-mix(in srgb, oklch(58.5% 0.233 277.117) 20%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      border-color: color-mix(in oklab, var(--color-indigo-500) 20%, transparent);
+    }
+  }
   .border-indigo-500\/60 {
     border-color: color-mix(in srgb, oklch(58.5% 0.233 277.117) 60%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
@@ -1057,6 +1081,12 @@
   }
   .bg-black {
     background-color: var(--color-black);
+  }
+  .bg-black\/10 {
+    background-color: color-mix(in srgb, #000 10%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-black) 10%, transparent);
+    }
   }
   .bg-black\/20 {
     background-color: color-mix(in srgb, #000 20%, transparent);
@@ -1375,6 +1405,9 @@
   .p-3 {
     padding: calc(var(--spacing) * 3);
   }
+  .p-3\.5 {
+    padding: calc(var(--spacing) * 3.5);
+  }
   .p-4 {
     padding: calc(var(--spacing) * 4);
   }
@@ -1392,6 +1425,9 @@
   }
   .px-2 {
     padding-inline: calc(var(--spacing) * 2);
+  }
+  .px-2\.5 {
+    padding-inline: calc(var(--spacing) * 2.5);
   }
   .px-3 {
     padding-inline: calc(var(--spacing) * 3);
@@ -1416,6 +1452,9 @@
   }
   .py-1 {
     padding-block: var(--spacing);
+  }
+  .py-1\.5 {
+    padding-block: calc(var(--spacing) * 1.5);
   }
   .py-2 {
     padding-block: calc(var(--spacing) * 2);
@@ -1522,8 +1561,17 @@
   .text-\[10px\] {
     font-size: 10px;
   }
+  .text-\[11px\] {
+    font-size: 11px;
+  }
   .text-\[12px\] {
     font-size: 12px;
+  }
+  .text-\[13px\] {
+    font-size: 13px;
+  }
+  .text-\[14px\] {
+    font-size: 14px;
   }
   .leading-5 {
     --tw-leading: calc(var(--spacing) * 5);
@@ -1647,6 +1695,9 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+  .accent-indigo-500 {
+    accent-color: var(--color-indigo-500);
+  }
   .opacity-0 {
     opacity: 0%;
   }
@@ -1712,6 +1763,10 @@
   }
   .shadow-\[0_0_80px_rgba\(99\,102\,241\,0\.15\)\] {
     --tw-shadow: 0 0 80px var(--tw-shadow-color, rgba(99,102,241,0.15));
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+  .shadow-\[0_20px_60px_rgba\(0\,0\,0\,0\.18\)\] {
+    --tw-shadow: 0 20px 60px var(--tw-shadow-color, rgba(0,0,0,0.18));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
   .shadow-\[inset_0_0_80px_rgba\(99\,102\,241\,0\.08\)\,0_0_30px_rgba\(99\,102\,241\,0\.10\)\] {
@@ -2172,6 +2227,18 @@
   }
   .\[\&\>svg\]\:h-15 > svg {
     height: calc(var(--spacing) * 15);
+  }
+  .\[\&\>svg\]\:w-2 > svg {
+    width: calc(var(--spacing) * 2);
+  }
+  .\[\&\>svg\]\:w-3 > svg {
+    width: calc(var(--spacing) * 3);
+  }
+  .\[\&\>svg\]\:w-3\.5 > svg {
+    width: calc(var(--spacing) * 3.5);
+  }
+  .\[\&\>svg\]\:w-4 > svg {
+    width: calc(var(--spacing) * 4);
   }
   .\[\&\>svg\]\:w-5 > svg {
     width: calc(var(--spacing) * 5);

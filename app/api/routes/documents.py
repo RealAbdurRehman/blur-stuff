@@ -3,7 +3,7 @@ from pathlib import Path
 from flask import Blueprint, Response, request, jsonify
 
 from app.media.types import DOCUMENT_FORMATS
-from app.services.validate import validate_upload, get_targets, get_mode
+from app.services.validate import validate_upload, get_targets, get_mode, get_padding
 from app.services.converter import to_pdf
 from app.services.decoder import decode_pdf
 from app.services.encoder import encode_pdf, encode_page_image
@@ -107,7 +107,8 @@ def documents():
 
         targets = get_targets(request)
         mode = get_mode(request)
-        processed = handlers["anonymizer"](document, targets, mode)
+        padding = get_padding(request)
+        processed = handlers["anonymizer"](document, targets, mode, padding)
     except ValidationError as err:
         return jsonify({"error": str(err)}), 400
     except RuntimeError as err:

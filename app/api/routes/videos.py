@@ -1,7 +1,7 @@
 from flask import Blueprint, Response, request, jsonify
 
 from app.media.types import VIDEO_FORMATS
-from app.services.validate import validate_upload, get_targets, get_mode
+from app.services.validate import validate_upload, get_targets, get_mode, get_padding
 from app.services.decoder import decode_video
 from app.services.encoder import encode_video
 from app.services.anonymizer import anonymize_video
@@ -40,7 +40,8 @@ def videos():
 
         targets = get_targets(request)
         mode = get_mode(request)
-        processed = anonymize_video(video, targets, mode)
+        padding = get_padding(request)
+        processed = anonymize_video(video, targets, mode, padding)
     except ValidationError as err:
         return jsonify({"error": str(err)}), 400
     except RuntimeError as err:

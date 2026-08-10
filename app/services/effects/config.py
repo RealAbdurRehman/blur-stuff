@@ -22,9 +22,12 @@ MODE_OVERRIDES = {
 }
 
 
-def get_effect_config(mode, target):
+def get_effect_config(mode, target, padding=None):
     config = ANONYMIZATION_CONFIG[target].copy()
     override = MODE_OVERRIDES.get(mode, {}).get(target, {})
     config.update(override)
+
+    if padding is not None:
+        config["padding"] = padding
 
     return config

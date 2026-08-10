@@ -2,7 +2,7 @@ from pathlib import Path
 from flask import Blueprint, Response, request, jsonify
 
 from app.media.types import IMAGE_FORMATS
-from app.services.validate import validate_upload, get_targets, get_mode
+from app.services.validate import validate_upload, get_targets, get_mode, get_padding
 from app.services.decoder import decode_image
 from app.services.encoder import encode_image, encode_preview
 from app.services.anonymizer import anonymize_image
@@ -61,7 +61,8 @@ def images():
 
         targets = get_targets(request)
         mode = get_mode(request)
-        processed = anonymize_image(media, targets, mode)
+        padding = get_padding(request)
+        processed = anonymize_image(media, targets, mode, padding)
     except ValidationError as err:
         return jsonify({"error": str(err)}), 400
     except RuntimeError as err:

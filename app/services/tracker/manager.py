@@ -21,11 +21,11 @@ class TrackerManager:
         self.objects = []
         self.ids = count(1)
 
-    def initialize(self, frame, detections, mode):
+    def initialize(self, frame, detections, mode, padding=None):
         new_objects = []
         available = self.objects.copy()
         for target, boxes in detections.items():
-            config = get_effect_config(mode, target)
+            config = get_effect_config(mode, target, padding)
             for box in boxes:
                 tracked = self.find_match(available, box, target)
 
