@@ -1,0 +1,80 @@
+<div
+  x-data
+  class="pointer-events-none fixed inset-x-4 bottom-4 z-100 sm:left-auto sm:w-105"
+>
+  <div class="relative flex flex-col items-end gap-3">
+    <template
+      x-for="notification in $store.notifications.items"
+      :key="notification.id"
+    >
+      <div
+        x-show="notification.visible"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="translate-y-3 opacity-0 scale-95"
+        x-transition:enter-end="translate-y-0 opacity-100 scale-100"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="translate-y-0 opacity-100 scale-100"
+        x-transition:leave-end="translate-y-2 opacity-0 scale-95"
+        x-collapse.duration.200ms
+        class="pointer-events-auto w-full overflow-hidden rounded-2xl border border-white/10 bg-[#111418]/95 shadow-2xl shadow-black/30 backdrop-blur-xl"
+      >
+        <div class="flex items-start gap-3 p-4">
+          <div
+            class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"
+            :class="{
+                  'bg-red-500/10 text-red-400': notification.type === 'error',
+                  'bg-emerald-500/10 text-emerald-400': notification.type === 'success',
+                  'bg-amber-500/10 text-amber-400': notification.type === 'warning',
+                  'bg-blue-500/10 text-blue-400': notification.type === 'info'
+                }"
+          >
+            <template x-if="notification.type === 'error'">
+              <span>{% include "components/icons/alert.svg" %}</span>
+            </template>
+            <template x-if="notification.type === 'success'">
+              <span>{% include "components/icons/success.svg" %}</span>
+            </template>
+            <template x-if="notification.type === 'warning'">
+              <span>{% include "components/icons/close.svg" %}</span>
+            </template>
+            <template x-if="notification.type === 'info'">
+              <span>{% include "components/icons/info.svg" %}</span>
+            </template>
+          </div>
+          <div class="min-w-0 flex-1">
+            <p
+              class="text-sm font-medium"
+              :class="{
+                    'text-red-300': notification.type === 'error',
+                    'text-emerald-300': notification.type === 'success',
+                    'text-amber-300': notification.type === 'warning',
+                    'text-blue-300': notification.type === 'info'
+                  }"
+              x-text="
+                    notification.type === 'error'
+                      ? 'Something went wrong'
+                      : notification.type === 'success'
+                        ? 'Success'
+                        : notification.type === 'warning'
+                          ? 'Warning'
+                          : 'Information'
+                  "
+            ></p>
+            <p
+              class="mt-1 text-sm leading-5 text-zinc-400"
+              x-text="notification.message"
+            ></p>
+          </div>
+          <button
+            type="button"
+            @click="$store.notifications.remove(notification.id)"
+            class="shrink-0 cursor-pointer text-zinc-600 transition hover:text-zinc-300"
+            aria-label="Dismiss notification"
+          >
+            {% include "components/icons/close.svg" %}
+          </button>
+        </div>
+      </div>
+    </template>
+  </div>
+</div>

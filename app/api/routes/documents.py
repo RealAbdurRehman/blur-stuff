@@ -89,11 +89,11 @@ def page_preview():
 def detect():
     try:
         _, document, _, _ = load_document()
+
+        targets = get_targets(request)
+        detections = detect_document(document, targets)
     except ValidationError as err:
         return jsonify({"error": str(err)}), 400
-
-    try:
-        detections = detect_document(document, get_targets(request))
     except RuntimeError as err:
         return jsonify({"error": str(err)}), 503
 
@@ -104,13 +104,12 @@ def detect():
 def documents():
     try:
         file, document, handlers, extension = load_document()
+
+        targets = get_targets(request)
+        mode = get_mode(request)
+        processed = handlers["anonymizer"](document, targets, mode)
     except ValidationError as err:
         return jsonify({"error": str(err)}), 400
-
-    try:
-        processed = handlers["anonymizer"](
-            document, get_targets(request), get_mode(request)
-        )
     except RuntimeError as err:
         return jsonify({"error": str(err)}), 503
 

@@ -43,11 +43,11 @@ def preview():
 def detections():
     try:
         _, media = load_image()
+
+        targets = get_targets(request)
+        detections = detect_image(media.image, targets)
     except ValidationError as err:
         return jsonify({"error": str(err)}), 400
-
-    try:
-        detections = detect_image(media.image, get_targets(request))
     except RuntimeError as err:
         return jsonify({"error": str(err)}), 503
 
@@ -58,11 +58,12 @@ def detections():
 def images():
     try:
         file, media = load_image()
+
+        targets = get_targets(request)
+        mode = get_mode(request)
+        processed = anonymize_image(media, targets, mode)
     except ValidationError as err:
         return jsonify({"error": str(err)}), 400
-
-    try:
-        processed = anonymize_image(media, get_targets(request), get_mode(request))
     except RuntimeError as err:
         return jsonify({"error": str(err)}), 503
 

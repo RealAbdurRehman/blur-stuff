@@ -1,5 +1,60 @@
 const API_BASE = "/api/v1";
 
+document.addEventListener("alpine:init", () => {
+  Alpine.store("notifications", {
+    items: [],
+    show(message, type = "error", duration = 5000) {
+      const id = Date.now() + Math.random();
+      this.items.push({
+        id,
+        message,
+        type,
+        visible: false,
+      });
+
+      requestAnimationFrame(() => {
+        const notification = this.items.find((item) => item.id === id);
+        if (notification) notification.visible = true;
+      });
+
+      if (duration > 0) setTimeout(() => this.remove(id), duration);
+    },
+    success(message, duration = 4000) {
+      this.show(message, "success", duration);
+    },
+    error(message, duration = 4000) {
+      this.show(message, "error", duration);
+    },
+    warning(message, duration = 4000) {
+      this.show(message, "warning", duration);
+    },
+    info(message, duration = 4000) {
+      this.show(message, "info", duration);
+    },
+    remove(id) {
+      const notification = this.items.find((item) => item.id === id);
+      if (!notification || !notification.visible) return;
+      notification.visible = false;
+    },
+    clear() {
+      this.items = [];
+    },
+  });
+});
+
+function getErrorMessage(error, fallback = "Something went wrong.") {
+  if (error instanceof Error && error.message) return error.message;
+  return fallback;
+}
+
+function notifyError(error, fallback = "Something went wrong.") {
+  console.error(error);
+  const message = getErrorMessage(error, fallback);
+
+  Alpine.store("notifications").error(message);
+  return message;
+}
+
 async function fetchPreview(file, fileType) {
   let endpoint;
 
@@ -182,7 +237,7 @@ function uploadBox() {
         await storeUploadedFile(file);
         window.location.href = "/detect";
       } catch (error) {
-        console.error("Failed to store file:", error);
+        notifyError(error, "Failed to upload the file.");
       }
     },
   };
@@ -222,7 +277,10 @@ function anonymizeApp() {
 
         await this.setFile(storedFile.file);
       } catch (error) {
-        console.error("Failed to load uploaded file:", error);
+        this.detectionError = notifyError(
+          error,
+          "Failed to load the uploaded file.",
+        );
       }
     },
     async handleFile(event) {
@@ -238,8 +296,7 @@ function anonymizeApp() {
         this.detections = null;
         this.detectionError = null;
       } catch (error) {
-        console.error("Failed to store file:", error);
-        this.detectionError = "Failed to prepare the file.";
+        this.detectionError = notifyError(error, "Failed to prepare the file.");
       }
     },
     async handleDrop(event) {
@@ -255,8 +312,7 @@ function anonymizeApp() {
         this.detections = null;
         this.detectionError = null;
       } catch (error) {
-        console.error("Failed to store file:", error);
-        this.detectionError = "Failed to prepare the file.";
+        this.detectionError = notifyError(error, "Failed to prepare the file.");
       }
     },
     async setFile(file) {
@@ -298,9 +354,11 @@ function anonymizeApp() {
           const preview = await fetchPreview(file, "image");
           this.previewUrl = preview.url;
         } catch (error) {
-          console.error("Failed to generate image preview:", error);
           this.previewType = "file";
-          this.detectionError = "Failed to generate a preview.";
+          this.detectionError = notifyError(
+            error,
+            "Failed to generate an image preview.",
+          );
         } finally {
           this.isPreviewLoading = false;
         }
@@ -313,9 +371,11 @@ function anonymizeApp() {
           const preview = await fetchPreview(file, "document");
           this.previewUrl = preview.url;
         } catch (error) {
-          console.error("Failed to generate document preview:", error);
           this.previewType = "file";
-          this.detectionError = "Failed to generate a document preview.";
+          this.detectionError = notifyError(
+            error,
+            "Failed to generate a document preview.",
+          );
         } finally {
           this.isPreviewLoading = false;
         }
@@ -356,6 +416,28 @@ function anonymizeApp() {
 
       return null;
     },
+    hasDetections(detections) {
+      if (!detections) return false;
+      if (Array.isArray(detections)) {
+        return detections.some((result) => {
+          if (!result) return false;
+          if (result.detections)
+            return Object.values(result.detections).some(
+              (items) => Array.isArray(items) && items.length > 0,
+            );
+
+          return ["faces", "plates", "text", "pii"].some(
+            (target) =>
+              Array.isArray(result[target]) && result[target].length > 0,
+          );
+        });
+      }
+
+      return ["faces", "plates", "text", "pii"].some(
+        (target) =>
+          Array.isArray(detections[target]) && detections[target].length > 0,
+      );
+    },
     async detect() {
       if (!this.canDetect()) return;
 
@@ -395,11 +477,20 @@ function anonymizeApp() {
           );
 
         await storeDetectionResult(data);
+        const hasDetections = this.hasDetections(data);
+        if (!hasDetections) {
+          Alpine.store("notifications").info(
+            "No sensitive content was detected in this file.",
+          );
+          return;
+        }
+
         window.location.href = "/results";
       } catch (error) {
-        console.error("Detection failed:", error);
-        this.detectionError =
-          error.message || "Something went wrong while detecting the file.";
+        this.detectionError = notifyError(
+          error,
+          "Something went wrong while detecting the file.",
+        );
       } finally {
         this.isDetecting = false;
       }
@@ -431,6 +522,10 @@ function resultsApp() {
           this.error = "No file found.";
           this.isLoading = false;
 
+          Alpine.store("notifications").warning(
+            "Your uploaded file could not be found. Please select it again.",
+          );
+
           window.location.replace("/detect");
           return;
         }
@@ -444,8 +539,7 @@ function resultsApp() {
         if (this.fileType === "document")
           await this.generateDocumentDetectionCrops();
       } catch (error) {
-        console.error("Failed to load results:", error);
-        this.error = "Failed to load the file.";
+        this.error = notifyError(error, "Failed to load the results.");
       } finally {
         this.isLoading = false;
       }
@@ -489,8 +583,10 @@ function resultsApp() {
             const preview = await fetchPreview(file, "image");
             this.previewUrl = preview.url;
           } catch (error) {
-            console.error("Failed to generate image preview:", error);
-            this.error = "Failed to generate image preview.";
+            this.error = notifyError(
+              error,
+              "Failed to generate image preview.",
+            );
           }
         }
       } else if (videoFormats.includes(extension)) {
@@ -503,8 +599,10 @@ function resultsApp() {
           const preview = await fetchPreview(file, "document");
           this.previewUrl = preview.url;
         } catch (error) {
-          console.error("Failed to generate document preview:", error);
-          this.error = "Failed to generate document preview.";
+          this.error = notifyError(
+            error,
+            "Failed to generate document preview.",
+          );
         }
       } else if (file.type.startsWith("image/")) {
         this.fileType = "image";
@@ -513,8 +611,7 @@ function resultsApp() {
           const preview = await fetchPreview(file, "image");
           this.previewUrl = preview.url;
         } catch (error) {
-          console.error("Failed to generate image preview:", error);
-          this.error = "Failed to generate image preview.";
+          this.error = notifyError(error, "Failed to generate image preview.");
         }
       } else {
         this.fileType = "document";
@@ -523,8 +620,10 @@ function resultsApp() {
           const preview = await fetchPreview(file, "document");
           this.previewUrl = preview.url;
         } catch (error) {
-          console.error("Failed to generate document preview:", error);
-          this.error = "Failed to generate document preview.";
+          this.error = notifyError(
+            error,
+            "Failed to generate document preview.",
+          );
         }
       }
     },
@@ -588,8 +687,7 @@ function resultsApp() {
 
         window.location.href = "/detect";
       } catch (error) {
-        console.error("Failed to replace file:", error);
-        this.error = "Failed to replace the file.";
+        this.error = notifyError(error, "Failed to replace the file.");
       }
     },
     visibleDetections() {
@@ -611,7 +709,7 @@ function resultsApp() {
       };
     },
     detectionName(detection) {
-      if (detection.label) return detection.label;
+      if (detection.text) return detection.text;
 
       const target = detection.target || detection.type;
       const names = {
@@ -621,7 +719,14 @@ function resultsApp() {
         pii: "Personal Information",
       };
 
-      return names[target] || "Detection";
+      const name = names[target] || "Detection";
+      const detectionId = detection.uniqueId || detection.id;
+      const detections = this.detectionsFor(target);
+      const index = detections.findIndex(
+        (item) => (item.uniqueId || item.id) === detectionId,
+      );
+
+      return index >= 0 ? `${name} ${index + 1}` : name;
     },
     detectionTargetLabel(detection) {
       const target = detection.target || detection.type;
@@ -824,15 +929,14 @@ function resultsApp() {
       );
 
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error(
-          `Document page preview failed (${response.status}):`,
-          errorText,
-        );
+        let message = `Failed to load page ${page}.`;
 
-        throw new Error(
-          `Failed to load page ${page} (${response.status}): ${errorText}`,
-        );
+        try {
+          const data = await response.json();
+          message = data.error || message;
+        } catch {}
+
+        throw new Error(message);
       }
 
       const blob = await response.blob();
@@ -873,7 +977,7 @@ function resultsApp() {
 
           this.documentPages[page] = pageImage;
         } catch (error) {
-          console.error(`Failed to load document page ${page}:`, error);
+          notifyError(error, `Failed to load document page ${page}.`);
         }
       }
 

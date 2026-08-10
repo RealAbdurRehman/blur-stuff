@@ -23,7 +23,11 @@
     />
     <script
       defer
-      src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js"
+      src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"
+    ></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
     ></script>
     {% block head %}{% endblock %}
   </head>
@@ -33,7 +37,7 @@
     {% include "components/header.html" %}
     <main>{% block content %}{% endblock %}</main>
     {% block footer %} {% include "components/footer.html" %} {% endblock %} {%
-    block scripts %}{% endblock %}
+    include "components/notifications.html" %} {% block scripts %}{% endblock %}
     <script src="{{ url_for('frontend.static', filename='js/app.js') }}"></script>
   </body>
 </html>

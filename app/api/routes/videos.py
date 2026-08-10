@@ -22,11 +22,11 @@ def load_video():
 def detections():
     try:
         _, video = load_video()
+
+        targets = get_targets(request)
+        detections = detect_video(video, targets)
     except ValidationError as err:
         return jsonify({"error": str(err)}), 400
-
-    try:
-        detections = detect_video(video, get_targets(request))
     except RuntimeError as err:
         return jsonify({"error": str(err)}), 503
 
@@ -37,11 +37,12 @@ def detections():
 def videos():
     try:
         file, video = load_video()
+
+        targets = get_targets(request)
+        mode = get_mode(request)
+        processed = anonymize_video(video, targets, mode)
     except ValidationError as err:
         return jsonify({"error": str(err)}), 400
-
-    try:
-        processed = anonymize_video(video, get_targets(request), get_mode(request))
     except RuntimeError as err:
         return jsonify({"error": str(err)}), 503
 
