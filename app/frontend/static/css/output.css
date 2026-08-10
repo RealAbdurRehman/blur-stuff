@@ -556,6 +556,9 @@
   .w-200 {
     width: calc(var(--spacing) * 200);
   }
+  .w-fit {
+    width: fit-content;
+  }
   .w-full {
     width: 100%;
   }

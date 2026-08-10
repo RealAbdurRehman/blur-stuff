@@ -49,3 +49,14 @@ def encode_preview(media):
 
     image.save(output, format="PNG")
     return output.getvalue()
+
+
+def encode_page_image(image, extension=".png"):
+    if not cv2.haveImageWriter(f"dummy{extension}"):
+        raise ValidationError("Unsupported image format")
+
+    success, encoded = cv2.imencode(extension, image)
+    if not success:
+        raise EncodingError("Could not encode page image")
+
+    return encoded.tobytes()

@@ -414,6 +414,7 @@ function resultsApp() {
     fileType: null,
     detections: null,
     cropUrls: {},
+    documentPages: {},
     selectedDetections: [],
     isLoading: true,
     error: null,
@@ -439,6 +440,8 @@ function resultsApp() {
         await this.setPreview(this.file);
 
         if (this.fileType === "image") await this.generateDetectionCrops();
+        if (this.fileType === "document")
+          await this.generateDocumentDetectionCrops();
       } catch (error) {
         console.error("Failed to load results:", error);
         this.error = "Failed to load the file.";
@@ -681,18 +684,36 @@ function resultsApp() {
         pii: [],
       };
 
-      for (const frameResult of this.detections) {
-        if (!frameResult?.detections) continue;
-        const frame = frameResult.frame;
-        for (const target of ["faces", "plates", "text", "pii"]) {
-          const detections = frameResult.detections[target] || [];
-          for (const detection of detections)
-            grouped[target].push({
-              ...detection,
-              target,
-              frame,
-              uniqueId: `${frame}-${detection.id}`,
-            });
+      for (const result of this.detections) {
+        if (!result) continue;
+        if (result.page != null) {
+          const page = result.page;
+          for (const target of ["faces", "plates", "text", "pii"]) {
+            const detections = result[target] || [];
+            for (const detection of detections)
+              grouped[target].push({
+                ...detection,
+                target,
+                page,
+                uniqueId: detection.id,
+              });
+          }
+
+          continue;
+        }
+
+        if (result.frame != null) {
+          const frame = result.frame;
+          for (const target of ["faces", "plates", "text", "pii"]) {
+            const detections = result.detections?.[target] || [];
+            for (const detection of detections)
+              grouped[target].push({
+                ...detection,
+                target,
+                frame,
+                uniqueId: detection.id,
+              });
+          }
         }
       }
 
@@ -750,10 +771,17 @@ function resultsApp() {
 
       return result;
     },
+    // isCropDetection(detection) {
+    //   const target = detection.target;
+    //   return (
+    //     this.fileType === "image" && (target === "faces" || target === "plates")
+    //   );
+    // },
     isCropDetection(detection) {
       const target = detection.target;
       return (
-        this.fileType === "image" && (target === "faces" || target === "plates")
+        (this.fileType === "image" || this.fileType === "document") &&
+        (target === "faces" || target === "plates")
       );
     },
     async generateDetectionCrops() {
@@ -780,6 +808,114 @@ function resultsApp() {
           if (cropUrl) this.cropUrls[key] = cropUrl;
         } catch (error) {
           console.error("Failed to create crop:", detection, error);
+        }
+      }
+    },
+    // async loadDocumentPage(page) {
+    //   const response = await fetch(
+    //     `${API_BASE}/documents/page-preview?page=${encodeURIComponent(page)}`,
+    //     {
+    //       method: "POST",
+    //       body: (() => {
+    //         const formData = new FormData();
+    //         formData.append("file", this.file);
+    //         return formData;
+    //       })(),
+    //     },
+    //   );
+
+    //   if (!response.ok) throw new Error(`Failed to load page ${page}`);
+
+    //   const blob = await response.blob();
+    //   const url = URL.createObjectURL(blob);
+    //   const image = new Image();
+    //   await new Promise((resolve, reject) => {
+    //     image.onload = resolve;
+    //     image.onerror = reject;
+    //     image.src = url;
+    //   });
+
+    //   image._objectUrl = url;
+
+    //   return image;
+    // },
+    async loadDocumentPage(page) {
+      const response = await fetch(
+        `${API_BASE}/documents/page-preview?page=${encodeURIComponent(page)}`,
+        {
+          method: "POST",
+          body: (() => {
+            const formData = new FormData();
+            formData.append("file", this.file);
+            return formData;
+          })(),
+        },
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(
+          `Document page preview failed (${response.status}):`,
+          errorText,
+        );
+
+        throw new Error(
+          `Failed to load page ${page} (${response.status}): ${errorText}`,
+        );
+      }
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const image = new Image();
+
+      await new Promise((resolve, reject) => {
+        image.onload = resolve;
+        image.onerror = reject;
+        image.src = url;
+      });
+
+      image._objectUrl = url;
+
+      return image;
+    },
+    async generateDocumentDetectionCrops() {
+      if (this.fileType !== "document") return;
+
+      const detections = [
+        ...this.detectionsFor("faces"),
+        ...this.detectionsFor("plates"),
+      ];
+
+      if (!detections.length) return;
+      const pages = [
+        ...new Set(
+          detections
+            .map((detection) => detection.page)
+            .filter((page) => page != null),
+        ),
+      ];
+
+      for (const page of pages) {
+        try {
+          const pageImage = await this.loadDocumentPage(page);
+          if (!pageImage) continue;
+
+          this.documentPages[page] = pageImage;
+        } catch (error) {
+          console.error(`Failed to load document page ${page}:`, error);
+        }
+      }
+
+      for (const detection of detections) {
+        const key = detection.uniqueId || detection.id;
+        const pageImage = this.documentPages[detection.page];
+        if (!pageImage) continue;
+
+        try {
+          const cropUrl = await this.createDetectionCrop(pageImage, detection);
+          if (cropUrl) this.cropUrls[key] = cropUrl;
+        } catch (error) {
+          console.error("Failed to create document crop:", detection, error);
         }
       }
     },

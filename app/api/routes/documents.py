@@ -1,3 +1,4 @@
+import cv2
 from pathlib import Path
 from flask import Blueprint, Response, request, jsonify
 
@@ -5,7 +6,7 @@ from app.media.types import DOCUMENT_FORMATS
 from app.services.validate import validate_upload, get_targets, get_mode
 from app.services.converter import to_pdf
 from app.services.decoder import decode_pdf
-from app.services.encoder import encode_pdf
+from app.services.encoder import encode_pdf, encode_page_image
 from app.services.anonymizer import anonymize_pdf
 from app.services.detector import detect_document
 from app.services.exceptions import ValidationError, EncodingError
@@ -54,6 +55,33 @@ def preview():
     return Response(
         encoded,
         mimetype="application/pdf",
+    )
+
+
+@documents_bp.post("/page-preview")
+def page_preview():
+    try:
+        _, document, _, _ = load_document()
+    except ValidationError as err:
+        return jsonify({"error": str(err)}), 400
+
+    page = request.args.get("page", type=int)
+    if page is None or page < 1:
+        return jsonify({"error": "Invalid page number"}), 400
+
+    try:
+        page = document.page(page - 1)
+    except (IndexError, TypeError):
+        return jsonify({"error": "Page not found"}), 404
+
+    try:
+        encoded = encode_page_image(page.image)
+    except (EncodingError, ValidationError) as err:
+        return jsonify({"error": str(err)}), 500
+
+    return Response(
+        encoded,
+        mimetype="image/png",
     )
 
 
