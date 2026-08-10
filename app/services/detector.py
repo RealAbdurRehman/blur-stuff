@@ -13,7 +13,13 @@ def detect_video(video, targets):
     for frame in video.frames():
         detections = process_frame(frame, state, targets)
         if detections is not None:
-            results.append({"frame": state.frame_number, "detections": detections})
+            results.append(
+                {
+                    "frame": state.frame_number,
+                    "timestamp": state.frame_number / video.fps,
+                    "detections": detections,
+                }
+            )
 
         state.next_frame(frame)
 

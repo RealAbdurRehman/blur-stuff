@@ -57,18 +57,6 @@
       </div>
     </template>
     <div class="min-w-0 flex-1">
-      <!-- <template x-if="detection.text">
-        <p
-          class="truncate text-sm font-medium text-white"
-          x-text="detection.text"
-        ></p>
-      </template>
-      <template x-if="!detection.text">
-        <p
-          class="truncate text-sm font-semibold text-white"
-          x-text="detectionName(detection)"
-        ></p>
-      </template> -->
       <div class="flex min-w-0 items-center gap-2">
         <template x-if="detection.text">
           <p
@@ -89,10 +77,10 @@
           ></span>
         </template>
       </div>
-      <template x-if="fileType === 'video' && detection.start_time != null">
+      <template x-if="fileType === 'video' && detection.timestamp != null">
         <p
           class="mt-1 text-[10px] text-zinc-500"
-          x-text="formatDetectionTimeRange(detection)"
+          x-text="`First seen at ${formatDuration(detection.timestamp)}`"
         ></p>
       </template>
       <template x-if="detection.type">

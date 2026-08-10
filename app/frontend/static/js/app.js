@@ -440,6 +440,7 @@ function resultsApp() {
         await this.setPreview(this.file);
 
         if (this.fileType === "image") await this.generateDetectionCrops();
+        if (this.fileType === "video") await this.generateVideoDetectionCrops();
         if (this.fileType === "document")
           await this.generateDocumentDetectionCrops();
       } catch (error) {
@@ -552,7 +553,7 @@ function resultsApp() {
       return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`;
     },
     formatDuration(seconds) {
-      if (!seconds || !Number.isFinite(seconds)) return "";
+      if (seconds == null || !Number.isFinite(seconds)) return "";
 
       const totalSeconds = Math.floor(seconds);
       const minutes = Math.floor(totalSeconds / 60);
@@ -706,13 +707,20 @@ function resultsApp() {
           const frame = result.frame;
           for (const target of ["faces", "plates", "text", "pii"]) {
             const detections = result.detections?.[target] || [];
-            for (const detection of detections)
+            for (const detection of detections) {
+              const existing = grouped[target].find(
+                (item) => item.uniqueId === detection.id,
+              );
+              if (existing) continue;
+
               grouped[target].push({
                 ...detection,
                 target,
                 frame,
+                timestamp: result.timestamp,
                 uniqueId: detection.id,
               });
+            }
           }
         }
       }
@@ -771,18 +779,9 @@ function resultsApp() {
 
       return result;
     },
-    // isCropDetection(detection) {
-    //   const target = detection.target;
-    //   return (
-    //     this.fileType === "image" && (target === "faces" || target === "plates")
-    //   );
-    // },
     isCropDetection(detection) {
       const target = detection.target;
-      return (
-        (this.fileType === "image" || this.fileType === "document") &&
-        (target === "faces" || target === "plates")
-      );
+      return target === "faces" || target === "plates";
     },
     async generateDetectionCrops() {
       if (this.fileType !== "image" || !this.previewUrl) return;
@@ -811,34 +810,6 @@ function resultsApp() {
         }
       }
     },
-    // async loadDocumentPage(page) {
-    //   const response = await fetch(
-    //     `${API_BASE}/documents/page-preview?page=${encodeURIComponent(page)}`,
-    //     {
-    //       method: "POST",
-    //       body: (() => {
-    //         const formData = new FormData();
-    //         formData.append("file", this.file);
-    //         return formData;
-    //       })(),
-    //     },
-    //   );
-
-    //   if (!response.ok) throw new Error(`Failed to load page ${page}`);
-
-    //   const blob = await response.blob();
-    //   const url = URL.createObjectURL(blob);
-    //   const image = new Image();
-    //   await new Promise((resolve, reject) => {
-    //     image.onload = resolve;
-    //     image.onerror = reject;
-    //     image.src = url;
-    //   });
-
-    //   image._objectUrl = url;
-
-    //   return image;
-    // },
     async loadDocumentPage(page) {
       const response = await fetch(
         `${API_BASE}/documents/page-preview?page=${encodeURIComponent(page)}`,
@@ -919,8 +890,16 @@ function resultsApp() {
         }
       }
     },
-    createDetectionCrop(image, detection) {
+    createDetectionCrop(media, detection) {
       return new Promise((resolve) => {
+        const mediaWidth = media.naturalWidth ?? media.videoWidth;
+        const mediaHeight = media.naturalHeight ?? media.videoHeight;
+
+        if (!mediaWidth || !mediaHeight) {
+          resolve(null);
+          return;
+        }
+
         let x1 = Number(detection.x1);
         let y1 = Number(detection.y1);
         let x2 = Number(detection.x2);
@@ -972,22 +951,22 @@ function resultsApp() {
           y1 = 0;
         }
 
-        if (x2 > image.naturalWidth) {
-          const overflow = x2 - image.naturalWidth;
+        if (x2 > mediaWidth) {
+          const overflow = x2 - mediaWidth;
           x1 -= overflow;
-          x2 = image.naturalWidth;
+          x2 = mediaWidth;
         }
 
-        if (y2 > image.naturalHeight) {
-          const overflow = y2 - image.naturalHeight;
+        if (y2 > mediaHeight) {
+          const overflow = y2 - mediaHeight;
           y1 -= overflow;
-          y2 = image.naturalHeight;
+          y2 = mediaHeight;
         }
 
         x1 = Math.max(0, x1);
         y1 = Math.max(0, y1);
-        x2 = Math.min(image.naturalWidth, x2);
-        y2 = Math.min(image.naturalHeight, y2);
+        x2 = Math.min(mediaWidth, x2);
+        y2 = Math.min(mediaHeight, y2);
 
         cropWidth = x2 - x1;
         cropHeight = y2 - y1;
@@ -1008,7 +987,7 @@ function resultsApp() {
         }
 
         context.drawImage(
-          image,
+          media,
           x1,
           y1,
           cropWidth,
@@ -1020,6 +999,71 @@ function resultsApp() {
         );
 
         resolve(canvas.toDataURL("image/jpeg", 0.9));
+      });
+    },
+    async generateVideoDetectionCrops() {
+      if (this.fileType !== "video" || !this.previewUrl) return;
+
+      const detections = [
+        ...this.detectionsFor("faces"),
+        ...this.detectionsFor("plates"),
+      ];
+      if (!detections.length) return;
+
+      const video = document.createElement("video");
+      video.preload = "metadata";
+      video.muted = true;
+      video.playsInline = true;
+      video.src = this.previewUrl;
+
+      await new Promise((resolve, reject) => {
+        video.onloadedmetadata = resolve;
+        video.onerror = reject;
+      });
+
+      for (const detection of detections) {
+        const key = detection.uniqueId || detection.id;
+        try {
+          const cropUrl = await this.createVideoDetectionCrop(video, detection);
+          if (cropUrl) this.cropUrls[key] = cropUrl;
+        } catch (error) {
+          console.error(
+            "Failed to create video detection crop:",
+            detection,
+            error,
+          );
+        }
+      }
+    },
+    async createVideoDetectionCrop(video, detection) {
+      if (detection.timestamp == null) {
+        console.warn("Video detection has no timestamp:", detection);
+        return null;
+      }
+
+      await this.seekVideo(video, detection.timestamp);
+      return this.createDetectionCrop(video, detection);
+    },
+    seekVideo(video, time) {
+      return new Promise((resolve, reject) => {
+        const handleSeeked = () => {
+          cleanup();
+          resolve();
+        };
+
+        const handleError = () => {
+          cleanup();
+          reject(new Error("Failed to seek video"));
+        };
+
+        const cleanup = () => {
+          video.removeEventListener("seeked", handleSeeked);
+          video.removeEventListener("error", handleError);
+        };
+
+        video.addEventListener("seeked", handleSeeked);
+        video.addEventListener("error", handleError);
+        video.currentTime = Math.min(Math.max(0, time), video.duration);
       });
     },
     destroy() {
