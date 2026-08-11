@@ -215,6 +215,46 @@ async function storeDetectionResult(detections) {
   });
 }
 
+async function storeProcessedFile(blob, outputName) {
+  const db = await openFileDatabase();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction("files", "readwrite");
+    const store = transaction.objectStore("files");
+    const request = store.get("current");
+    request.onsuccess = () => {
+      const entry = request.result;
+      if (!entry) {
+        reject(new Error("No uploaded file found."));
+        return;
+      }
+
+      store.put(
+        {
+          ...entry,
+          processedFile: blob,
+          outputName,
+          processedAt: Date.now(),
+        },
+        "current",
+      );
+    };
+
+    request.onerror = () => {
+      reject(request.error);
+    };
+
+    transaction.oncomplete = () => {
+      db.close();
+      resolve();
+    };
+
+    transaction.onerror = () => {
+      db.close();
+      reject(transaction.error);
+    };
+  });
+}
+
 function uploadBox() {
   return {
     isDragging: false,
@@ -480,7 +520,7 @@ function anonymizeApp() {
         const hasDetections = this.hasDetections(data);
         if (!hasDetections) {
           Alpine.store("notifications").info(
-            "No sensitive content was detected in this file.",
+            "No sensitive content of the selected type was detected in this file.",
           );
           return;
         }
@@ -507,6 +547,9 @@ function resultsApp() {
     cropUrls: {},
     documentPages: {},
     selectedDetections: [],
+    mode: "blur",
+    padding: 20,
+    isProcessing: false,
     isLoading: true,
     error: null,
     imageDimensions: null,
@@ -1170,11 +1213,167 @@ function resultsApp() {
         video.currentTime = Math.min(Math.max(0, time), video.duration);
       });
     },
+    async anonymizeSelected() {
+      if (this.selectedDetections.length === 0) {
+        Alpine.store("notifications").warning(
+          "Select at least one detection to anonymize.",
+        );
+        return;
+      }
+
+      this.isProcessing = true;
+      try {
+        let endpoint;
+        if (this.fileType === "image")
+          endpoint = `${API_BASE}/images/anonymize-selected`;
+        else if (this.fileType === "video")
+          endpoint = `${API_BASE}/videos/anonymize-selected`;
+        else if (this.fileType === "document")
+          endpoint = `${API_BASE}/documents/anonymize-selected`;
+        else throw new Error("Unsupported file type.");
+
+        const formData = new FormData();
+        formData.append("file", this.file);
+        formData.append("detections", JSON.stringify(this.selectedDetections));
+
+        const params = new URLSearchParams();
+        params.set("mode", this.mode);
+        params.set("padding", String(this.padding / 100));
+
+        const response = await fetch(`${endpoint}?${params.toString()}`, {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!response.ok) {
+          let message = `Anonymization failed with status ${response.status}.`;
+          try {
+            const data = await response.json();
+            message = data.error || message;
+          } catch {}
+
+          throw new Error(message);
+        }
+
+        const blob = await response.blob();
+        const filename = this.getOutputFilename();
+        await storeProcessedFile(blob, filename);
+
+        window.location.href = "/complete";
+      } catch (error) {
+        notifyError(error, "Failed to anonymize the file.");
+      } finally {
+        this.isProcessing = false;
+      }
+    },
+    getOutputFilename() {
+      if (!this.file) return "anonymized";
+      const extension = this.getExtension(this.file);
+
+      return `${this.file.name.replace(/\.[^/.]+$/, "")}-anonymized.${extension}`;
+    },
     destroy() {
       if (this.previewUrl) URL.revokeObjectURL(this.previewUrl);
     },
     isDocument() {
       return this.fileType === "document" || this.fileType === "pdf";
+    },
+  };
+}
+
+function completePage() {
+  return {
+    originalUrl: null,
+    processedUrl: null,
+    fileName: "Anonymized file",
+    outputName: "anonymized",
+    mediaType: "image",
+    position: 50,
+    dragging: false,
+    isLoading: true,
+    error: null,
+    isDownloading: false,
+    async init() {
+      try {
+        const storedFile = await getCurrentUpload();
+        if (!storedFile) {
+          this.error = "No file found.";
+          this.isLoading = false;
+          Alpine.store("notifications").warning(
+            "Your anonymized file could not be found. Please select it again.",
+          );
+
+          window.location.replace("/detect");
+          return;
+        }
+
+        if (!storedFile.processedFile) {
+          this.error = "No processed file found.";
+          this.isLoading = false;
+          Alpine.store("notifications").warning(
+            "Your anonymized file could not be found. Please process the file again.",
+          );
+
+          window.location.replace("/results");
+          return;
+        }
+
+        this.fileName = storedFile.file.name;
+        this.outputName = storedFile.outputName;
+
+        this.originalUrl = URL.createObjectURL(storedFile.file);
+        this.processedUrl = URL.createObjectURL(storedFile.processedFile);
+        this.mediaType = this.getMediaType(storedFile.file);
+
+        this.isLoading = false;
+      } catch (error) {
+        this.error = notifyError(error, "Failed to load the anonymized file.");
+        this.isLoading = false;
+      }
+    },
+    getMediaType(file) {
+      if (file.type.startsWith("image/")) return "image";
+      if (file.type.startsWith("video/")) return "video";
+      return "document";
+    },
+    move(event) {
+      if (!this.dragging) return;
+
+      const rect = this.$refs.wrapper.getBoundingClientRect();
+      this.position = Math.min(
+        100,
+        Math.max(0, ((event.clientX - rect.left) / rect.width) * 100),
+      );
+    },
+    download() {
+      if (!this.processedUrl || this.isDownloading) return;
+
+      this.isDownloading = true;
+
+      const link = document.createElement("a");
+      link.href = this.processedUrl;
+      link.download = this.outputName;
+
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      Alpine.store("notifications").success(
+        "Your anonymized file has been downloaded.",
+      );
+
+      setTimeout(() => {
+        this.isDownloading = false;
+      }, 2500);
+    },
+    processAnother() {
+      sessionStorage.removeItem("originalUrl");
+      sessionStorage.removeItem("processedUrl");
+      sessionStorage.removeItem("fileName");
+      sessionStorage.removeItem("outputName");
+      sessionStorage.removeItem("mediaType");
+
+      window.location.href = "/detect";
     },
   };
 }

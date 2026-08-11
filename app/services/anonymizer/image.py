@@ -18,3 +18,17 @@ def anonymize_image(media, targets, mode, padding):
     process_frame(media.image, state, targets, mode, padding)
 
     return media
+
+
+def anonymize_selected_image(media, detections, mode, padding):
+    state = VideoState()
+    process_frame(
+        media.image,
+        state,
+        set(detections.keys()),
+        mode,
+        padding,
+        initial_detections=detections,
+    )
+
+    return media

@@ -1,3 +1,5 @@
+import json
+
 from pathlib import Path
 from .exceptions import ValidationError
 
@@ -25,7 +27,7 @@ def get_targets(request):
     value = request.args.get("targets")
 
     if value is None:
-        return DEFAULT_TARGETS.copy(t)
+        return DEFAULT_TARGETS.copy()
 
     targets = {target.strip().lower() for target in value.split(",") if target.strip()}
 
@@ -68,3 +70,54 @@ def get_padding(request):
         )
 
     return value
+
+
+def get_selected_detections(request):
+    raw = request.form.get("detections")
+    if not raw:
+        raise ValidationError("No detections were provided")
+
+    try:
+        detections = json.loads(raw)
+    except json.JSONDecodeError:
+        raise ValidationError("Invalid detections JSON")
+
+    if not isinstance(detections, list):
+        raise ValidationError("Detections must be a list")
+
+    for detection in detections:
+        if not isinstance(detection, dict):
+            raise ValidationError("Invalid detection")
+
+        target = detection.get("target")
+        if target not in SUPPORTED_TARGETS:
+            raise ValidationError(f"Unsupported detection target: {target}")
+
+        for coordinate in ("x1", "y1", "x2", "y2"):
+            if coordinate not in detection:
+                raise ValidationError(f"Detection is missing {coordinate}")
+
+            try:
+                detection[coordinate] = float(detection[coordinate])
+            except (TypeError, ValueError):
+                raise ValidationError(f"Invalid detection coordinate: {coordinate}")
+
+        if not (
+            0 <= detection["x1"] < detection["x2"]
+            and 0 <= detection["y1"] < detection["y2"]
+        ):
+            raise ValidationError(
+                "Detection coordinates must define a valid bounding box"
+            )
+
+        frame = detection.get("frame")
+        if frame is not None:
+            try:
+                detection["frame"] = int(frame)
+            except (TypeError, ValueError):
+                raise ValidationError("Invalid detection frame")
+
+            if detection["frame"] < 0:
+                raise ValidationError("Detection frame must be non-negative")
+
+    return detections

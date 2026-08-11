@@ -1,0 +1,220 @@
+{% extends "base.html" %} {% block page_title %}Complete{% endblock %} {% block
+description %}Your anonymized file is ready to download.{% endblock %} {% block
+og_title %}Complete — Blur Stuff{% endblock %} {% block extra_meta %}
+<meta name="robots" content="noindex, nofollow" />
+{% endblock %} {% set upload_button_text = "New Upload" %} {% block content %}
+
+<div
+  x-data="completePage()"
+  x-init="init()"
+  @mousemove.window="move($event)"
+  @mouseup.window="dragging = false"
+  class="mx-auto max-w-6xl px-6 py-16"
+>
+  <div x-show="isLoading" class="flex min-h-125 items-center justify-center">
+    <div class="text-center">
+      <div
+        class="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-2 border-white/10 border-t-indigo-400"
+      ></div>
+      <p class="text-sm text-white/60">Preparing your anonymized file...</p>
+    </div>
+  </div>
+  <div
+    x-show="!isLoading && error"
+    class="mx-auto max-w-lg rounded-3xl border border-red-400/20 bg-red-400/5 p-8 text-center"
+  >
+    <h1 class="text-xl font-semibold text-white">Something went wrong</h1>
+    <p class="mt-2 text-sm text-white/50" x-text="error"></p>
+    <button
+      type="button"
+      @click="processAnother()"
+      class="mt-6 rounded-xl bg-white px-5 py-3 text-sm font-medium text-black transition hover:bg-white/90 cursor-pointer"
+    >
+      Try another file
+    </button>
+  </div>
+  <div x-show="!isLoading && !error" x-cloak>
+    <div class="mx-auto max-w-2xl text-center">
+      <h1 class="mt-6 text-4xl font-bold tracking-tight text-white">
+        Your file is ready
+      </h1>
+      <p class="mx-auto mt-4 max-w-xl text-white/50">
+        Your selected sensitive content has been anonymized. Nothing was stored
+        on the server.
+      </p>
+    </div>
+    <div
+      class="mt-12 rounded-3xl border border-white/10 bg-white/3 p-5 backdrop-blur-xl"
+    >
+      <div class="mb-5 flex items-center justify-between">
+        <div>
+          <h2 class="text-lg font-semibold text-white">Before & after</h2>
+          <p class="mt-1 text-sm text-white/40">
+            Drag the slider to compare the original and anonymized versions.
+          </p>
+        </div>
+      </div>
+      <template x-if="mediaType === 'image'">
+        <div
+          x-ref="wrapper"
+          class="relative mx-auto max-h-150 overflow-hidden rounded-2xl border border-white/10 bg-black select-none"
+        >
+          <img
+            :src="processedUrl"
+            alt="Anonymized file"
+            draggable="false"
+            class="block max-h-150 w-full object-contain"
+          />
+          <div
+            class="absolute inset-0 overflow-hidden"
+            :style="`clip-path: inset(0 ${100 - position}% 0 0)`"
+          >
+            <img
+              :src="originalUrl"
+              alt="Original file"
+              draggable="false"
+              class="block h-full w-full object-contain"
+            />
+          </div>
+          <div
+            x-show="position > 10"
+            x-transition.opacity
+            class="absolute left-4 top-4 rounded-lg bg-black/60 px-3 py-1 text-sm text-white backdrop-blur"
+          >
+            Original
+          </div>
+          <div
+            x-show="position < 87"
+            x-transition.opacity
+            class="absolute right-4 top-4 rounded-lg bg-black/60 px-3 py-1 text-sm text-white backdrop-blur"
+          >
+            Anonymized
+          </div>
+          <div
+            class="absolute bottom-0 top-0 w-0.5 bg-white"
+            :style="`left:${position}%`"
+          ></div>
+          <div
+            class="absolute top-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 cursor-ew-resize items-center justify-center rounded-full border border-white/20 bg-black/70 text-white shadow-xl backdrop-blur transition hover:scale-110"
+            :style="`left:${position}%`"
+            @mousedown="dragging = true"
+          >
+            {% include "components/icons/move.svg" %}
+          </div>
+        </div>
+      </template>
+      <template x-if="mediaType === 'video'">
+        <div class="grid gap-5 md:grid-cols-2">
+          <div>
+            <p class="mb-2 text-sm text-white/40">Original</p>
+            <video
+              :src="originalUrl"
+              controls
+              class="w-full rounded-2xl border border-white/10 bg-black"
+            ></video>
+          </div>
+          <div>
+            <p class="mb-2 text-sm text-white/40">Anonymized</p>
+            <video
+              :src="processedUrl"
+              controls
+              class="w-full rounded-2xl border border-white/10 bg-black"
+            ></video>
+          </div>
+        </div>
+      </template>
+      <template x-if="mediaType === 'document'">
+        <div class="grid gap-5 md:grid-cols-2">
+          <div>
+            <p class="mb-2 text-sm text-white/40">Original</p>
+            <iframe
+              :src="originalUrl"
+              class="h-125 w-full rounded-2xl border border-white/10 bg-white"
+            ></iframe>
+          </div>
+          <div>
+            <p class="mb-2 text-sm text-white/40">Anonymized</p>
+            <iframe
+              :src="processedUrl"
+              class="h-125 w-full rounded-2xl border border-white/10 bg-white"
+            ></iframe>
+          </div>
+        </div>
+      </template>
+    </div>
+    <div
+      class="mx-auto mt-8 max-w-2xl rounded-2xl border border-white/10 bg-white/3 p-5"
+    >
+      <div class="flex items-center justify-between gap-4">
+        <div class="min-w-0">
+          <p class="text-sm text-white/40">Anonymized file</p>
+          <p
+            class="mt-1 truncate font-medium text-white"
+            x-text="outputName"
+          ></p>
+        </div>
+        <div class="shrink-0 text-sm text-emerald-400">Ready to download</div>
+      </div>
+    </div>
+    <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+      <button
+        type="button"
+        @click="download()"
+        :disabled="isDownloading"
+        class="inline-flex min-w-40 items-center justify-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-semibold text-black transition hover:bg-white/90 disabled:cursor-default disabled:opacity-80 cursor-pointer"
+      >
+        <template x-if="!isDownloading">
+          <span class="inline-flex items-center gap-2">
+            {% include "components/icons/download.svg" %} Download file
+          </span>
+        </template>
+        <template x-if="isDownloading">
+          <span class="inline-flex items-center gap-2 text-emerald-600">
+            {% include "components/icons/success.svg" %} Downloaded
+          </span>
+        </template>
+      </button>
+      <!-- <button
+        type="button"
+        @click="download()"
+        :disabled="isDownloading"
+        class="inline-flex min-w-40 items-center justify-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-semibold text-black transition hover:bg-white/90 disabled:cursor-default disabled:opacity-80 cursor-pointer"
+      >
+        <span
+          x-show="!isDownloading"
+          x-transition:enter="transition ease-out duration-200"
+          x-transition:enter-start="opacity-0 scale-95"
+          x-transition:enter-end="opacity-100 scale-100"
+          class="inline-flex items-center gap-2"
+        >
+          {% include "components/icons/download.svg" %} Download file
+        </span>
+
+        <span
+          x-show="isDownloading"
+          x-transition:enter="transition ease-out duration-200"
+          x-transition:enter-start="opacity-0 scale-95"
+          x-transition:enter-end="opacity-100 scale-100"
+          x-transition:leave="transition ease-in duration-300"
+          x-transition:leave-start="opacity-100 scale-100"
+          x-transition:leave-end="opacity-0 scale-95"
+          class="inline-flex items-center gap-2 text-emerald-600"
+        >
+          {% include "components/icons/success.svg" %} Downloaded
+        </span>
+      </button> -->
+      <button
+        type="button"
+        @click="processAnother()"
+        class="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-medium text-white transition hover:bg-white/10 cursor-pointer"
+      >
+        Anonymize another
+      </button>
+    </div>
+    <p class="mt-5 text-center text-xs text-white/30">
+      Your file is stored locally in your browser until you start a new session.
+    </p>
+  </div>
+</div>
+
+{% endblock %}

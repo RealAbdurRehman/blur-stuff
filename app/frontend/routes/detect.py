@@ -10,3 +10,8 @@ def detect():
 @frontend_bp.get("/results")
 def results():
     return render_template("results.html")
+
+
+@frontend_bp.get("/complete")
+def complete():
+    return render_template("complete.html")

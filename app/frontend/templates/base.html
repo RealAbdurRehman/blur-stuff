@@ -13,6 +13,7 @@
       content="{% block og_title %}Blur Stuff{% endblock %}"
     />
     <meta property="og:description" content="{{ self.description() }}" />
+    {% block extra_meta %}{% endblock %}
     <title>
       {% block page_title %}{% endblock %} {% if self.page_title() %} - {% endif
       %} Blur Stuff

@@ -30,13 +30,25 @@ def apply_anonymization(image, tracked_objects, mode):
         effect(image, tracked)
 
 
-def process_frame(image, state, targets, mode=None, padding=None, assign_ids=True):
+def process_frame(
+    image,
+    state,
+    targets,
+    mode=None,
+    padding=None,
+    assign_ids=True,
+    initial_detections=None,
+    allow_detection=True,
+):
     tracker_lost = False
     if state.frame_number > 0:
         tracker_lost = state.tracker.update(image)
 
     detections = None
-    if state.should_detect(image, tracker_lost):
+    if initial_detections is not None:
+        detections = initial_detections
+        state.tracker.initialize(image, detections, mode, padding)
+    elif allow_detection and state.should_detect(image, tracker_lost):
         detections = detect(image, targets, assign_ids)
         state.tracker.initialize(image, detections, mode, padding)
 
@@ -48,6 +60,7 @@ def process_frame(image, state, targets, mode=None, padding=None, assign_ids=Tru
 
 def process_frames(frames, state, targets, mode, padding, assign_ids=True):
     for frame in frames:
+        original_frame = frame.copy()
         process_frame(frame, state, targets, mode, padding, assign_ids)
         yield frame
-        state.next_frame(frame)
+        state.next_frame(original_frame)

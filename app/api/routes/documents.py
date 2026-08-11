@@ -3,11 +3,18 @@ from pathlib import Path
 from flask import Blueprint, Response, request, jsonify
 
 from app.media.types import DOCUMENT_FORMATS
-from app.services.validate import validate_upload, get_targets, get_mode, get_padding
+from app.services.validate import (
+    validate_upload,
+    get_targets,
+    get_mode,
+    get_padding,
+    get_selected_detections,
+)
+
 from app.services.converter import to_pdf
 from app.services.decoder import decode_pdf
 from app.services.encoder import encode_pdf, encode_page_image
-from app.services.anonymizer import anonymize_pdf
+from app.services.anonymizer import anonymize_pdf, anonymize_selected_pdf
 from app.services.detector import detect_document
 from app.services.exceptions import ValidationError, EncodingError
 
@@ -109,6 +116,34 @@ def documents():
         mode = get_mode(request)
         padding = get_padding(request)
         processed = handlers["anonymizer"](document, targets, mode, padding)
+    except ValidationError as err:
+        return jsonify({"error": str(err)}), 400
+    except RuntimeError as err:
+        return jsonify({"error": str(err)}), 503
+
+    try:
+        encoded = handlers["encoder"](processed)
+    except EncodingError as err:
+        return jsonify({"error": str(err)}), 500
+
+    mimetype = DOCUMENT_FORMATS[extension]
+    return Response(
+        encoded,
+        mimetype=mimetype,
+        headers={"Content-Disposition": f'inline; filename="{file.filename}"'},
+    )
+
+
+@documents_bp.post("/anonymize-selected")
+def anonymize_selected():
+    try:
+        file, document, handlers, extension = load_document()
+
+        mode = get_mode(request)
+        padding = get_padding(request)
+
+        detections = get_selected_detections(request)
+        processed = anonymize_selected_pdf(document, detections, mode, padding)
     except ValidationError as err:
         return jsonify({"error": str(err)}), 400
     except RuntimeError as err:
