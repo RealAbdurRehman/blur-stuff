@@ -887,6 +887,39 @@ function resultsApp() {
         groups.pii.length
       );
     },
+    selectedVideoDetections() {
+      const selectedIds = new Set(
+        this.selectedDetections.map(
+          (detection) =>
+            `${detection.target}:${detection.uniqueId || detection.id}`,
+        ),
+      );
+
+      const selected = [];
+      for (const result of this.detections || []) {
+        if (!result || result.frame == null) continue;
+        const frame = Number(result.frame);
+        for (const target of ["faces", "plates", "text", "pii"]) {
+          const detections = result.detections?.[target] || [];
+          for (const detection of detections) {
+            const id = detection.id;
+            if (!id) continue;
+
+            const key = `${target}:${id}`;
+            if (!selectedIds.has(key)) continue;
+
+            selected.push({
+              ...detection,
+              target,
+              frame,
+              timestamp: result.timestamp,
+            });
+          }
+        }
+      }
+
+      return selected;
+    },
     isDetectionSelected(detection) {
       return this.selectedDetections.some((item) => item.id === detection.id);
     },
@@ -1234,7 +1267,13 @@ function resultsApp() {
 
         const formData = new FormData();
         formData.append("file", this.file);
-        formData.append("detections", JSON.stringify(this.selectedDetections));
+
+        const detectionsToSend =
+          this.fileType === "video"
+            ? this.selectedVideoDetections()
+            : this.selectedDetections;
+
+        formData.append("detections", JSON.stringify(detectionsToSend));
 
         const params = new URLSearchParams();
         params.set("mode", this.mode);
@@ -1293,6 +1332,7 @@ function completePage() {
     isLoading: true,
     error: null,
     isDownloading: false,
+
     async init() {
       try {
         const storedFile = await getCurrentUpload();
@@ -1320,10 +1360,22 @@ function completePage() {
 
         this.fileName = storedFile.file.name;
         this.outputName = storedFile.outputName;
-
-        this.originalUrl = URL.createObjectURL(storedFile.file);
-        this.processedUrl = URL.createObjectURL(storedFile.processedFile);
         this.mediaType = this.getMediaType(storedFile.file);
+        if (this.mediaType === "image") {
+          this.originalUrl = await this.getImagePreview(storedFile.file);
+          const processedFile = new File(
+            [storedFile.processedFile],
+            storedFile.outputName,
+            {
+              type: storedFile.processedFile.type,
+            },
+          );
+
+          this.processedUrl = await this.getImagePreview(processedFile);
+        } else {
+          this.originalUrl = URL.createObjectURL(storedFile.file);
+          this.processedUrl = URL.createObjectURL(storedFile.processedFile);
+        }
 
         this.isLoading = false;
       } catch (error) {
@@ -1331,13 +1383,43 @@ function completePage() {
         this.isLoading = false;
       }
     },
+    async getImagePreview(file) {
+      const extension = this.getExtension(file);
+      const browserPreviewableImages = ["jpg", "jpeg", "png", "webp", "gif"];
+      if (browserPreviewableImages.includes(extension))
+        return URL.createObjectURL(file);
+
+      const preview = await fetchPreview(file, "image");
+      return preview.url;
+    },
+    getExtension(file) {
+      if (!file?.name) return "";
+      return file.name.split(".").pop().toLowerCase();
+    },
     getMediaType(file) {
+      const extension = this.getExtension(file);
+      const imageFormats = [
+        "jpg",
+        "jpeg",
+        "png",
+        "webp",
+        "gif",
+        "tif",
+        "tiff",
+        "heic",
+        "heif",
+      ];
+
+      const videoFormats = ["mp4", "mov", "avi", "mkv", "webm"];
+      if (imageFormats.includes(extension)) return "image";
+      if (videoFormats.includes(extension)) return "video";
       if (file.type.startsWith("image/")) return "image";
       if (file.type.startsWith("video/")) return "video";
+
       return "document";
     },
     move(event) {
-      if (!this.dragging) return;
+      if (!this.dragging || !this.$refs.wrapper) return;
 
       const rect = this.$refs.wrapper.getBoundingClientRect();
       this.position = Math.min(

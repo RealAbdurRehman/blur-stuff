@@ -49,8 +49,11 @@ og_title %}Complete — Blur Stuff{% endblock %} {% block extra_meta %}
       <div class="mb-5 flex items-center justify-between">
         <div>
           <h2 class="text-lg font-semibold text-white">Before & after</h2>
-          <p class="mt-1 text-sm text-white/40">
+          <p x-show="mediaType === 'image'" class="mt-1 text-sm text-white/40">
             Drag the slider to compare the original and anonymized versions.
+          </p>
+          <p x-show="mediaType !== 'image'" class="mt-1 text-sm text-white/40">
+            Compare the original and anonymized versions side by side.
           </p>
         </div>
       </div>
@@ -129,14 +132,14 @@ og_title %}Complete — Blur Stuff{% endblock %} {% block extra_meta %}
             <p class="mb-2 text-sm text-white/40">Original</p>
             <iframe
               :src="originalUrl"
-              class="h-125 w-full rounded-2xl border border-white/10 bg-white"
+              class="h-125 w-full rounded-2xl border border-white/10"
             ></iframe>
           </div>
           <div>
             <p class="mb-2 text-sm text-white/40">Anonymized</p>
             <iframe
               :src="processedUrl"
-              class="h-125 w-full rounded-2xl border border-white/10 bg-white"
+              class="h-125 w-full rounded-2xl border border-white/10"
             ></iframe>
           </div>
         </div>
@@ -174,35 +177,6 @@ og_title %}Complete — Blur Stuff{% endblock %} {% block extra_meta %}
           </span>
         </template>
       </button>
-      <!-- <button
-        type="button"
-        @click="download()"
-        :disabled="isDownloading"
-        class="inline-flex min-w-40 items-center justify-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-semibold text-black transition hover:bg-white/90 disabled:cursor-default disabled:opacity-80 cursor-pointer"
-      >
-        <span
-          x-show="!isDownloading"
-          x-transition:enter="transition ease-out duration-200"
-          x-transition:enter-start="opacity-0 scale-95"
-          x-transition:enter-end="opacity-100 scale-100"
-          class="inline-flex items-center gap-2"
-        >
-          {% include "components/icons/download.svg" %} Download file
-        </span>
-
-        <span
-          x-show="isDownloading"
-          x-transition:enter="transition ease-out duration-200"
-          x-transition:enter-start="opacity-0 scale-95"
-          x-transition:enter-end="opacity-100 scale-100"
-          x-transition:leave="transition ease-in duration-300"
-          x-transition:leave-start="opacity-100 scale-100"
-          x-transition:leave-end="opacity-0 scale-95"
-          class="inline-flex items-center gap-2 text-emerald-600"
-        >
-          {% include "components/icons/success.svg" %} Downloaded
-        </span>
-      </button> -->
       <button
         type="button"
         @click="processAnother()"

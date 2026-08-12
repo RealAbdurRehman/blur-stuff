@@ -16,3 +16,8 @@ class TrackedObject:
     mask_size: tuple = None
     mask_full_size: tuple = None
     mask_offset: tuple = None
+
+    lost: bool = False
+    lost_frames: int = 0
+    last_center: tuple = None
+    velocity: tuple = (0.0, 0.0)
