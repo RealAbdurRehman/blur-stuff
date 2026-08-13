@@ -1,21 +1,20 @@
 import cv2
 from itertools import count
 
+from app.paths import NANOTRACK_HEAD
+from app.paths import NANOTRACK_BACKBONE
+
 from .tracked_object import TrackedObject
 from app.services.effects.config import get_effect_config
-
 from app.services.detectors.bounding_box import BoundingBox
-
-HEAD = "models/nanotrack_head_sim.onnx"
-BACKBONE = "models/nanotrack_backbone_sim.onnx"
 
 MAX_LOST_FRAMES = 15
 
 
 def create_tracker():
     params = cv2.TrackerNano_Params()
-    params.neckhead = HEAD
-    params.backbone = BACKBONE
+    params.neckhead = str(NANOTRACK_HEAD)
+    params.backbone = str(NANOTRACK_BACKBONE)
 
     return cv2.TrackerNano_create(params)
 

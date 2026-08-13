@@ -25,22 +25,14 @@ def resize(image, max_side=960):
 
     scale = max_side / longest
     resized = cv2.resize(
-        image,
-        (
-            int(w * scale),
-            int(h * scale),
-        ),
-        interpolation=cv2.INTER_AREA,
+        image, (int(w * scale), int(h * scale)), interpolation=cv2.INTER_AREA
     )
 
     return resized, scale
 
 
 class OcrDetector:
-    def __init__(
-        self,
-        language="en",
-    ):
+    def __init__(self, language="en"):
         self.ready = True
 
         try:
@@ -68,11 +60,7 @@ class OcrDetector:
             boxes = page["rec_boxes"]
             texts = page["rec_texts"]
             scores = page["rec_scores"]
-            for box, text, confidence in zip(
-                boxes,
-                texts,
-                scores,
-            ):
+            for box, text, confidence in zip(boxes, texts, scores):
                 if not is_useful_token(text):
                     continue
 
