@@ -19,5 +19,6 @@ class TrackedObject:
 
     lost: bool = False
     lost_frames: int = 0
-    last_center: tuple = None
     velocity: tuple = (0.0, 0.0)
+    trusted_box: BoundingBox = None
+    last_detection_frame: int = 0
