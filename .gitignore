@@ -12,18 +12,11 @@ __pycache__/
 # macOS
 .DS_Store
 
-# uploads
-uploads/
-outputs/
-
 # Logs
 *.log
 
 # Environment
 .env
-
-# Test Data
-test_data/
 
 # TODO
 TODO
