@@ -14,7 +14,11 @@
     x-ref="fileInput"
     type="file"
     class="hidden"
-    accept="image/*,video/*,.pdf,.doc,.docx,.txt"
+    accept="
+      .jpg,.jpeg,.png,.webp,.tif,.tiff,.heic,.heif,.gif,
+      .mp4,.mov,.avi,.mkv,.webm,
+      .pdf,.docx,.pptx,.xlsx
+    "
     @change="handleFile"
   />
   <div
