@@ -16,11 +16,6 @@ __pycache__/
 uploads/
 outputs/
 
-# AI models
-models/
-*.pt
-*.onnx
-
 # Logs
 *.log
 
