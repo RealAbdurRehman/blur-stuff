@@ -1,0 +1,365 @@
+{% extends "base.html" %} {% block page_title %}API{% endblock %} {% block
+description %} Use the Blur Stuff API to detect and anonymize sensitive
+information in images, videos, and documents. {% endblock %} {% block og_title
+%}API - Blur Stuff{% endblock %}{% block content %}
+
+<main class="mx-auto mt-10 max-w-7xl px-6 pb-10">
+  <div class="mb-12">
+    <div
+      class="mb-6 inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm text-zinc-300"
+    >
+      {% include "components/icons/code.svg" %}
+      <span>Developer-friendly</span>
+    </div>
+    <h1 class="text-4xl font-bold tracking-tight text-white md:text-5xl">
+      Blur Stuff API
+    </h1>
+    <p class="mt-5 max-w-2xl text-lg leading-6 text-zinc-400">
+      Bring privacy protection into your own applications with the Blur Stuff
+      API.
+    </p>
+  </div>
+  <div class="space-y-6">
+    <section
+      class="group/card relative overflow-hidden rounded-3xl border border-white/10 bg-white/3 p-6 backdrop-blur-xl"
+    >
+      <div
+        class="pointer-events-none absolute left-1/2 -top-40 h-96 w-3xl -translate-x-1/2 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.10)_0%,rgba(139,92,246,0.06)_35%,transparent_70%)] blur-3xl"
+      ></div>
+      <div class="relative z-10">
+        <div class="mb-6 flex items-center justify-between">
+          <div>
+            <p class="text-sm text-zinc-500">API</p>
+            <h2 class="mt-1 text-2xl font-semibold text-white">
+              Simple REST API
+            </h2>
+          </div>
+          <span
+            class="rounded-full border border-emerald-400/20 bg-emerald-400/5 px-3 py-1 text-xs text-emerald-400"
+          >
+            No API key required
+          </span>
+        </div>
+        <p class="max-w-2xl leading-6 text-zinc-400">
+          Send a file to the API, choose what you want to detect, and receive
+          the anonymized result.
+        </p>
+        <div class="mt-6">
+          <p class="mb-2 text-xs uppercase tracking-wider text-zinc-500">
+            Base URL
+          </p>
+          <div
+            class="rounded-2xl border border-white/10 bg-[#090b10] px-4 py-3 font-mono text-sm text-zinc-300"
+          >
+            https://blurstuff.com/api/v1
+          </div>
+        </div>
+      </div>
+    </section>
+    <section
+      class="group/card relative overflow-hidden rounded-3xl border border-white/10 bg-white/3 p-6 backdrop-blur-xl"
+    >
+      <div
+        class="pointer-events-none absolute right-0 top-0 h-64 w-96 bg-[radial-gradient(circle_at_top_right,rgba(139,92,246,0.08),transparent_70%)] blur-3xl"
+      ></div>
+      <div class="relative z-10">
+        <p class="text-sm text-zinc-500">Detection</p>
+        <h2 class="mt-1 text-2xl font-semibold text-white">
+          What can you detect?
+        </h2>
+        <p class="mt-3 max-w-2xl leading-6 text-zinc-400">
+          Choose the types of sensitive information you want the API to look
+          for.
+        </p>
+        <div class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div
+            class="rounded-2xl border border-white/10 bg-white/3 px-4 py-4 text-zinc-300"
+          >
+            Faces
+          </div>
+          <div
+            class="rounded-2xl border border-white/10 bg-white/3 px-4 py-4 text-zinc-300"
+          >
+            License plates
+          </div>
+          <div
+            class="rounded-2xl border border-white/10 bg-white/3 px-4 py-4 text-zinc-300"
+          >
+            Text
+          </div>
+          <div
+            class="rounded-2xl border border-white/10 bg-white/3 px-4 py-4 text-zinc-300"
+          >
+            Personal information
+          </div>
+        </div>
+      </div>
+    </section>
+    <section
+      class="group/card relative overflow-hidden rounded-3xl border border-white/10 bg-white/3 p-6 backdrop-blur-xl"
+    >
+      <div
+        class="pointer-events-none absolute left-1/2 -top-40 h-96 w-3xl -translate-x-1/2 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.08)_0%,rgba(139,92,246,0.05)_35%,transparent_70%)] blur-3xl"
+      ></div>
+      <div class="relative z-10">
+        <p class="text-sm text-zinc-500">Endpoints</p>
+        <h2 class="mt-1 text-2xl font-semibold text-white">Images</h2>
+        <p class="mt-3 leading-6 text-zinc-400">
+          Detect and anonymize sensitive information in images.
+        </p>
+        <div class="mt-6 space-y-3">
+          <div
+            class="rounded-2xl border border-white/10 bg-[#090b10] p-5 font-mono text-sm"
+          >
+            <p class="mb-3 text-zinc-500">Detect</p>
+            <span class="text-[#E4B1D6]">POST</span>
+            <span class="text-zinc-200"> /api/v1/images/detect</span>
+          </div>
+          <div
+            class="rounded-2xl border border-white/10 bg-[#090b10] p-5 font-mono text-sm"
+          >
+            <p class="mb-3 text-zinc-500">Anonymize</p>
+            <span class="text-[#E4B1D6]">POST</span>
+            <span class="text-zinc-200"> /api/v1/images/anonymize</span>
+          </div>
+          <div
+            class="rounded-2xl border border-white/10 bg-[#090b10] p-5 font-mono text-sm"
+          >
+            <p class="mb-3 text-zinc-500">Anonymize selected</p>
+            <span class="text-[#E4B1D6]">POST</span>
+            <span class="text-zinc-200">
+              /api/v1/images/anonymize-selected
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section
+      class="group/card relative overflow-hidden rounded-3xl border border-white/10 bg-white/3 p-6 backdrop-blur-xl"
+    >
+      <div
+        class="pointer-events-none absolute right-0 top-0 h-72 w-96 bg-[radial-gradient(circle_at_top_right,rgba(139,92,246,0.08),transparent_70%)] blur-3xl"
+      ></div>
+      <div class="relative z-10">
+        <p class="text-sm text-zinc-500">Endpoints</p>
+        <h2 class="mt-1 text-2xl font-semibold text-white">Videos</h2>
+        <p class="mt-3 leading-6 text-zinc-400">
+          Detect and anonymize sensitive information in video files.
+        </p>
+        <div class="mt-6 space-y-3">
+          <div
+            class="rounded-2xl border border-white/10 bg-[#090b10] p-5 font-mono text-sm"
+          >
+            <p class="mb-3 text-zinc-500">Detect</p>
+            <span class="text-[#E4B1D6]">POST</span>
+            <span class="text-zinc-200"> /api/v1/videos/detect</span>
+          </div>
+          <div
+            class="rounded-2xl border border-white/10 bg-[#090b10] p-5 font-mono text-sm"
+          >
+            <p class="mb-3 text-zinc-500">Anonymize</p>
+            <span class="text-[#E4B1D6]">POST</span>
+            <span class="text-zinc-200"> /api/v1/videos/anonymize</span>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section
+      class="group/card relative overflow-hidden rounded-3xl border border-white/10 bg-white/3 p-6 backdrop-blur-xl"
+    >
+      <div
+        class="pointer-events-none absolute left-0 top-0 h-72 w-96 bg-[radial-gradient(circle_at_top_left,rgba(139,92,246,0.08),transparent_70%)] blur-3xl"
+      ></div>
+      <div class="relative z-10">
+        <p class="text-sm text-zinc-500">Endpoints</p>
+        <h2 class="mt-1 text-2xl font-semibold text-white">Documents</h2>
+        <p class="mt-3 leading-6 text-zinc-400">
+          Process supported document formats and anonymize sensitive content.
+        </p>
+        <div class="mt-6 space-y-3">
+          <div
+            class="rounded-2xl border border-white/10 bg-[#090b10] p-5 font-mono text-sm"
+          >
+            <p class="mb-3 text-zinc-500">Detect</p>
+            <span class="text-[#E4B1D6]">POST</span>
+            <span class="text-zinc-200"> /api/v1/documents/detect</span>
+          </div>
+          <div
+            class="rounded-2xl border border-white/10 bg-[#090b10] p-5 font-mono text-sm"
+          >
+            <p class="mb-3 text-zinc-500">Anonymize</p>
+            <span class="text-[#E4B1D6]">POST</span>
+            <span class="text-zinc-200"> /api/v1/documents/anonymize</span>
+          </div>
+          <div
+            class="rounded-2xl border border-white/10 bg-[#090b10] p-5 font-mono text-sm"
+          >
+            <p class="mb-3 text-zinc-500">Anonymize selected</p>
+            <span class="text-[#E4B1D6]">POST</span>
+            <span class="text-zinc-200">
+              /api/v1/documents/anonymize-selected
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section
+      class="group/card relative overflow-hidden rounded-3xl border border-white/10 bg-white/3 p-6 backdrop-blur-xl"
+    >
+      <div
+        class="pointer-events-none absolute left-1/2 -top-32 h-112 w-7xl -translate-x-1/2 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.12)_0%,rgba(255,255,255,0.06)_18%,rgba(255,255,255,0.025)_38%,transparent_72%)] blur-3xl"
+      ></div>
+      <div class="relative z-10">
+        <div class="mb-6">
+          <p class="text-sm text-zinc-500">Quick start</p>
+          <h2 class="mt-1 text-2xl font-semibold text-white">
+            Anonymize an image
+          </h2>
+          <p class="mt-3 max-w-2xl leading-6 text-zinc-400">
+            A simple cURL request is all you need to get started.
+          </p>
+        </div>
+        <div
+          class="overflow-hidden rounded-2xl border border-white/10 bg-[#090b10] p-6 font-mono text-sm"
+        >
+          <p class="mb-5 text-zinc-200">
+            POST <span class="text-white">/images/anonymize</span>
+          </p>
+          <div>
+            <span class="text-[#E4B1D6]">curl</span>
+            <span class="text-zinc-200">-X POST \</span>
+          </div>
+          <div class="pl-5 text-[#98C379]">
+            "https://blurstuff.com/api/v1/images/anonymize?targets=faces&amp;mode=pixelate"
+            \
+          </div>
+          <div class="pl-5">
+            <span class="text-zinc-200">-F</span>
+            <span class="text-[#98C379]">"file=@original.jpg"</span> \
+          </div>
+          <div class="pl-5">
+            <span class="text-zinc-200">--output</span>
+            <span class="text-zinc-200">anonymized.jpg</span>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section
+      class="group/card relative overflow-hidden rounded-3xl border border-white/10 bg-white/3 p-6 backdrop-blur-xl"
+    >
+      <div
+        class="pointer-events-none absolute right-0 top-0 h-72 w-96 bg-[radial-gradient(circle_at_top_right,rgba(139,92,246,0.08),transparent_70%)] blur-3xl"
+      ></div>
+      <div class="relative z-10">
+        <p class="text-sm text-zinc-500">Anonymization</p>
+        <h2 class="mt-1 text-2xl font-semibold text-white">
+          Anonymization modes
+        </h2>
+        <p class="mt-3 leading-6 text-zinc-400">
+          Choose how detected information should be hidden.
+        </p>
+        <div class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div
+            class="rounded-2xl border border-white/10 bg-white/3 px-4 py-4 text-zinc-300"
+          >
+            Blur
+          </div>
+          <div
+            class="rounded-2xl border border-white/10 bg-white/3 px-4 py-4 text-zinc-300"
+          >
+            Pixelate
+          </div>
+          <div
+            class="rounded-2xl border border-white/10 bg-white/3 px-4 py-4 text-zinc-300"
+          >
+            Solid
+          </div>
+          <div
+            class="rounded-2xl border border-white/10 bg-white/3 px-4 py-4 text-zinc-300"
+          >
+            Noise
+          </div>
+          <div
+            class="rounded-2xl border border-white/10 bg-white/3 px-4 py-4 text-zinc-300"
+          >
+            Emoji
+          </div>
+          <div
+            class="rounded-2xl border border-white/10 bg-white/3 px-4 py-4 text-zinc-300"
+          >
+            Inpaint
+          </div>
+        </div>
+        <p class="mt-5 text-sm text-zinc-500">
+          Select a mode using the
+          <code class="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300"
+            >mode</code
+          >
+          query parameter.
+        </p>
+      </div>
+    </section>
+    <section
+      class="group/card relative overflow-hidden rounded-3xl border border-white/10 bg-white/3 p-6 backdrop-blur-xl"
+    >
+      <div
+        class="pointer-events-none absolute left-0 top-0 h-72 w-96 bg-[radial-gradient(circle_at_top_left,rgba(139,92,246,0.08),transparent_70%)] blur-3xl"
+      ></div>
+      <div class="relative z-10">
+        <p class="text-sm text-zinc-500">Infrastructure</p>
+        <h2 class="mt-1 text-2xl font-semibold text-white">
+          Health & readiness
+        </h2>
+        <p class="mt-3 leading-6 text-zinc-400">
+          Check whether the API is running and whether its models are ready.
+        </p>
+        <div class="mt-6 grid gap-3 md:grid-cols-2">
+          <div
+            class="rounded-2xl border border-white/10 bg-[#090b10] p-5 font-mono text-sm"
+          >
+            <p class="mb-3 text-zinc-500">Health</p>
+            <span class="text-[#E4B1D6]">GET</span>
+            <span class="text-zinc-200"> /api/v1/health</span>
+          </div>
+          <div
+            class="rounded-2xl border border-white/10 bg-[#090b10] p-5 font-mono text-sm"
+          >
+            <p class="mb-3 text-zinc-500">Readiness</p>
+            <span class="text-[#E4B1D6]">GET</span>
+            <span class="text-zinc-200"> /api/v1/health/ready</span>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section
+      class="relative overflow-hidden rounded-3xl border border-white/10 bg-white/3 p-8 text-center backdrop-blur-xl"
+    >
+      <div
+        class="pointer-events-none absolute left-1/2 -top-40 h-96 w-3xl -translate-x-1/2 bg-[radial-gradient(ellipse_at_top,rgba(139,92,246,0.12),transparent_70%)] blur-3xl"
+      ></div>
+      <div class="relative z-10">
+        <p class="text-sm text-zinc-500">Want to go deeper?</p>
+        <h2 class="mt-2 text-2xl font-semibold text-white">
+          Explore the API documentation
+        </h2>
+        <p class="mx-auto mt-3 max-w-xl leading-6 text-zinc-400">
+          Find detailed request parameters, responses, supported formats, and
+          examples.
+        </p>
+        <a
+          href="{{ url_for('frontend.docs') }}"
+          class="group mt-6 inline-flex items-center gap-2 text-indigo-400 transition hover:text-indigo-300"
+        >
+          View API Docs
+          <span
+            class="transition-transform duration-300 group-hover:translate-x-1"
+          >
+            {% include "components/icons/arrow-right.svg" %}
+          </span>
+        </a>
+      </div>
+    </section>
+  </div>
+</main>
+
+{% endblock %}

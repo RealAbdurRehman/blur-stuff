@@ -30,15 +30,7 @@
     <ul class="mx-auto flex items-center gap-10">
       <li>
         <a
-          href="#"
-          class="text-sm font-medium text-zinc-400 transition hover:text-white"
-        >
-          Features
-        </a>
-      </li>
-      <li>
-        <a
-          href="#"
+          href="{{ url_for('frontend.api') }}"
           class="text-sm font-medium text-zinc-400 transition hover:text-white"
         >
           API
@@ -46,7 +38,7 @@
       </li>
       <li>
         <a
-          href="#"
+          href="{{ url_for('frontend.docs') }}"
           class="text-sm font-medium text-zinc-400 transition hover:text-white"
         >
           Docs
@@ -54,7 +46,7 @@
       </li>
       <li>
         <a
-          href="#"
+          href="{{ url_for('frontend.about') }}"
           class="text-sm font-medium text-zinc-400 transition hover:text-white"
         >
           About

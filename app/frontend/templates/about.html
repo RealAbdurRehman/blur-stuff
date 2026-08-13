@@ -1,0 +1,138 @@
+{% extends "base.html" %} {% block page_title %}About{% endblock %} {% block
+description %} Learn more about Blur Stuff, a privacy-first tool for anonymizing
+sensitive information in images, videos, and documents. {% endblock %} {% block
+og_title %} About - Blur Stuff {% endblock %} {% block content %}
+
+<main class="mx-auto mt-10 max-w-7xl px-6 pb-10">
+  <div class="mb-14">
+    <div
+      class="mb-6 inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm text-zinc-300"
+    >
+      {% include "components/icons/info.svg" %}
+      <span>About Blur Stuff</span>
+    </div>
+    <h1 class="text-4xl font-bold tracking-tight text-white md:text-5xl">
+      Privacy should be
+      <span
+        class="bg-linear-to-r from-indigo-400 via-purple-400 to-indigo-500 bg-clip-text text-transparent"
+      >
+        simple.
+      </span>
+    </h1>
+    <p class="mt-5 max-w-2xl text-lg leading-6 text-zinc-400">
+      Blur Stuff is a privacy-first media anonymization tool designed to make
+      removing sensitive information from your files quick and easy.
+    </p>
+  </div>
+  <div class="space-y-10 text-sm leading-5 text-zinc-400">
+    <section>
+      <h2 class="mb-4 text-xl font-semibold text-white">What is Blur Stuff?</h2>
+      <p>
+        Blur Stuff automatically detects sensitive information in your images,
+        videos, and documents and lets you anonymize it before sharing.
+      </p>
+      <p class="mt-1">
+        You can detect and anonymize things such as faces, license plates, text,
+        and personal information without manually editing every part of your
+        file.
+      </p>
+    </section>
+    <section>
+      <h2 class="mb-4 text-xl font-semibold text-white">Why we built it</h2>
+      <p>
+        Sharing photos, videos, and documents often means accidentally sharing
+        information that was never meant to be public.
+      </p>
+      <p class="mt-1">
+        Blur Stuff aims to make protecting that information accessible to
+        everyone — without requiring complicated editing software or a long
+        manual process.
+      </p>
+    </section>
+    <section>
+      <h2 class="mb-4 text-xl font-semibold text-white">
+        Built with privacy in mind
+      </h2>
+      <div class="mt-6 grid gap-4 md:grid-cols-3">
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-6">
+          <h3 class="font-semibold text-white">No account required</h3>
+          <p class="mt-2 text-zinc-500">
+            Use the core anonymization workflow without creating an account.
+          </p>
+        </div>
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-6">
+          <h3 class="font-semibold text-white">Minimal data</h3>
+          <p class="mt-2 text-zinc-500">
+            Blur Stuff is designed to process your files rather than build a
+            permanent collection of your media.
+          </p>
+        </div>
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-6">
+          <h3 class="font-semibold text-white">Open source friendly</h3>
+          <p class="mt-2 text-zinc-500">
+            The project is built with transparency and inspectable software in
+            mind.
+          </p>
+        </div>
+      </div>
+    </section>
+    <section>
+      <h2 class="mb-4 text-xl font-semibold text-white">
+        What can it anonymize?
+      </h2>
+      <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="rounded-xl border border-white/10 bg-white/5 px-5 py-4">
+          <p class="font-medium text-white">Faces</p>
+          <p class="mt-1 text-zinc-500">
+            Automatically detect and anonymize faces.
+          </p>
+        </div>
+        <div class="rounded-xl border border-white/10 bg-white/5 px-5 py-4">
+          <p class="font-medium text-white">License Plates</p>
+          <p class="mt-1 text-zinc-500">
+            Hide vehicle license plates before sharing.
+          </p>
+        </div>
+        <div class="rounded-xl border border-white/10 bg-white/5 px-5 py-4">
+          <p class="font-medium text-white">Text</p>
+          <p class="mt-1 text-zinc-500">
+            Detect and anonymize text found in your files.
+          </p>
+        </div>
+        <div class="rounded-xl border border-white/10 bg-white/5 px-5 py-4">
+          <p class="font-medium text-white">Personal Information</p>
+          <p class="mt-1 text-zinc-500">
+            Help remove potentially identifying information.
+          </p>
+        </div>
+      </div>
+    </section>
+    <section>
+      <h2 class="mb-4 text-xl font-semibold text-white">Open source</h2>
+      <p>
+        Blur Stuff is developed as an open-source-friendly project. You can
+        explore the code, see how the application works, and follow its
+        development on GitHub.
+      </p>
+      <a
+        href="https://github.com/RealAbdurRehman/blur-stuff"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="mt-5 inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-5 py-3 font-medium text-white transition hover:bg-white/10"
+      >
+        {% include "components/icons/github.svg" %} View on GitHub
+      </a>
+    </section>
+    <section>
+      <h2 class="mb-4 text-xl font-semibold text-white">
+        Built to keep getting better
+      </h2>
+      <p>
+        Blur Stuff is an evolving project. New detection methods, file formats,
+        anonymization options, and improvements will be added over time.
+      </p>
+    </section>
+  </div>
+</main>
+
+{% endblock %}

@@ -13,13 +13,16 @@
     </div>
     <div class="flex flex-col items-start gap-6 lg:items-end">
       <nav class="flex flex-wrap items-center gap-x-8 gap-y-3 text-sm">
-        <a href="#" class="text-zinc-400 transition hover:text-white">
-          Features
+        <a
+          href="{{ url_for('frontend.about') }}"
+          class="text-zinc-400 transition hover:text-white"
+        >
+          About
         </a>
-        <a href="#" class="text-zinc-400 transition hover:text-white">
-          API Docs
-        </a>
-        <a href="#" class="text-zinc-400 transition hover:text-white">
+        <a
+          href="{{ url_for('frontend.privacy') }}"
+          class="text-zinc-400 transition hover:text-white"
+        >
           Privacy Policy
         </a>
         <a

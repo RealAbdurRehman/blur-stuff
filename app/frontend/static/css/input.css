@@ -5,6 +5,10 @@
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   ::selection {
     background: rgba(99, 102, 241, 0.35);
   }
