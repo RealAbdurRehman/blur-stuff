@@ -63,9 +63,10 @@ nvidia-ml-py==13.610.43
 opencv-contrib-python==5.0.0.93
 opt-einsum==3.3.0
 packaging==26.2
-paddleocr==3.7.0
+# pyyaml==6.0.3
+# paddleocr==3.7.0
 paddlepaddle==3.3.1
-paddlex==3.7.2
+# paddlex==3.7.2
 pandas==2.3.3
 phonenumbers==9.0.35
 pillow==12.3.0
@@ -73,7 +74,7 @@ pillow_heif==1.5.0
 polars==1.42.1
 polars-runtime-32==1.42.1
 preshed==3.0.13
-presidio_analyzer==2.2.364
+# presidio_analyzer==2.2.364
 prettytable==3.18.0
 propcache==0.5.2
 protobuf==7.35.1
