@@ -60,7 +60,7 @@ networkx==3.6.1
 ninja==1.13.0
 numpy==2.3.5
 nvidia-ml-py==13.610.43
-opencv-contrib-python==5.0.0.93
+opencv-contrib-python-headless==5.0.0.93
 opt-einsum==3.3.0
 packaging==26.2
 # pyyaml==6.0.3
