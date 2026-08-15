@@ -14,7 +14,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/RealAbdurRehman/blur-stuff">
+  <a href="https://github.com/RealAbdurRehman/blur-stuff" style="text-decoration: none;">
     <img src="https://img.shields.io/github/stars/RealAbdurRehman/blur-stuff?style=flat&logo=github" alt="GitHub Stars">
   </a>
   <img src="https://img.shields.io/badge/Python-3.12-3776AB?style=flat&logo=python&logoColor=white" alt="Python Version">
