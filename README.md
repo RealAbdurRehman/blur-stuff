@@ -1,7 +1,7 @@
 <p align="center">
   <img
     src="https://github.com/RealAbdurRehman/blur-stuff/blob/main/screenshots/logo.svg"
-    width="70"
+    width="200"
     alt="Blur Stuff"
   />
 </p>
