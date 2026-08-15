@@ -3,7 +3,7 @@ import os
 os.environ["FLAGS_use_mkldnn"] = "0"
 os.environ["FLAGS_use_onednn"] = "0"
 
-import paddle
+from app import create_app
 
 app = create_app()
 
