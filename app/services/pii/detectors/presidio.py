@@ -1,4 +1,5 @@
 from presidio_analyzer import AnalyzerEngine, RecognizerRegistry
+from presidio_analyzer.nlp_engine import NlpEngineProvider
 
 from .base import BaseDetector
 from app.services.pii.detection import Detection
@@ -42,7 +43,15 @@ class PresidioDetector(BaseDetector):
         registry = RecognizerRegistry()
         registry.load_predefined_recognizers()
 
-        self.engine = AnalyzerEngine(registry=registry)
+        nlp_configuration = {
+            "nlp_engine_name": "spacy",
+            "models": [{"lang_code": "en", "model_name": "en_core_web_sm"}],
+        }
+
+        provider = NlpEngineProvider(nlp_configuration=nlp_configuration)
+        nlp_engine = provider.create_engine()
+
+        self.engine = AnalyzerEngine(nlp_engine=nlp_engine, registry=registry)
 
     def detect(self, graph):
         detections = []
