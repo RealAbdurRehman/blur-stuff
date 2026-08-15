@@ -144,9 +144,9 @@ og_title %}API Documentation - Blur Stuff{% endblock %} {% block content %}
         <h2 class="mt-1 text-2xl font-semibold text-white">Requests</h2>
         <p class="mt-3">
           File-processing endpoints accept
-          <code class="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300">
-            multipart/form-data
-          </code>
+          <code class="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300"
+            >multipart/form-data</code
+          >
           requests.
         </p>
         <div class="mt-6 overflow-hidden rounded-2xl border border-white/10">
@@ -618,9 +618,9 @@ og_title %}API Documentation - Blur Stuff{% endblock %} {% block content %}
         </h2>
         <p class="mt-3">
           The
-          <code class="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300">
-            anonymize-selected
-          </code>
+          <code class="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300"
+            >anonymize-selected</code
+          >
           endpoints allow you to anonymize only specific detections instead of
           automatically anonymizing everything detected in the file.
         </p>
@@ -638,9 +638,9 @@ og_title %}API Documentation - Blur Stuff{% endblock %} {% block content %}
             <p>
               Anonymizes only the detections supplied by the client. The
               detections are provided through the
-              <code class="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300">
-                detections
-              </code>
+              <code class="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300"
+                >detections</code
+              >
               multipart form field.
             </p>
             <div
@@ -881,16 +881,16 @@ og_title %}API Documentation - Blur Stuff{% endblock %} {% block content %}
         </h2>
         <p class="mt-3">
           Use the
-          <code class="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300">
-            targets
-          </code>
+          <code class="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300"
+            >targets</code
+          >
           query parameter to choose what Blur Stuff should detect.
         </p>
         <p class="mt-3">
           Multiple targets can be provided as a comma-separated list. If
           omitted, the API defaults to
-          <code class="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300">
-            faces </code
+          <code class="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300"
+            >faces</code
           >.
         </p>
         <div class="mt-6 overflow-hidden rounded-2xl border border-white/10">
@@ -930,13 +930,13 @@ og_title %}API Documentation - Blur Stuff{% endblock %} {% block content %}
             Important
           </p>
           <p class="mt-2 text-sm text-zinc-400">
-            <code class="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300">
-              text
-            </code>
+            <code class="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300"
+              >text</code
+            >
             and
-            <code class="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300">
-              pii
-            </code>
+            <code class="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300"
+              >pii</code
+            >
             cannot be used together.
           </p>
         </div>
@@ -949,9 +949,9 @@ og_title %}API Documentation - Blur Stuff{% endblock %} {% block content %}
         <p class="mt-3">
           Anonymization endpoints support several ways of hiding detected
           information. Use the
-          <code class="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300">
-            mode
-          </code>
+          <code class="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300"
+            >mode</code
+          >
           query parameter.
         </p>
         <div class="mt-6 grid gap-3 sm:grid-cols-2">
@@ -1002,9 +1002,9 @@ og_title %}API Documentation - Blur Stuff{% endblock %} {% block content %}
         <h2 class="mt-1 text-2xl font-semibold text-white">Padding</h2>
         <p class="mt-3">
           Use the
-          <code class="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300">
-            padding
-          </code>
+          <code class="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300"
+            >padding</code
+          >
           query parameter to expand the detected bounding box before applying
           anonymization.
         </p>
@@ -1121,9 +1121,9 @@ og_title %}API Documentation - Blur Stuff{% endblock %} {% block content %}
             </div>
             <p class="mt-3">
               Selected detections must be supplied through the
-              <code class="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300">
-                detections
-              </code>
+              <code class="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300"
+                >detections</code
+              >
               form field as JSON.
             </p>
           </div>
