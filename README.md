@@ -67,7 +67,7 @@ Detect sensitive information
   └── PII
   │
   ▼
-Select detections (optional)
+Select detections
   │
   ▼
 Apply anonymization
