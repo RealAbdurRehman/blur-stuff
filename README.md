@@ -1,13 +1,10 @@
-<h1 align="center">
+<p align="center">
   <img
-    src="https://raw.githubusercontent.com/RealAbdurRehman/blur-stuff/main/app/frontend/templates/components/icons/logo-white.svg"
-    width="35"
-    height="35"
-    alt="Blur Stuff logo"
-    style="vertical-align: bottom;"
+    src="https://github.com/RealAbdurRehman/blur-stuff/blob/main/screenshots/logo.svg"
+    width="70"
+    alt="Blur Stuff"
   />
-  Blur Stuff
-</h1>
+</p>
 
 <p align="center">
   <i>Automatically detect and anonymize sensitive information in images, videos, and documents.</i>
