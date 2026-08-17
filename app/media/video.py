@@ -22,7 +22,7 @@ class Video:
         self.output_path = tempfile.NamedTemporaryFile(delete=False, suffix=".mp4").name
         self.writer = cv2.VideoWriter(
             self.output_path,
-            cv2.VideoWriter_fourcc(*"avc1"),
+            cv2.VideoWriter_fourcc(*"mp4v"),
             self.fps,
             (self.width, self.height),
         )
