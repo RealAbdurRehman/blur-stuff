@@ -56,6 +56,9 @@ class OcrDetector:
             self.load_error = str(err)
             raise
 
+    def unload(self):
+        self.model = None
+
     def detect(self, image):
         self._load_model()
 
@@ -86,5 +89,8 @@ class OcrDetector:
 
                 token.id = f"token_{next(ids)}"
                 tokens.append(token)
+
+        del result
+        del resized
 
         return tokens

@@ -27,14 +27,6 @@ class YoloDetector:
         self.ready = True
         self.load_error = None
 
-        try:
-            self.model = YOLO(model_path)
-        except Exception as err:
-            self.model = None
-            self.ready = False
-            self.load_error = err
-            raise
-
     def _load_model(self):
         if self.model is not None:
             return
@@ -45,6 +37,9 @@ class YoloDetector:
             self.model = None
             self.ready = False
             raise
+
+    def unload(self):
+        self.model = None
 
     def detect(self, image):
         self._load_model()
@@ -57,6 +52,7 @@ class YoloDetector:
                 conf=self.conf_threshold,
                 augment=self.augment,
                 verbose=False,
+                device="cpu",
             )
 
             for result in results:
@@ -72,5 +68,7 @@ class YoloDetector:
                             confidence=float(box.conf[0]),
                         )
                     )
+
+            del result
 
         return non_max_suppression(boxes)

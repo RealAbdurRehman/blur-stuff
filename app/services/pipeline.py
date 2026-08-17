@@ -1,17 +1,15 @@
 import time
 
-from concurrent.futures import ThreadPoolExecutor
-
-from .detectors.faces import detect_faces
-from .detectors.plates import detect_plates
-from .detectors.text import detect_text
-from .detectors.pii import detect_pii
+from .detectors.faces import detect_faces, unload_faces
+from .detectors.plates import detect_plates, unload_plates
+from .detectors.text import detect_text, unload_text
+from .detectors.pii import detect_pii, unload_pii
 
 DETECTORS = {
-    "faces": detect_faces,
-    "plates": detect_plates,
-    "text": detect_text,
-    "pii": detect_pii,
+    "faces": (detect_faces, unload_faces),
+    "plates": (detect_plates, unload_plates),
+    "text": (detect_text, unload_text),
+    "pii": (detect_pii, unload_pii),
 }
 
 ID_PREFIXES = {
@@ -39,15 +37,16 @@ def assign_detection_ids(results, counters=None):
 
 def detect(image, targets, assign_ids=True):
     results = {}
-    with ThreadPoolExecutor(max_workers=len(targets) or 1) as executor:
-        futures = {
-            target: executor.submit(DETECTORS[target], image) for target in targets
-        }
+    for target in targets:
+        detector, unload = DETECTORS[target]
 
-        for target, future in futures.items():
-            start = time.time()
-            results[target] = future.result()
-            print(f"[timing] {target}: {time.time() - start:.2f}s", flush=True)
+        start = time.time()
+        try:
+            results[target] = detector(image)
+        finally:
+            unload()
+
+        print(f"[timing] {target}: {time.time() - start:.2f}s", flush=True)
 
     if assign_ids:
         assign_detection_ids(results)

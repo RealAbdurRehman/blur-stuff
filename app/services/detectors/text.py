@@ -5,3 +5,7 @@ model = OcrDetector()
 
 def detect_text(image):
     return model.detect(image)
+
+
+def unload_text():
+    model.unload()

@@ -6,3 +6,7 @@ model = YoloDetector(model_path=str(FACE_MODEL), conf_threshold=0.4)
 
 def detect_faces(image):
     return model.detect(image)
+
+
+def unload_faces():
+    model.unload()

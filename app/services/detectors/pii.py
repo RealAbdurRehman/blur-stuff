@@ -14,3 +14,7 @@ def detect_pii(image):
     matches = manager.detect(graph)
 
     return map_matches(matches)
+
+
+def unload_pii():
+    ocr.unload()
