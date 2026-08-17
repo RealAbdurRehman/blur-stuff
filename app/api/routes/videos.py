@@ -56,10 +56,11 @@ def videos():
         return jsonify({"error": str(err)}), 503
 
     encoded = encode_video(processed)
+    output_name = f'{file.filename.rsplit(".", 1)[0]}-anonymized.mp4'
     return Response(
         encoded,
         mimetype="video/mp4",
-        headers={"Content-Disposition": f'inline; filename="{file.filename}"'},
+        headers={"Content-Disposition": f'inline; filename="{output_name}"'},
     )
 
 
@@ -80,8 +81,9 @@ def anonymize_selected():
         return jsonify({"error": str(err)}), 503
 
     encoded = encode_video(processed)
+    output_name = f'{file.filename.rsplit(".", 1)[0]}-anonymized.mp4'
     return Response(
         encoded,
         mimetype="video/mp4",
-        headers={"Content-Disposition": (f'inline; filename="{file.filename}"')},
+        headers={"Content-Disposition": (f'inline; filename="{output_name}"')},
     )

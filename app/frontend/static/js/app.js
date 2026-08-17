@@ -1307,9 +1307,10 @@ function resultsApp() {
     },
     getOutputFilename() {
       if (!this.file) return "anonymized";
-      const extension = this.getExtension(this.file);
+      const baseName = this.file.name.replace(/\.[^/.]+$/, "");
 
-      return `${this.file.name.replace(/\.[^/.]+$/, "")}-anonymized.${extension}`;
+      if (this.fileType === "video") return `${baseName}-anonymized.mp4`;
+      return `${baseName}-anonymized.${this.getExtension(this.file)}`;
     },
     destroy() {
       if (this.previewUrl) URL.revokeObjectURL(this.previewUrl);

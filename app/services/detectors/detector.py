@@ -7,7 +7,6 @@ def non_max_suppression(boxes, iou_threshold=0.4):
     boxes = sorted(boxes, key=lambda b: b.confidence, reverse=True)
 
     kept = []
-
     while boxes:
         best = boxes.pop(0)
         kept.append(best)
@@ -18,25 +17,39 @@ def non_max_suppression(boxes, iou_threshold=0.4):
 
 
 class YoloDetector:
-    def __init__(self, model_path, imgsizes=[1280], conf_threshold=0.5, augment=True):
-        self.ready = True
-
-        try:
-            self.model = YOLO(model_path)
-        except Exception:
-            self.model = None
-            self.ready = False
-
+    def __init__(self, model_path, imgsizes=[960], conf_threshold=0.5, augment=False):
+        self.model_path = model_path
         self.imgsizes = imgsizes
         self.conf_threshold = conf_threshold
         self.augment = augment
 
+        self.model = None
+        self.ready = True
+        self.load_error = None
+
+        try:
+            self.model = YOLO(model_path)
+        except Exception as err:
+            self.model = None
+            self.ready = False
+            self.load_error = err
+            raise
+
+    def _load_model(self):
+        if self.model is not None:
+            return
+
+        try:
+            self.model = YOLO(self.model_path)
+        except Exception:
+            self.model = None
+            self.ready = False
+            raise
+
     def detect(self, image):
-        if self.model is None:
-            raise RuntimeError("Detector unavailable")
+        self._load_model()
 
         boxes = []
-
         for size in self.imgsizes:
             results = self.model(
                 image,

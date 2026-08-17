@@ -33,11 +33,11 @@ def merge_audio(original_video, processed_video):
         output,
     ]
 
-    subprocess.run(
+    result = subprocess.run(
         command,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-        check=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
     )
 
     return output

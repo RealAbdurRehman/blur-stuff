@@ -33,25 +33,35 @@ def resize(image, max_side=960):
 
 class OcrDetector:
     def __init__(self, language="en"):
+        self.language = language
+        self.model = None
         self.ready = True
+        self.load_error = None
+
+    def _load_model(self):
+        if self.model is not None:
+            return
 
         try:
             self.model = PaddleOCR(
-                lang=language,
                 text_detection_model_name="PP-OCRv6_small_det",
                 text_recognition_model_name="latin_PP-OCRv5_mobile_rec",
                 use_doc_orientation_classify=False,
                 use_doc_unwarping=False,
                 use_textline_orientation=False,
             )
-        except Exception:
+        except Exception as err:
             self.model = None
             self.ready = False
+            self.load_error = str(err)
+            raise
 
     def detect(self, image):
+        self._load_model()
+
         ids = count(1)
-        enhanced = enhance(image)
-        resized, scale = resize(enhanced)
+        resized, scale = resize(image)
+        resized = enhance(resized)
         result = self.model.predict(resized)
 
         tokens = []
