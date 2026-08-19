@@ -1,54 +1,68 @@
 <div
-  class="mt-7 overflow-hidden rounded-3xl border border-white/10 bg-[#0d1014] px-8 py-6"
+  class="mt-10 rounded-xl border-2 border-ink bg-paper p-5 shadow-[4px_4px_0_#16171a] sm:p-6"
 >
-  <h2 class="text-center text-lg font-semibold text-white">
-    Supported Formats
-  </h2>
-  <div class="mt-5 grid grid-cols-3 divide-x divide-white/10">
-    <div class="flex items-center gap-5 px-5 first:pl-0">
-      <div
-        class="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-indigo-400/40 bg-indigo-500/10 shadow-[0_0_25px_rgba(99,102,241,0.08)]"
+  <div
+    class="mb-5 flex flex-wrap items-end justify-between gap-3 border-b-2 border-ink/15 pb-4"
+  >
+    <div>
+      <h2
+        class="mt-1 font-display text-xl font-extrabold tracking-tight text-ink"
       >
-        <span class="text-indigo-400 [&>svg]:h-7 [&>svg]:w-7">
-          {% include "components/icons/image.svg" %}
-        </span>
-      </div>
-      <div>
-        <h3 class="text-sm font-semibold text-white">Images</h3>
-        <p class="mt-2 text-sm leading-relaxed text-zinc-500">
-          PNG, JPG, JPEG, WEBP, HEIC, TIFF, BMP, GIF
-        </p>
-      </div>
+        Supported formats
+      </h2>
     </div>
-    <div class="flex items-center gap-5 px-7">
-      <div
-        class="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-emerald-400/40 bg-emerald-500/10 shadow-[0_0_25px_rgba(52,211,153,0.06)]"
-      >
-        <span class="text-emerald-400 [&>svg]:h-7 [&>svg]:w-7">
-          {% include "components/icons/video.svg" %}
-        </span>
+  </div>
+  <div class="grid gap-4 md:grid-cols-3">
+    <div
+      class="group relative rounded-lg border-2 border-ink bg-background p-4 pb-6 shadow-[2px_2px_0_#16171a] transition-transform duration-150 hover:-translate-y-0.5"
+    >
+      <div class="mb-4 flex items-start justify-between">
+        <div
+          class="flex h-11 w-11 items-center justify-center rounded-md border-2 border-ink bg-paper-2"
+        >
+          <span class="text-ink [&>svg]:h-6 [&>svg]:w-6">
+            {% include "components/icons/image.svg" %}
+          </span>
+        </div>
       </div>
-      <div>
-        <h3 class="text-sm font-semibold text-white">Videos</h3>
-        <p class="mt-2 text-sm leading-relaxed text-zinc-500">
-          MP4, MOV, AVI, MKV, WEBM, M4V, 3GP
-        </p>
-      </div>
+      <h3 class="font-display text-base font-extrabold text-ink">Images</h3>
+      <p class="mt-2 text-xs leading-6 text-ink/60">
+        PNG, JPG, JPEG, WEBP, HEIC, TIFF, BMP, GIF
+      </p>
     </div>
-    <div class="flex items-center gap-5 px-7 last:pr-0">
-      <div
-        class="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-amber-400/40 bg-amber-500/10 shadow-[0_0_25px_rgba(251,191,36,0.06)]"
-      >
-        <span class="text-amber-400 [&>svg]:h-7 [&>svg]:w-7">
-          {% include "components/icons/file.svg" %}
-        </span>
+    <div
+      class="group relative rounded-lg border-2 border-ink bg-background p-4 pb-6 shadow-[2px_2px_0_#16171a] transition-transform duration-150 hover:-translate-y-0.5"
+    >
+      <div class="mb-4 flex items-start justify-between">
+        <div
+          class="flex h-11 w-11 items-center justify-center rounded-md border-2 border-ink bg-paper-2"
+        >
+          <span class="text-ink [&>svg]:h-6 [&>svg]:w-6">
+            {% include "components/icons/video.svg" %}
+          </span>
+        </div>
       </div>
-      <div>
-        <h3 class="text-sm font-semibold text-white">Documents</h3>
-        <p class="mt-2 text-sm leading-relaxed text-zinc-500">
-          PDF, DOCX, PPTX, TXT, XLSX
-        </p>
+      <h3 class="font-display text-base font-extrabold text-ink">Videos</h3>
+      <p class="mt-2 text-xs leading-6 text-ink/60">
+        MP4, MOV, AVI, MKV, WEBM, M4V, 3GP
+      </p>
+    </div>
+    <div
+      class="group relative rounded-lg border-2 border-ink bg-background p-4 pb-6 shadow-[2px_2px_0_#16171a] transition-transform duration-150 hover:-translate-y-0.5"
+    >
+      <div class="mb-4 flex items-start justify-between">
+        <div
+          class="flex h-11 w-11 items-center justify-center rounded-md border-2 border-ink bg-paper-2"
+        >
+          <span class="text-ink [&>svg]:h-6 [&>svg]:w-6">
+            {% include "components/icons/file.svg" %}
+          </span>
+        </div>
       </div>
+      <h3 class="font-display text-base font-extrabold text-ink">Documents</h3>
+      <p class="mt-2 text-xs leading-6 text-ink/60">
+        PDF, DOCX, PPTX, TXT, XLSX
+      </p>
     </div>
   </div>
 </div>

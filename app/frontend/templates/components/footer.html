@@ -1,27 +1,35 @@
-<footer class="mx-auto mt-14 max-w-7xl px-6 pb-10">
+<footer class="mt-25 border-t-2 border-ink bg-paper px-5 pb-8 pt-12 text-ink">
   <div
-    class="flex flex-col gap-10 border-t border-white/10 pt-10 lg:flex-row lg:items-start lg:justify-between"
+    class="mx-auto flex max-w-295 flex-col justify-between gap-8 sm:flex-row sm:flex-wrap"
   >
-    <div>
-      <a href="/" class="flex items-center gap-3">
-        {% include "components/icons/logo.svg" %}
-        <span class="text-2xl font-semibold text-white">Blur Stuff</span>
+    <div class="footer-brand">
+      <a
+        href="{{ url_for('frontend.index') }}"
+        class="group mb-2.5 flex items-center gap-2.5 font-display text-lg font-extrabold tracking-tight no-underline"
+      >
+        <span
+          class="flex h-8 w-8 -rotate-6 items-center justify-center rounded-lg bg-ink text-paper transition-transform duration-150 group-hover:rotate-0"
+        >
+          {% include "components/icons/logo.svg" %}
+        </span>
+        <span>Blur Stuff</span>
       </a>
-      <p class="mt-4 max-w-xs leading-7 text-zinc-400 text-sm">
+
+      <p class="m-0 max-w-65 text-sm leading-relaxed text-ink/65">
         Privacy-first media anonymization for everyone.
       </p>
     </div>
-    <div class="flex flex-col items-start gap-6 lg:items-end">
-      <nav class="flex flex-wrap items-center gap-x-8 gap-y-3 text-sm">
+    <div class="flex flex-col items-start gap-4 sm:items-end">
+      <nav class="flex flex-wrap gap-x-5.5 gap-y-3 text-sm font-semibold">
         <a
           href="{{ url_for('frontend.about') }}"
-          class="text-zinc-400 transition hover:text-white"
+          class="text-ink/75 no-underline transition-opacity duration-150 hover:text-ink hover:opacity-100"
         >
           About
         </a>
         <a
           href="{{ url_for('frontend.privacy') }}"
-          class="text-zinc-400 transition hover:text-white"
+          class="text-ink/75 no-underline transition-opacity duration-150 hover:text-ink hover:opacity-100"
         >
           Privacy Policy
         </a>
@@ -29,12 +37,12 @@
           href="https://github.com/RealAbdurRehman/blur-stuff"
           target="_blank"
           rel="noopener noreferrer"
-          class="flex items-center gap-2 text-zinc-400 transition hover:text-white"
+          class="flex items-center gap-1.5 text-ink/75 no-underline transition-opacity duration-150 hover:text-ink hover:opacity-100"
         >
           {% include "components/icons/github.svg" %} GitHub
         </a>
       </nav>
-      <p class="text-sm text-zinc-500">
+      <p class="mt-1 font-mono text-[0.7rem] tracking-wide text-ink/50">
         © 2026 Blur Stuff. All rights reserved.
       </p>
     </div>

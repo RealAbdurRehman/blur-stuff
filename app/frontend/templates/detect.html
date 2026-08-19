@@ -2,9 +2,10 @@
 description %} Anonymize faces, license plates, text, and personal information
 in your images, videos, and documents. Process files quickly and privately with
 Blur Stuff. {% endblock %} {% block og_title %}Detect - Blur Stuff{% endblock %}
-{% set upload_button_text = "New Upload" %} {% block content %}
+{% block body_class %} min-h-screen bg-workspace text-ink {% endblock %} {% set
+upload_button_text = "New Upload" %} {% block content %}
 
-<section class="mx-auto mt-10 max-w-7xl px-6">
+<section class="mx-auto mt-36 max-w-7xl px-6 pb-20">
   {% include "components/detect-intro.html" %}
   <div
     x-data="anonymizeApp()"

@@ -7,60 +7,85 @@ og_title %}Complete — Blur Stuff{% endblock %} {% block extra_meta %}
 <div
   x-data="completePage()"
   x-init="init()"
-  @mousemove.window="move($event)"
-  @mouseup.window="dragging = false"
-  class="mx-auto max-w-6xl px-6 py-16"
+  @pointermove.window="move($event)"
+  @pointerup.window="dragging = false"
+  @pointercancel.window="dragging = false"
+  class="mx-auto min-h-vsh w-full max-w-6xl px-6 pb-20 pt-36"
 >
   <div x-show="isLoading" class="flex min-h-125 items-center justify-center">
     <div class="text-center">
       <div
-        class="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-2 border-white/10 border-t-indigo-400"
+        class="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-2 border-ink/15 border-t-hot"
       ></div>
-      <p class="text-sm text-white/60">Preparing your anonymized file...</p>
+      <p class="font-mono text-xs uppercase tracking-wide text-ink/50">
+        Preparing your anonymized file...
+      </p>
     </div>
   </div>
   <div
     x-show="!isLoading && error"
-    class="mx-auto max-w-lg rounded-3xl border border-red-400/20 bg-red-400/5 p-8 text-center"
+    x-cloak
+    class="mx-auto max-w-lg rounded-xl border-2 border-ink bg-paper p-8 text-center shadow-[4px_4px_0_#16171a]"
   >
-    <h1 class="text-xl font-semibold text-white">Something went wrong</h1>
-    <p class="mt-2 text-sm text-white/50" x-text="error"></p>
+    <div
+      class="mx-auto flex h-12 w-12 items-center justify-center rounded-full border-2 border-ink bg-hot font-mono text-lg font-bold text-white"
+    >
+      !
+    </div>
+    <h1
+      class="mt-5 font-display text-2xl font-extrabold tracking-tight text-ink"
+    >
+      Something went wrong.
+    </h1>
+    <p class="mt-2 text-sm leading-relaxed text-ink/55" x-text="error"></p>
     <button
       type="button"
       @click="processAnother()"
-      class="mt-6 rounded-xl bg-white px-5 py-3 text-sm font-medium text-black transition hover:bg-white/90 cursor-pointer"
+      class="mt-6 cursor-pointer rounded-lg border-2 border-ink bg-hot px-5 py-3 font-mono text-xs font-bold uppercase tracking-wide text-white shadow-[2px_2px_0_#16171a] transition-all duration-150 hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1px_1px_0_#16171a]"
     >
       Try another file
     </button>
   </div>
   <div x-show="!isLoading && !error" x-cloak>
     <div class="mx-auto max-w-2xl text-center">
-      <h1 class="mt-6 text-4xl font-bold tracking-tight text-white">
-        Your file is ready
+      <h1
+        class="mt-6 font-display text-4xl font-extrabold leading-tight tracking-tight text-ink sm:text-5xl"
+      >
+        Your File Is
+        <span class="text-hot">Ready.</span>
       </h1>
-      <p class="mx-auto mt-4 max-w-xl text-white/50">
+      <p
+        class="mx-auto mt-3 max-w-xl text-sm leading-7 text-ink/60 sm:text-base"
+      >
         Your selected sensitive content has been anonymized. Nothing was stored
         on the server.
       </p>
     </div>
     <div
-      class="mt-12 rounded-3xl border border-white/10 bg-white/3 p-5 backdrop-blur-xl"
+      class="mt-10 overflow-hidden rounded-xl border-2 border-ink bg-paper p-5 shadow-[4px_4px_0_#16171a] lg:p-6"
     >
-      <div class="mb-5 flex items-center justify-between">
-        <div>
-          <h2 class="text-lg font-semibold text-white">Before & after</h2>
-          <p x-show="mediaType === 'image'" class="mt-1 text-sm text-white/40">
-            Drag the slider to compare the original and anonymized versions.
-          </p>
-          <p x-show="mediaType !== 'image'" class="mt-1 text-sm text-white/40">
-            Compare the original and anonymized versions side by side.
-          </p>
-        </div>
+      <div class="border-b-2 border-ink/15 pb-5">
+        <h2 class="font-display text-xl font-extrabold tracking-tight text-ink">
+          Before & After
+        </h2>
+        <p
+          x-show="mediaType === 'image'"
+          class="mt-1 text-sm leading-relaxed text-ink/55"
+        >
+          Drag the slider to compare the original and anonymized versions.
+        </p>
+        <p
+          x-show="mediaType !== 'image'"
+          class="mt-1 text-sm leading-relaxed text-ink/55"
+        >
+          Compare the original and anonymized versions side by side.
+        </p>
       </div>
       <template x-if="mediaType === 'image'">
         <div
           x-ref="wrapper"
-          class="relative mx-auto max-h-150 overflow-hidden rounded-2xl border border-white/10 bg-black select-none"
+          @pointerdown="startDrag($event)"
+          class="relative mx-auto mt-5 cursor-ew-resize touch-none select-none overflow-hidden rounded-lg border-2 border-ink bg-paper-2"
         >
           <img
             :src="processedUrl"
@@ -81,98 +106,128 @@ og_title %}Complete — Blur Stuff{% endblock %} {% block extra_meta %}
           </div>
           <div
             x-show="position > 10"
-            x-transition.opacity
-            class="absolute left-4 top-4 rounded-lg bg-black/60 px-3 py-1 text-sm text-white backdrop-blur"
+            x-transition.opacity.duration.150ms
+            class="absolute left-3.5 top-3.5 rounded-md border-2 border-ink bg-paper/95 px-2.5 py-1 font-mono text-[0.68rem] font-bold uppercase tracking-wider text-ink shadow-[2px_2px_0_#16171a]"
           >
             Original
           </div>
           <div
             x-show="position < 87"
-            x-transition.opacity
-            class="absolute right-4 top-4 rounded-lg bg-black/60 px-3 py-1 text-sm text-white backdrop-blur"
+            x-transition.opacity.duration.150ms
+            class="absolute right-3.5 top-3.5 rounded-md border-2 border-ink bg-paper/95 px-2.5 py-1 font-mono text-[0.68rem] font-bold uppercase tracking-wider text-ink shadow-[2px_2px_0_#16171a]"
           >
             Anonymized
           </div>
           <div
-            class="absolute bottom-0 top-0 w-0.5 bg-white"
-            :style="`left:${position}%`"
-          ></div>
-          <div
-            class="absolute top-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 cursor-ew-resize items-center justify-center rounded-full border border-white/20 bg-black/70 text-white shadow-xl backdrop-blur transition hover:scale-110"
-            :style="`left:${position}%`"
-            @mousedown="dragging = true"
+            class="absolute bottom-0 top-0 w-0.75 -translate-x-1/2 bg-ink"
+            :style="`left: ${position}%`"
           >
-            {% include "components/icons/move.svg" %}
+            <div
+              @pointerdown.stop="startDrag($event)"
+              class="absolute left-1/2 top-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 cursor-ew-resize items-center justify-center rounded-full border-2 border-ink bg-hot text-ink shadow-[2px_2px_0_#16171a] transition-transform duration-150 hover:scale-110 active:scale-95"
+            >
+              {% include "components/icons/move.svg" %}
+            </div>
           </div>
         </div>
       </template>
       <template x-if="mediaType === 'video'">
-        <div class="grid gap-5 md:grid-cols-2">
+        <div class="mt-5 grid gap-5 md:grid-cols-2">
           <div>
-            <p class="mb-2 text-sm text-white/40">Original</p>
+            <p
+              class="mb-2 font-mono text-[10px] font-bold uppercase tracking-wide text-ink/50"
+            >
+              Original
+            </p>
             <video
               :src="originalUrl"
               controls
-              class="w-full rounded-2xl border border-white/10 bg-black"
+              class="w-full rounded-lg border-2 border-ink bg-background"
             ></video>
           </div>
           <div>
-            <p class="mb-2 text-sm text-white/40">Anonymized</p>
+            <p
+              class="mb-2 font-mono text-[10px] font-bold uppercase tracking-wide text-ink/50"
+            >
+              Anonymized
+            </p>
             <video
               :src="processedUrl"
               controls
-              class="w-full rounded-2xl border border-white/10 bg-black"
+              class="w-full rounded-lg border-2 border-ink bg-background"
             ></video>
           </div>
         </div>
       </template>
       <template x-if="mediaType === 'document'">
-        <div class="grid gap-5 md:grid-cols-2">
+        <div class="mt-5 grid gap-5 md:grid-cols-2">
           <div>
-            <p class="mb-2 text-sm text-white/40">Original</p>
+            <p
+              class="mb-2 font-mono text-[10px] font-bold uppercase tracking-wide text-ink/50"
+            >
+              Original
+            </p>
             <iframe
               :src="originalUrl"
-              class="h-125 w-full rounded-2xl border border-white/10"
+              class="h-125 w-full rounded-lg border-2 border-ink bg-background"
             ></iframe>
           </div>
           <div>
-            <p class="mb-2 text-sm text-white/40">Anonymized</p>
+            <p
+              class="mb-2 font-mono text-[10px] font-bold uppercase tracking-wide text-ink/50"
+            >
+              Anonymized
+            </p>
             <iframe
               :src="processedUrl"
-              class="h-125 w-full rounded-2xl border border-white/10"
+              class="h-125 w-full rounded-lg border-2 border-ink bg-background"
             ></iframe>
           </div>
         </div>
       </template>
     </div>
     <div
-      class="mx-auto mt-8 max-w-2xl rounded-2xl border border-white/10 bg-white/3 p-5"
+      class="mx-auto mt-15 max-w-2xl rounded-xl border-2 border-ink bg-paper p-4 shadow-[3px_3px_0_#16171a]"
     >
       <div class="flex items-center justify-between gap-4">
         <div class="min-w-0">
-          <p class="text-sm text-white/40">Anonymized file</p>
           <p
-            class="mt-1 truncate font-medium text-white"
+            class="font-mono text-[10px] font-bold uppercase tracking-wide text-ink/45"
+          >
+            Anonymized file
+          </p>
+          <p
+            class="mt-1 truncate font-display text-sm font-bold text-ink"
             x-text="outputName"
           ></p>
         </div>
-        <div class="shrink-0 text-sm text-emerald-400">Ready to download</div>
+        <div
+          class="flex shrink-0 items-center gap-1.5 rounded-full border-2 border-ink bg-paper-2 px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-wide text-ink"
+        >
+          <span class="h-1.5 w-1.5 rounded-full bg-hot"></span>
+          Ready
+        </div>
       </div>
     </div>
-    <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+    <div class="mx-auto mt-6 flex max-w-2xl flex-col gap-3 sm:flex-row">
       <button
         type="button"
         @click="download()"
         :disabled="isDownloading"
-        class="inline-flex min-w-40 items-center justify-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-semibold text-black transition hover:bg-white/90 disabled:cursor-default disabled:opacity-80 cursor-pointer"
+        :class="
+          isDownloading
+            ? 'cursor-default bg-paper-2 text-ink/50 shadow-none'
+            : 'cursor-pointer bg-hot text-white shadow-[3px_3px_0_#16171a] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1px_1px_0_#16171a] active:translate-x-1 active:translate-y-1'
+        "
+        class="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border-2 border-ink px-6 py-3.5 font-mono text-xs font-bold uppercase tracking-wide transition-all duration-150"
       >
         <template x-if="!isDownloading">
           <span class="inline-flex items-center gap-2">
-            {% include "components/icons/download.svg" %} Download file
+            {% include "components/icons/download.svg" %} Download File
           </span>
         </template>
         <template x-if="isDownloading">
-          <span class="inline-flex items-center gap-2 text-emerald-600">
+          <span class="inline-flex items-center gap-2">
             {% include "components/icons/success.svg" %} Downloaded
           </span>
         </template>
@@ -180,12 +235,14 @@ og_title %}Complete — Blur Stuff{% endblock %} {% block extra_meta %}
       <button
         type="button"
         @click="processAnother()"
-        class="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-medium text-white transition hover:bg-white/10 cursor-pointer"
+        class="inline-flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg border-2 border-ink bg-paper-2 px-6 py-3.5 font-mono text-xs font-bold uppercase tracking-wide text-ink shadow-[3px_3px_0_#16171a] transition-all duration-150 hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1px_1px_0_#16171a]"
       >
-        Anonymize another
+        Anonymize Another
       </button>
     </div>
-    <p class="mt-5 text-center text-xs text-white/30">
+    <p
+      class="mx-auto mt-5 max-w-xl text-center font-mono text-[10px] uppercase tracking-wide text-ink/35"
+    >
       Your file is stored locally in your browser until you start a new session.
     </p>
   </div>

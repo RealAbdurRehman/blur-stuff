@@ -1,133 +1,167 @@
 {% extends "base.html" %} {% block page_title %}Privacy Policy{% endblock %} {%
 block description %} Learn how Blur Stuff handles uploaded files, browser
 storage, detection results, and privacy while processing your media. {% endblock
-%} {% block og_title %} Privacy Policy - Blur Stuff {% endblock %}{% block
-content %}
+%} {% block og_title %} Privacy Policy - Blur Stuff {% endblock %} {% set
+upload_button_text = "Upload Files" %} {% block content %}
 
-<main class="mx-auto mt-10 max-w-7xl px-6 pb-10">
-  <div class="mb-12">
+<main class="mx-auto mt-36 max-w-7xl px-6 pb-10">
+  <div>
     <div
-      class="mb-6 inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm text-zinc-300"
+      class="mb-6 inline-flex items-center gap-2 rounded-md border-2 border-ink bg-paper-2 px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-wider text-ink shadow-[2px_2px_0_#16171a]"
     >
       {% include "components/icons/lock1.svg" %}
       <span>Privacy-first</span>
     </div>
-    <h1 class="text-4xl font-bold tracking-tight text-white md:text-5xl">
+    <h1
+      class="font-display text-4xl font-extrabold tracking-tight text-ink md:text-5xl"
+    >
       Privacy Policy
     </h1>
-    <p class="mt-5 max-w-2xl text-lg leading-6 text-zinc-400">
+    <p class="mt-5 max-w-2xl text-sm leading-7 text-ink/60 sm:text-base">
       Blur Stuff is built to help you anonymize sensitive information while
       keeping your data handling simple and minimal.
     </p>
-    <p class="mt-1 text-sm text-zinc-500">Last updated: August 13, 2026</p>
+    <p
+      class="mt-3 font-mono text-[10px] font-bold uppercase tracking-wider text-ink/35"
+    >
+      Last updated: August 13, 2026
+    </p>
   </div>
-  <div class="space-y-10 text-sm leading-5 text-zinc-400">
-    <section>
-      <h2 class="mb-4 text-xl font-semibold text-white">
-        1. What Blur Stuff Does
-      </h2>
-      <p>
-        Blur Stuff helps you anonymize sensitive information in images, videos,
-        and documents. It can detect things such as faces, license plates, text,
-        and personal information, and apply the anonymization options you
-        choose.
-      </p>
-    </section>
-    <section>
-      <h2 class="mb-4 text-xl font-semibold text-white">2. Your Files</h2>
-      <p>
-        When you select a file, it is temporarily kept in your browser so you
-        can move through the upload, detection, and anonymization process.
-      </p>
-      <p class="mt-1">
-        When processing is required, your file is sent to the Blur Stuff API.
-        The API processes the file and returns the result to your browser.
-      </p>
-      <p class="mt-1">
-        Blur Stuff is designed to process files rather than build a permanent
-        collection of your uploaded media.
-      </p>
-    </section>
-    <section>
-      <h2 class="mb-4 text-xl font-semibold text-white">3. What We Collect</h2>
-      <p>
-        Blur Stuff does not currently require an account, so you do not need to
-        provide information such as your name, email address, or password to use
-        the main anonymization features.
-      </p>
-      <p class="mt-1">
-        Your uploaded files and the information detected within them are used to
-        provide the anonymization service you requested.
-      </p>
-      <p class="mt-1">
-        We do not intentionally use your files to create user profiles, sell
-        personal information, or serve targeted advertising.
-      </p>
-    </section>
-    <section>
-      <h2 class="mb-4 text-xl font-semibold text-white">
-        4. Local Browser Storage
-      </h2>
-      <p>
-        Your browser may temporarily store your original file, detection
-        results, and anonymized file while you use Blur Stuff.
-      </p>
-      <p class="mt-1">
-        This storage is used only to keep your current workflow working between
-        the different steps of the application. You can remove it through your
-        browser's site data or storage settings.
-      </p>
-    </section>
-    <section>
-      <h2 class="mb-4 text-xl font-semibold text-white">
-        5. Tracking and Third Parties
-      </h2>
-      <p>
-        Blur Stuff does not currently use advertising trackers or sell your
-        information to third parties.
-      </p>
-      <p class="mt-1">
-        The application uses software libraries to perform tasks such as image
-        processing, computer vision, OCR, video processing, and document
-        processing.
-      </p>
-    </section>
-    <section>
-      <h2 class="mb-4 text-xl font-semibold text-white">6. Security</h2>
-      <p>
-        We take reasonable steps to protect files while they are being
-        processed. However, no online service can guarantee complete security.
-      </p>
-      <p class="mt-1">
-        For your own protection, only upload files that you are authorized to
-        process.
-      </p>
-    </section>
-    <section>
-      <h2 class="mb-4 text-xl font-semibold text-white">
-        7. Changes to This Policy
-      </h2>
-      <p>
-        As Blur Stuff grows, we may update this Privacy Policy to reflect
-        changes to the application or how data is handled. Any updates will be
-        posted on this page with a new "Last updated" date.
-      </p>
-    </section>
-    <section>
-      <h2 class="mb-4 text-xl font-semibold text-white">8. Contact</h2>
-      <p>
-        If you have questions about privacy or how Blur Stuff handles your
-        files, you can contact the project through the
-        <a
-          href="https://github.com/RealAbdurRehman/blur-stuff"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="text-indigo-400 transition hover:text-indigo-300"
+  <div
+    class="mx-auto mt-12 rounded-xl border-2 border-ink bg-paper p-6 shadow-[4px_4px_0_#16171a] sm:p-8 lg:p-10"
+  >
+    <div class="space-y-10 text-sm leading-7 text-ink/60">
+      <section>
+        <h2
+          class="mb-4 font-display text-xl font-extrabold tracking-tight text-ink"
         >
-          GitHub repository </a
-        >.
-      </p>
-    </section>
+          1. What Blur Stuff Does
+        </h2>
+        <p>
+          Blur Stuff helps you anonymize sensitive information in images,
+          videos, and documents. It can detect things such as faces, license
+          plates, text, and personal information, and apply the anonymization
+          options you choose.
+        </p>
+      </section>
+      <section>
+        <h2
+          class="mb-4 font-display text-xl font-extrabold tracking-tight text-ink"
+        >
+          2. Your Files
+        </h2>
+        <p>
+          When you select a file, it is temporarily kept in your browser so you
+          can move through the upload, detection, and anonymization process.
+        </p>
+        <p class="mt-2">
+          When processing is required, your file is sent to the Blur Stuff API.
+          The API processes the file and returns the result to your browser.
+        </p>
+        <p class="mt-2">
+          Blur Stuff is designed to process files rather than build a permanent
+          collection of your uploaded media.
+        </p>
+      </section>
+      <section>
+        <h2
+          class="mb-4 font-display text-xl font-extrabold tracking-tight text-ink"
+        >
+          3. What We Collect
+        </h2>
+        <p>
+          Blur Stuff does not currently require an account, so you do not need
+          to provide information such as your name, email address, or password
+          to use the main anonymization features.
+        </p>
+        <p class="mt-2">
+          Your uploaded files and the information detected within them are used
+          to provide the anonymization service you requested.
+        </p>
+        <p class="mt-2">
+          We do not intentionally use your files to create user profiles, sell
+          personal information, or serve targeted advertising.
+        </p>
+      </section>
+      <section>
+        <h2
+          class="mb-4 font-display text-xl font-extrabold tracking-tight text-ink"
+        >
+          4. Local Browser Storage
+        </h2>
+        <p>
+          Your browser may temporarily store your original file, detection
+          results, and anonymized file while you use Blur Stuff.
+        </p>
+        <p class="mt-2">
+          This storage is used only to keep your current workflow working
+          between the different steps of the application. You can remove it
+          through your browser's site data or storage settings.
+        </p>
+      </section>
+      <section>
+        <h2
+          class="mb-4 font-display text-xl font-extrabold tracking-tight text-ink"
+        >
+          5. Tracking and Third Parties
+        </h2>
+        <p>
+          Blur Stuff does not currently use advertising trackers or sell your
+          information to third parties.
+        </p>
+        <p class="mt-2">
+          The application uses software libraries to perform tasks such as image
+          processing, computer vision, OCR, video processing, and document
+          processing.
+        </p>
+      </section>
+      <section>
+        <h2
+          class="mb-4 font-display text-xl font-extrabold tracking-tight text-ink"
+        >
+          6. Security
+        </h2>
+        <p>
+          We take reasonable steps to protect files while they are being
+          processed. However, no online service can guarantee complete security.
+        </p>
+        <p class="mt-2">
+          For your own protection, only upload files that you are authorized to
+          process.
+        </p>
+      </section>
+      <section>
+        <h2
+          class="mb-4 font-display text-xl font-extrabold tracking-tight text-ink"
+        >
+          7. Changes to This Policy
+        </h2>
+        <p>
+          As Blur Stuff grows, we may update this Privacy Policy to reflect
+          changes to the application or how data is handled. Any updates will be
+          posted on this page with a new "Last updated" date.
+        </p>
+      </section>
+      <section>
+        <h2
+          class="mb-4 font-display text-xl font-extrabold tracking-tight text-ink"
+        >
+          8. Contact
+        </h2>
+        <p>
+          If you have questions about privacy or how Blur Stuff handles your
+          files, you can contact the project through the
+          <a
+            href="https://github.com/RealAbdurRehman/blur-stuff"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="font-semibold text-hot underline decoration-2 underline-offset-4 transition-opacity hover:opacity-70"
+          >
+            GitHub repository </a
+          >.
+        </p>
+      </section>
+    </div>
   </div>
 </main>
 

@@ -1,47 +1,64 @@
-<div class="overflow-hidden rounded-2xl border border-white/10 bg-[#080b10]">
-  <div class="flex border-b border-white/10">
-    <button
-      type="button"
-      class="relative flex-1 px-4 py-4 text-xs font-medium text-white cursor-pointer"
-    >
-      Detections
-      <span
-        class="ml-1.5 rounded-md bg-indigo-500/15 px-1.5 py-0.5 text-[10px] text-indigo-300"
-        x-text="totalDetectionCount()"
-      ></span>
-      <span class="absolute inset-x-0 bottom-0 h-px bg-indigo-500"></span>
-    </button>
-  </div>
-  <div class="max-h-[calc(100vh-13rem)] overflow-y-auto p-3">
-    <div
-      class="flex items-center justify-between border-b border-white/5 px-3 py-3"
-    >
-      <span class="text-xs text-zinc-500">
-        <span x-text="totalDetectionCount()"></span>
-        detections found
-      </span>
+<div
+  class="overflow-hidden rounded-xl border-2 border-ink bg-paper shadow-[4px_4px_0_#16171a]"
+>
+  <div class="border-b-2 border-ink/15 px-5 py-4">
+    <div class="flex items-center justify-between gap-4">
+      <div>
+        <div class="flex items-center gap-2">
+          <h2
+            class="font-display text-xl font-extrabold tracking-tight text-ink"
+          >
+            Detections
+          </h2>
+          <span
+            class="rounded-full border-2 border-ink bg-hot px-2 py-0.5 font-mono text-[10px] font-bold text-white"
+            x-text="totalDetectionCount()"
+          ></span>
+        </div>
+        <p class="mt-1 text-xs text-ink/50">
+          Review what was detected in your file.
+        </p>
+      </div>
       <button
         type="button"
-        class="text-xs font-medium text-indigo-400 transition hover:text-indigo-300 cursor-pointer"
         @click="toggleSelectAll()"
         x-text="allDetectionsSelected() ? 'Clear all' : 'Select all'"
+        class="shrink-0 cursor-pointer whitespace-nowrap rounded-full border-2 border-ink bg-paper-2 px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-wide text-ink shadow-[1px_1px_0_#16171a] transition-all duration-150 hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
       ></button>
     </div>
+  </div>
+  <div class="border-b-2 border-ink/15 bg-background px-5 py-3">
+    <p
+      class="font-mono text-[10px] font-bold uppercase tracking-wide text-ink/45"
+    >
+      <span x-text="totalDetectionCount()"></span>
+      <span
+        x-text="totalDetectionCount() === 1 ? 'detection found' : 'detections found'"
+      ></span>
+    </p>
+  </div>
+  <div class="max-h-[calc(100vh-13rem)] overflow-y-auto p-4">
     <template x-if="detectionsFor('faces').length">
-      <div class="mb-3">
-        <div class="mb-2 flex items-center justify-between px-2 py-1">
-          <div class="flex items-center gap-2">
+      <div class="mb-4">
+        <div class="mb-2 flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
             <div
-              class="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-300"
+              class="flex h-8 w-8 items-center justify-center rounded-lg border-2 border-ink bg-paper-2 text-ink"
             >
-              <span class="[&>svg]:h-5 [&>svg]:w-5"
-                >{% include "components/icons/scan.svg" %}</span
-              >
+              <span class="[&>svg]:h-4 [&>svg]:w-4">
+                {% include "components/icons/scan.svg" %}
+              </span>
             </div>
-            <span class="text-xs font-medium text-white"> Faces </span>
+            <div>
+              <p
+                class="font-display text-xs font-bold uppercase tracking-wide text-ink"
+              >
+                Faces
+              </p>
+            </div>
           </div>
           <span
-            class="rounded-md bg-white/5 px-1.5 py-0.5 text-[10px] text-zinc-400"
+            class="rounded-full border-2 border-ink bg-paper-2 px-2 py-0.5 font-mono text-[10px] font-bold text-ink"
             x-text="detectionsFor('faces').length"
           ></span>
         </div>
@@ -56,20 +73,26 @@
       </div>
     </template>
     <template x-if="detectionsFor('plates').length">
-      <div class="mb-3 border-t border-white/5 pt-3">
-        <div class="mb-2 flex items-center justify-between px-2 py-1">
-          <div class="flex items-center gap-2">
+      <div class="mb-4 border-t-2 border-ink/10 pt-4">
+        <div class="mb-2 flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
             <div
-              class="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-300"
+              class="flex h-8 w-8 items-center justify-center rounded-lg border-2 border-ink bg-paper-2 text-ink"
             >
-              <span class="[&>svg]:h-5 [&>svg]:w-5"
-                >{% include "components/icons/car.svg" %}</span
-              >
+              <span class="[&>svg]:h-4 [&>svg]:w-4">
+                {% include "components/icons/car.svg" %}
+              </span>
             </div>
-            <span class="text-xs font-medium text-white"> License Plates </span>
+            <div>
+              <p
+                class="font-display text-xs font-bold uppercase tracking-wide text-ink"
+              >
+                License Plates
+              </p>
+            </div>
           </div>
           <span
-            class="rounded-md bg-white/5 px-1.5 py-0.5 text-[10px] text-zinc-400"
+            class="rounded-full border-2 border-ink bg-paper-2 px-2 py-0.5 font-mono text-[10px] font-bold text-ink"
             x-text="detectionsFor('plates').length"
           ></span>
         </div>
@@ -84,21 +107,26 @@
       </div>
     </template>
     <template x-if="detectionsFor('text').length">
-      <div class="mb-3 border-t border-white/5 pt-3">
-        <div class="mb-2 flex items-center justify-between px-2 py-1">
-          <div class="flex items-center gap-2">
+      <div class="mb-4 border-t-2 border-ink/10 pt-4">
+        <div class="mb-2 flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
             <div
-              class="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-300"
+              class="flex h-8 w-8 items-center justify-center rounded-lg border-2 border-ink bg-paper-2 text-ink"
             >
-              <span class="[&>svg]:h-5 [&>svg]:w-5"
-                >{% include "components/icons/text.svg" %}</span
-              >
+              <span class="[&>svg]:h-4 [&>svg]:w-4">
+                {% include "components/icons/text.svg" %}
+              </span>
             </div>
-
-            <span class="text-xs font-medium text-white"> Text </span>
+            <div>
+              <p
+                class="font-display text-xs font-bold uppercase tracking-wide text-ink"
+              >
+                Text
+              </p>
+            </div>
           </div>
           <span
-            class="rounded-md bg-white/5 px-1.5 py-0.5 text-[10px] text-zinc-400"
+            class="rounded-full border-2 border-ink bg-paper-2 px-2 py-0.5 font-mono text-[10px] font-bold text-ink"
             x-text="detectionsFor('text').length"
           ></span>
         </div>
@@ -113,23 +141,26 @@
       </div>
     </template>
     <template x-if="detectionsFor('pii').length">
-      <div class="border-t border-white/5 pt-3">
-        <div class="mb-2 flex items-center justify-between px-2 py-1">
-          <div class="flex items-center gap-2">
+      <div class="border-t-2 border-ink/10 pt-4">
+        <div class="mb-2 flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
             <div
-              class="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-300"
+              class="flex h-8 w-8 items-center justify-center rounded-lg border-2 border-ink bg-paper-2 text-ink"
             >
-              <span class="[&>svg]:h-5 [&>svg]:w-5"
-                >{% include "components/icons/pii.svg" %}</span
-              >
+              <span class="[&>svg]:h-4 [&>svg]:w-4">
+                {% include "components/icons/pii.svg" %}
+              </span>
             </div>
-
-            <span class="text-xs font-medium text-white">
-              Personal Information
-            </span>
+            <div>
+              <p
+                class="font-display text-xs font-bold uppercase tracking-wide text-ink"
+              >
+                Personal Information
+              </p>
+            </div>
           </div>
           <span
-            class="rounded-md bg-white/5 px-1.5 py-0.5 text-[10px] text-zinc-400"
+            class="rounded-full border-2 border-ink bg-paper-2 px-2 py-0.5 font-mono text-[10px] font-bold text-ink"
             x-text="detectionsFor('pii').length"
           ></span>
         </div>
@@ -141,6 +172,25 @@
             {% include "components/detection-card.html" %}
           </template>
         </div>
+      </div>
+    </template>
+    <template x-if="totalDetectionCount() === 0">
+      <div
+        class="flex flex-col items-center justify-center px-6 py-12 text-center"
+      >
+        <div
+          class="flex h-12 w-12 items-center justify-center rounded-xl border-2 border-ink bg-paper-2"
+        >
+          <span class="[&>svg]:h-6 [&>svg]:w-6 text-ink/50">
+            {% include "components/icons/scan.svg" %}
+          </span>
+        </div>
+        <p class="mt-4 font-display text-sm font-bold text-ink">
+          Nothing detected
+        </p>
+        <p class="mt-1 max-w-xs text-xs leading-relaxed text-ink/45">
+          We couldn't find any content that needs anonymization.
+        </p>
       </div>
     </template>
   </div>

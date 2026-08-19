@@ -1,65 +1,56 @@
-<section class="mx-auto mt-10 max-w-7xl px-6">
-  <div
-    class="group/card grid gap-8 rounded-3xl border border-white/10 bg-white/3 px-6 py-3 backdrop-blur-xl lg:grid-cols-[1fr_1.15fr]"
-  >
-    <div class="flex items-center gap-6">
+<section class="mx-auto mt-22 max-w-7xl px-6">
+  <div class="grid items-center gap-8 lg:grid-cols-[0.95fr_1.15fr] lg:gap-10">
+    <div>
       <div
-        class="relative flex h-30 w-30 shrink-0 items-center justify-center overflow-hidden rounded-3xl border border-white/10 bg-[radial-gradient(circle_at_35%_30%,rgba(255,255,255,0.12),transparent_65%),radial-gradient(circle_at_70%_75%,rgba(139,92,246,0.10),transparent_75%)] transition-all duration-500 group-hover/card:scale-102 [&>svg]:relative [&>svg]:z-10 [&>svg]:h-15 [&>svg]:w-15 [&>svg]:transition-transform [&>svg]:duration-500 group-hover/card:[&>svg]:scale-105"
+        class="mb-3 font-mono text-[0.72rem] font-bold uppercase tracking-[0.12em] text-hot"
       >
-        {% include "components/icons/code.svg" %}
+        API
       </div>
-      <div>
-        <h2 class="text-3xl font-semibold text-white">
-          Powerful API for developers
-        </h2>
-        <p class="mt-3 max-w-sm leading-7 text-zinc-400">
-          Integrate privacy protection into your apps with a simple and powerful
-          REST API.
-        </p>
+      <h2
+        class="max-w-xl font-['Bricolage_Grotesque'] text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl"
+      >
+        Built for developers, not just uploads
+      </h2>
+      <p class="mt-4 max-w-md text-base leading-7 text-ink/70">
+        Wire redaction straight into your own app or pipeline with one REST
+        call. No dashboard required, no data retained.
+      </p>
+      <div class="mt-6">
+        <a
+          href="{{ url_for('frontend.docs') }}"
+          class="inline-flex items-center gap-2 rounded-full border-2 border-ink bg-ink px-5 py-3 font-mono text-[0.8rem] font-bold uppercase tracking-wide text-paper shadow-[3px_3px_0_rgba(0,0,0,0.35)] transition-all duration-150 hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1px_1px_0_rgba(0,0,0,0.35)]"
+        >
+          View API docs {% include "components/icons/arrow-right.svg" %}
+        </a>
       </div>
     </div>
     <div
-      class="relative overflow-hidden space-y-1 rounded-2xl border border-white/10 bg-[#090b10] p-6 font-mono text-sm"
+      class="relative rounded-[14px] border-2 border-ink bg-ink p-5 font-mono text-[0.8rem] text-[#F2E9D8] shadow-[4px_4px_0_#16171A] sm:p-5.5"
     >
-      <div
-        class="pointer-events-none absolute left-1/2 -top-32 h-112 w-7xl -translate-x-1/2 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.12)_0%,rgba(255,255,255,0.06)_18%,rgba(255,255,255,0.025)_38%,transparent_72%)] blur-3xl"
-      ></div>
-      <div
-        class="pointer-events-none absolute inset-x-0 top-0 h-50 bg-linear-to-b from-white/4 via-white/1.5 to-transparent"
-      ></div>
-      <div class="relative z-10">
-        <p class="mb-5 text-zinc-200">
-          POST <span class="text-white">/images/anonymize</span>
-        </p>
+      <div class="mb-4 opacity-60">POST /images/anonymize</div>
+      <div class="leading-5">
         <div>
-          <span class="text-[#E4B1D6]">curl</span>
-          <span class="text-zinc-200">-X POST \</span>
+          <span class="font-bold text-hot">curl</span>
+          <span> -X POST \</span>
         </div>
-        <div class="pl-5 text-[#98C379]">
+        <div class="pl-4.5 break-all text-[#8CE99A]">
           "https://blurstuff.up.railway.app/api/v1/images/anonymize?targets=faces&amp;mode=pixelate"
           \
         </div>
-        <div class="pl-5">
-          <span class="text-zinc-200">-F</span>
-          <span class="text-[#98C379]">"file=@original.jpg"</span> \
+        <div class="pl-4.5">
+          -F
+          <span class="text-[#8CE99A]">"file=@original.jpg"</span>
+          \
         </div>
-        <div class="pl-5">
-          <span class="text-zinc-200">--output</span>
-          <span class="text-zinc-200">anonymized.jpg</span>
-        </div>
-        <div class="mt-4 flex justify-end">
-          <a
-            href="{{ url_for('frontend.docs') }}"
-            class="group inline-flex items-center gap-2 text-indigo-400 transition hover:text-indigo-300"
-          >
-            View API Docs
-            <span
-              class="transition-transform duration-300 group-hover:translate-x-1"
-            >
-              {% include "components/icons/arrow-right.svg" %}
-            </span>
-          </a>
-        </div>
+        <div class="pl-4.5">--output anonymized.jpg</div>
+      </div>
+      <div class="mt-4.5 flex justify-end">
+        <a
+          href="{{ url_for('frontend.docs') }}"
+          class="inline-flex items-center gap-1 font-mono font-bold text-background no-underline transition-transform duration-150 hover:translate-x-1"
+        >
+          Full reference {% include "components/icons/arrow-right.svg" %}
+        </a>
       </div>
     </div>
   </div>

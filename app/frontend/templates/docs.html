@@ -1,1127 +1,1304 @@
-{% extends "base.html" %} {% block page_title %}API Documentation{% endblock %}
-{% block description %} Complete documentation for the Blur Stuff API, including
-endpoints, parameters, supported formats, and examples. {% endblock %} {% block
-og_title %}API Documentation - Blur Stuff{% endblock %} {% block content %}
+{% extends "base.html" %} {% block page_title %}API Documentation{% endblock
+%}{% block description %} Complete documentation for the Blur Stuff API,
+includingendpoints, parameters, supported formats, and examples. {% endblock %}
+{% block og_title %}API Documentation - Blur Stuff{% endblock %} {% set
+upload_button_text = "Upload Files" %} {% block content %}
 
-<main class="mx-auto mt-10 max-w-7xl px-6 pb-10">
+<main class="mx-auto mt-36 max-w-7xl px-6 pb-16">
   <div class="mb-12">
     <div
-      class="mb-6 inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm text-zinc-300"
+      class="mb-6 inline-flex items-center gap-2 rounded-md border-2 border-ink bg-paper-2 px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-wider text-ink shadow-[2px_2px_0_#16171a]"
     >
-      {% include "components/icons/book.svg" %}
-      <span>Documentation</span>
+      {% include "components/icons/book.svg" %} <span>Documentation</span>
     </div>
-    <h1 class="text-4xl font-bold tracking-tight text-white md:text-5xl">
+    <h1
+      class="font-display text-4xl font-extrabold tracking-tight text-ink md:text-5xl"
+    >
       API Documentation
     </h1>
-    <p class="mt-5 max-w-2xl text-lg leading-6 text-zinc-400">
+    <p class="mt-5 max-w-2xl text-sm leading-7 text-ink/60 sm:text-base">
       Everything you need to integrate Blur Stuff into your own application.
+      Detect sensitive information, selectively anonymize detections, and
+      process images, videos, and documents.
     </p>
   </div>
   <div class="grid gap-10 lg:grid-cols-[220px_1fr]">
     <aside class="hidden lg:block">
-      <div class="sticky top-28 space-y-1">
-        <p
-          class="mb-3 text-xs font-medium uppercase tracking-wider text-zinc-500"
+      <div class="sticky top-28">
+        <div
+          class="rounded-xl border-2 border-ink bg-paper p-4 shadow-[3px_3px_0_#16171a]"
         >
-          On this page
-        </p>
-        <a
-          href="#quick-start"
-          class="block rounded-lg px-3 py-2 text-sm text-zinc-300 transition hover:bg-white/5 hover:text-white"
-        >
-          Quick Start
-        </a>
-        <a
-          href="#requests"
-          class="block rounded-lg px-3 py-2 text-sm text-zinc-300 transition hover:bg-white/5 hover:text-white"
-        >
-          Requests
-        </a>
-        <a
-          href="#detection-response"
-          class="block rounded-lg px-3 py-2 text-sm text-zinc-300 transition hover:bg-white/5 hover:text-white"
-        >
-          Detection Response
-        </a>
-        <a
-          href="#selected-detections"
-          class="block rounded-lg px-3 py-2 text-sm text-zinc-300 transition hover:bg-white/5 hover:text-white"
-        >
-          Selected Detections
-        </a>
-        <a
-          href="#targets"
-          class="block rounded-lg px-3 py-2 text-sm text-zinc-300 transition hover:bg-white/5 hover:text-white"
-        >
-          Detection Targets
-        </a>
-        <a
-          href="#modes"
-          class="block rounded-lg px-3 py-2 text-sm text-zinc-300 transition hover:bg-white/5 hover:text-white"
-        >
-          Anonymization Modes
-        </a>
-        <a
-          href="#padding"
-          class="block rounded-lg px-3 py-2 text-sm text-zinc-300 transition hover:bg-white/5 hover:text-white"
-        >
-          Padding
-        </a>
-        <a
-          href="#images"
-          class="block rounded-lg px-3 py-2 text-sm text-zinc-300 transition hover:bg-white/5 hover:text-white"
-        >
-          Images
-        </a>
-        <a
-          href="#videos"
-          class="block rounded-lg px-3 py-2 text-sm text-zinc-300 transition hover:bg-white/5 hover:text-white"
-        >
-          Videos
-        </a>
-        <a
-          href="#documents"
-          class="block rounded-lg px-3 py-2 text-sm text-zinc-300 transition hover:bg-white/5 hover:text-white"
-        >
-          Documents
-        </a>
-        <a
-          href="#health"
-          class="block rounded-lg px-3 py-2 text-sm text-zinc-300 transition hover:bg-white/5 hover:text-white"
-        >
-          Health
-        </a>
-        <a
-          href="#errors"
-          class="block rounded-lg px-3 py-2 text-sm text-zinc-300 transition hover:bg-white/5 hover:text-white"
-        >
-          Errors
-        </a>
+          <p
+            class="mb-3 px-2 font-mono text-[12px] font-bold uppercase tracking-wider text-ink/40"
+          >
+            On this page
+          </p>
+          <nav class="space-y-1">
+            <a
+              href="#quick-start"
+              class="block rounded-md px-2 py-1.5 font-mono text-xs font-bold text-ink transition-colors hover:bg-paper-2"
+            >
+              Quick Start
+            </a>
+            <a
+              href="#requests"
+              class="block rounded-md px-2 py-1.5 font-mono text-xs font-bold text-ink/60 transition-colors hover:bg-paper-2 hover:text-ink"
+            >
+              Requests
+            </a>
+            <a
+              href="#detection-response"
+              class="block rounded-md px-2 py-1.5 font-mono text-xs font-bold text-ink/60 transition-colors hover:bg-paper-2 hover:text-ink"
+            >
+              Detection Response
+            </a>
+            <a
+              href="#selected-detections"
+              class="block rounded-md px-2 py-1.5 font-mono text-xs font-bold text-ink/60 transition-colors hover:bg-paper-2 hover:text-ink"
+            >
+              Selected Detections
+            </a>
+            <a
+              href="#targets"
+              class="block rounded-md px-2 py-1.5 font-mono text-xs font-bold text-ink/60 transition-colors hover:bg-paper-2 hover:text-ink"
+            >
+              Detection Targets
+            </a>
+            <a
+              href="#modes"
+              class="block rounded-md px-2 py-1.5 font-mono text-xs font-bold text-ink/60 transition-colors hover:bg-paper-2 hover:text-ink"
+            >
+              Anonymization Modes
+            </a>
+            <a
+              href="#padding"
+              class="block rounded-md px-2 py-1.5 font-mono text-xs font-bold text-ink/60 transition-colors hover:bg-paper-2 hover:text-ink"
+            >
+              Padding
+            </a>
+            <a
+              href="#images"
+              class="block rounded-md px-2 py-1.5 font-mono text-xs font-bold text-ink/60 transition-colors hover:bg-paper-2 hover:text-ink"
+            >
+              Images
+            </a>
+            <a
+              href="#videos"
+              class="block rounded-md px-2 py-1.5 font-mono text-xs font-bold text-ink/60 transition-colors hover:bg-paper-2 hover:text-ink"
+            >
+              Videos
+            </a>
+            <a
+              href="#documents"
+              class="block rounded-md px-2 py-1.5 font-mono text-xs font-bold text-ink/60 transition-colors hover:bg-paper-2 hover:text-ink"
+            >
+              Documents
+            </a>
+            <a
+              href="#health"
+              class="block rounded-md px-2 py-1.5 font-mono text-xs font-bold text-ink/60 transition-colors hover:bg-paper-2 hover:text-ink"
+            >
+              Health
+            </a>
+            <a
+              href="#errors"
+              class="block rounded-md px-2 py-1.5 font-mono text-xs font-bold text-ink/60 transition-colors hover:bg-paper-2 hover:text-ink"
+            >
+              Errors
+            </a>
+          </nav>
+        </div>
       </div>
     </aside>
-    <div class="min-w-0 space-y-14 text-sm leading-6 text-zinc-400">
-      <section id="quick-start">
-        <p class="text-sm text-zinc-500">Getting started</p>
-        <h2 class="mt-1 text-2xl font-semibold text-white">Quick Start</h2>
-        <p class="mt-3">
+    <div class="min-w-0 space-y-8">
+      <section
+        id="quick-start"
+        class="rounded-xl border-2 border-ink bg-paper p-6 shadow-[4px_4px_0_#16171a] sm:p-8"
+      >
+        <p
+          class="font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+        >
+          Getting started
+        </p>
+        <h2
+          class="mt-1 font-display text-2xl font-extrabold tracking-tight text-ink"
+        >
+          Quick Start
+        </h2>
+        <p class="mt-3 max-w-2xl text-sm leading-7 text-ink/60">
           The Blur Stuff API accepts files through HTTP requests and returns
           detection results or anonymized files.
         </p>
         <div class="mt-6">
-          <p class="mb-2 text-xs uppercase tracking-wider text-zinc-500">
+          <p
+            class="mb-2 font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+          >
             Base URL
           </p>
           <div
-            class="overflow-x-auto rounded-xl border border-white/10 bg-[#090b10] px-4 py-3 font-mono text-sm text-zinc-300"
+            class="overflow-x-auto rounded-lg border-2 border-ink bg-paper-2 px-4 py-3 font-mono text-sm text-ink shadow-[2px_2px_0_#16171a]"
           >
             https://blurstuff.up.railway.app/api/v1
           </div>
         </div>
-        <div
-          class="mt-6 overflow-hidden rounded-2xl border border-white/10 bg-[#090b10] p-6 font-mono text-sm"
-        >
-          <p class="mb-5 text-zinc-200">
-            POST
-            <span class="text-white"> /images/anonymize </span>
+        <div class="mt-6">
+          <p
+            class="mb-2 font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+          >
+            Example
           </p>
-          <div>
-            <span class="text-[#E4B1D6]">curl</span>
-            <span class="text-zinc-200"> -X POST \ </span>
-          </div>
-          <div class="pl-5 text-[#98C379]">
-            "https://blurstuff.up.railway.app/api/v1/images/anonymize?targets=faces&mode=pixelate"
-            \
-          </div>
-          <div class="pl-5">
-            <span class="text-zinc-200"> -F </span>
-            <span class="text-[#98C379]"> "file=@image.jpg" </span>
+          <div
+            class="overflow-x-auto rounded-lg border-2 border-ink bg-ink p-6 font-mono text-sm text-white shadow-[3px_3px_0_#16171a]"
+          >
+            <div class="mb-4 opacity-60">POST /images/anonymize</div>
+            <div>
+              <span class="font-bold text-hot">curl</span>
+              <span class="text-white"> -X POST \</span>
+            </div>
+            <div class="pl-5">
+              <span class="text-[#8CE99A]"
+                >"https://blurstuff.up.railway.app/api/v1/images/anonymize?targets=faces&amp;mode=pixelate"</span
+              >
+              <span class="text-white"> \</span>
+            </div>
+            <div class="pl-5">
+              <span class="text-white">-F</span>
+              <span class="text-[#8CE99A]"> "file=@image.jpg"</span>
+            </div>
           </div>
         </div>
       </section>
-      <section id="requests">
-        <p class="text-sm text-zinc-500">Basics</p>
-        <h2 class="mt-1 text-2xl font-semibold text-white">Requests</h2>
-        <p class="mt-3">
+      <section
+        id="requests"
+        class="rounded-xl border-2 border-ink bg-paper p-6 shadow-[3px_3px_0_#16171a] sm:p-8"
+      >
+        <p
+          class="font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+        >
+          Basics
+        </p>
+        <h2
+          class="mt-1 font-display text-2xl font-extrabold tracking-tight text-ink"
+        >
+          Requests
+        </h2>
+        <p class="mt-3 text-sm leading-7 text-ink/60">
           File-processing endpoints accept
-          <code class="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300"
+          <code
+            class="rounded border border-ink/15 bg-paper-2 px-1.5 py-0.5 font-mono text-xs text-ink"
             >multipart/form-data</code
           >
           requests.
         </p>
-        <div class="mt-6 overflow-hidden rounded-2xl border border-white/10">
+        <div class="mt-6 overflow-hidden rounded-lg border-2 border-ink">
           <div
-            class="grid grid-cols-[140px_1fr] border-b border-white/10 bg-white/3 px-4 py-3"
+            class="grid grid-cols-[140px_1fr] border-b-2 border-ink bg-paper-2 px-4 py-3"
           >
-            <span class="font-mono text-xs text-zinc-500"> Parameter </span>
-            <span class="font-mono text-xs text-zinc-500"> Description </span>
+            <span
+              class="font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+            >
+              Parameter
+            </span>
+            <span
+              class="font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+            >
+              Description
+            </span>
           </div>
           <div
-            class="grid grid-cols-[140px_1fr] border-b border-white/10 px-4 py-4"
+            class="grid grid-cols-[140px_1fr] border-b border-ink/10 px-4 py-4"
           >
-            <code class="text-zinc-300"> file </code>
-            <span> The file to process. </span>
+            <code class="font-mono text-sm font-bold text-ink">file</code>
+            <span class="text-sm text-ink/60"> The file to process. </span>
           </div>
           <div class="grid grid-cols-[140px_1fr] px-4 py-4">
-            <code class="text-zinc-300"> detections </code>
-            <span>
+            <code class="font-mono text-sm font-bold text-ink">
+              detections
+            </code>
+            <span class="text-sm text-ink/60">
               JSON-encoded detection data. Required by selected anonymization
               endpoints.
             </span>
           </div>
         </div>
       </section>
-      <section id="detection-response">
-        <p class="text-sm text-zinc-500">Responses</p>
-        <h2 class="mt-1 text-2xl font-semibold text-white">
+      <section
+        id="detection-response"
+        class="rounded-xl border-2 border-ink bg-paper p-6 shadow-[3px_3px_0_#16171a] sm:p-8"
+      >
+        <p
+          class="font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+        >
+          Responses
+        </p>
+        <h2
+          class="mt-1 font-display text-2xl font-extrabold tracking-tight text-ink"
+        >
           Detection Response
         </h2>
-        <p class="mt-3">
+        <p class="mt-3 text-sm leading-7 text-ink/60">
           Detection endpoints return the regions identified by Blur Stuff. Each
           detection contains its bounding-box coordinates, confidence score, and
           unique detection ID. Detections are grouped by their target type.
         </p>
         <div class="mt-6">
-          <p class="mb-2 text-xs uppercase tracking-wider text-zinc-500">
+          <p
+            class="mb-2 font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+          >
             Detection object
           </p>
           <div
-            class="overflow-x-auto rounded-2xl border border-white/10 bg-[#090b10] p-5 font-mono text-xs leading-6"
+            class="overflow-x-auto rounded-lg border-2 border-ink bg-ink p-5 font-mono text-xs leading-6 text-white shadow-[3px_3px_0_#16171a]"
           >
-            <div class="text-zinc-500">{</div>
+            <div class="text-white/50">{</div>
             <div class="pl-5">
-              <span class="text-[#E4B1D6]">"x1"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-blue-300">120</span>
-              <span class="text-zinc-500">,</span>
+              <span class="text-[#FFB7E5]">"x1"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CB4FF]">120</span>
+              <span class="text-white/50">,</span>
             </div>
             <div class="pl-5">
-              <span class="text-[#E4B1D6]">"y1"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-blue-300">80</span>
-              <span class="text-zinc-500">,</span>
+              <span class="text-[#FFB7E5]">"y1"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CB4FF]">80</span>
+              <span class="text-white/50">,</span>
             </div>
             <div class="pl-5">
-              <span class="text-[#E4B1D6]">"x2"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-blue-300">260</span>
-              <span class="text-zinc-500">,</span>
+              <span class="text-[#FFB7E5]">"x2"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CB4FF]">260</span>
+              <span class="text-white/50">,</span>
             </div>
             <div class="pl-5">
-              <span class="text-[#E4B1D6]">"y2"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-blue-300">240</span>
-              <span class="text-zinc-500">,</span>
+              <span class="text-[#FFB7E5]">"y2"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CB4FF]">240</span>
+              <span class="text-white/50">,</span>
             </div>
             <div class="pl-5">
-              <span class="text-[#E4B1D6]">"confidence"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-blue-300">0.94</span>
-              <span class="text-zinc-500">,</span>
+              <span class="text-[#FFB7E5]">"confidence"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CB4FF]">0.94</span>
+              <span class="text-white/50">,</span>
             </div>
             <div class="pl-5">
-              <span class="text-[#E4B1D6]">"id"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-[#98C379]">"face_1"</span>
+              <span class="text-[#FFB7E5]">"id"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CE99A]">"face_1"</span>
             </div>
-            <div class="text-zinc-500">}</div>
+            <div class="text-white/50">}</div>
           </div>
         </div>
-        <div class="mt-6 overflow-hidden rounded-2xl border border-white/10">
+        <div class="mt-6 overflow-hidden rounded-lg border-2 border-ink">
           <div
-            class="grid grid-cols-[150px_1fr] border-b border-white/10 bg-white/3 px-4 py-3"
+            class="grid grid-cols-[150px_1fr] border-b-2 border-ink bg-paper-2 px-4 py-3"
           >
-            <span class="font-mono text-xs text-zinc-500">Field</span>
-            <span class="font-mono text-xs text-zinc-500">Description</span>
+            <span
+              class="font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+            >
+              Field
+            </span>
+            <span
+              class="font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+            >
+              Description
+            </span>
           </div>
           <div
-            class="grid grid-cols-[150px_1fr] border-b border-white/10 px-4 py-4"
+            class="grid grid-cols-[150px_1fr] border-b border-ink/10 px-4 py-4"
           >
-            <code class="text-zinc-300">x1</code>
-            <span>Left coordinate of the detection bounding box.</span>
+            <code class="font-mono text-sm font-bold text-ink">x1</code>
+            <span class="text-sm text-ink/60">
+              Left coordinate of the detection bounding box.
+            </span>
           </div>
           <div
-            class="grid grid-cols-[150px_1fr] border-b border-white/10 px-4 py-4"
+            class="grid grid-cols-[150px_1fr] border-b border-ink/10 px-4 py-4"
           >
-            <code class="text-zinc-300">y1</code>
-            <span>Top coordinate of the detection bounding box.</span>
+            <code class="font-mono text-sm font-bold text-ink">y1</code>
+            <span class="text-sm text-ink/60">
+              Top coordinate of the detection bounding box.
+            </span>
           </div>
           <div
-            class="grid grid-cols-[150px_1fr] border-b border-white/10 px-4 py-4"
+            class="grid grid-cols-[150px_1fr] border-b border-ink/10 px-4 py-4"
           >
-            <code class="text-zinc-300">x2</code>
-            <span>Right coordinate of the detection bounding box.</span>
+            <code class="font-mono text-sm font-bold text-ink">x2</code>
+            <span class="text-sm text-ink/60">
+              Right coordinate of the detection bounding box.
+            </span>
           </div>
           <div
-            class="grid grid-cols-[150px_1fr] border-b border-white/10 px-4 py-4"
+            class="grid grid-cols-[150px_1fr] border-b border-ink/10 px-4 py-4"
           >
-            <code class="text-zinc-300">y2</code>
-            <span>Bottom coordinate of the detection bounding box.</span>
+            <code class="font-mono text-sm font-bold text-ink">y2</code>
+            <span class="text-sm text-ink/60">
+              Bottom coordinate of the detection bounding box.
+            </span>
           </div>
           <div
-            class="grid grid-cols-[150px_1fr] border-b border-white/10 px-4 py-4"
+            class="grid grid-cols-[150px_1fr] border-b border-ink/10 px-4 py-4"
           >
-            <code class="text-zinc-300">confidence</code>
-            <span>Confidence score produced by the detector.</span>
+            <code class="font-mono text-sm font-bold text-ink">
+              confidence
+            </code>
+            <span class="text-sm text-ink/60">
+              Confidence score produced by the detector.
+            </span>
           </div>
           <div class="grid grid-cols-[150px_1fr] px-4 py-4">
-            <code class="text-zinc-300">id</code>
-            <span>Unique identifier assigned to the detection.</span>
+            <code class="font-mono text-sm font-bold text-ink">id</code>
+            <span class="text-sm text-ink/60">
+              Unique identifier assigned to the detection.
+            </span>
           </div>
         </div>
         <div class="mt-8">
-          <h3 class="text-lg font-semibold text-white">
+          <h3
+            class="font-display text-lg font-extrabold tracking-tight text-ink"
+          >
             Image detection response
           </h3>
-          <p class="mt-2">
+          <p class="mt-2 text-sm leading-7 text-ink/60">
             The image detection endpoint returns detections grouped by target.
             The target name is used as the JSON key containing its detections.
           </p>
           <div
-            class="mt-4 overflow-x-auto rounded-2xl border border-white/10 bg-[#090b10] p-5 font-mono text-xs leading-6"
+            class="mt-4 overflow-x-auto rounded-lg border-2 border-ink bg-ink p-5 font-mono text-xs leading-6 text-white shadow-[3px_3px_0_#16171a]"
           >
-            <div class="text-zinc-500">{</div>
+            <div class="text-white/50">{</div>
             <div class="pl-5">
-              <span class="text-[#E4B1D6]">"faces"</span>
-              <span class="text-zinc-500">: [</span>
+              <span class="text-[#FFB7E5]">"faces"</span>
+              <span class="text-white/50">: [</span>
             </div>
-            <div class="pl-10">
-              <span class="text-zinc-500">{</span>
+            <div class="pl-10 text-white/50">{</div>
+            <div class="pl-15 ml-5">
+              <span class="text-[#FFB7E5]">"x1"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CB4FF]">120</span>
+              <span class="text-white/50">,</span>
             </div>
             <div class="pl-15 ml-5">
-              <span class="text-[#E4B1D6]">"x1"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-blue-300">120</span>
-              <span class="text-zinc-500">,</span>
+              <span class="text-[#FFB7E5]">"y1"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CB4FF]">80</span>
+              <span class="text-white/50">,</span>
             </div>
             <div class="pl-15 ml-5">
-              <span class="text-[#E4B1D6]">"y1"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-blue-300">80</span>
-              <span class="text-zinc-500">,</span>
+              <span class="text-[#FFB7E5]">"x2"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CB4FF]">260</span>
+              <span class="text-white/50">,</span>
             </div>
             <div class="pl-15 ml-5">
-              <span class="text-[#E4B1D6]">"x2"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-blue-300">260</span>
-              <span class="text-zinc-500">,</span>
+              <span class="text-[#FFB7E5]">"y2"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CB4FF]">240</span>
+              <span class="text-white/50">,</span>
             </div>
             <div class="pl-15 ml-5">
-              <span class="text-[#E4B1D6]">"y2"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-blue-300">240</span>
-              <span class="text-zinc-500">,</span>
+              <span class="text-[#FFB7E5]">"confidence"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CB4FF]">0.94</span>
+              <span class="text-white/50">,</span>
             </div>
             <div class="pl-15 ml-5">
-              <span class="text-[#E4B1D6]">"confidence"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-blue-300">0.94</span>
-              <span class="text-zinc-500">,</span>
+              <span class="text-[#FFB7E5]">"id"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CE99A]">"face_1"</span>
             </div>
-            <div class="pl-15 ml-5">
-              <span class="text-[#E4B1D6]">"id"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-[#98C379]">"face_1"</span>
-            </div>
-            <div class="pl-10">
-              <span class="text-zinc-500">}</span>
-            </div>
+            <div class="pl-10 text-white/50">}</div>
+            <div class="pl-5 text-white/50">],</div>
             <div class="pl-5">
-              <span class="text-zinc-500">],</span>
+              <span class="text-[#FFB7E5]">"plates"</span>
+              <span class="text-white/50">: [</span>
             </div>
-            <div class="pl-5">
-              <span class="text-[#E4B1D6]">"plates"</span>
-              <span class="text-zinc-500">: [</span>
-            </div>
-            <div class="pl-10">
-              <span class="text-zinc-500">{</span>
+            <div class="pl-10 text-white/50">{</div>
+            <div class="pl-15 ml-5">
+              <span class="text-[#FFB7E5]">"x1"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CB4FF]">420</span>
+              <span class="text-white/50">,</span>
             </div>
             <div class="pl-15 ml-5">
-              <span class="text-[#E4B1D6]">"x1"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-blue-300">420</span>
-              <span class="text-zinc-500">,</span>
+              <span class="text-[#FFB7E5]">"y1"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CB4FF]">310</span>
+              <span class="text-white/50">,</span>
             </div>
             <div class="pl-15 ml-5">
-              <span class="text-[#E4B1D6]">"y1"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-blue-300">310</span>
-              <span class="text-zinc-500">,</span>
+              <span class="text-[#FFB7E5]">"x2"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CB4FF]">580</span>
+              <span class="text-white/50">,</span>
             </div>
             <div class="pl-15 ml-5">
-              <span class="text-[#E4B1D6]">"x2"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-blue-300">580</span>
-              <span class="text-zinc-500">,</span>
+              <span class="text-[#FFB7E5]">"y2"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CB4FF]">360</span>
+              <span class="text-white/50">,</span>
             </div>
             <div class="pl-15 ml-5">
-              <span class="text-[#E4B1D6]">"y2"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-blue-300">360</span>
-              <span class="text-zinc-500">,</span>
+              <span class="text-[#FFB7E5]">"confidence"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CB4FF]">0.88</span>
+              <span class="text-white/50">,</span>
             </div>
             <div class="pl-15 ml-5">
-              <span class="text-[#E4B1D6]">"confidence"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-blue-300">0.88</span>
-              <span class="text-zinc-500">,</span>
+              <span class="text-[#FFB7E5]">"id"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CE99A]">"plate_1"</span>
             </div>
-            <div class="pl-15 ml-5">
-              <span class="text-[#E4B1D6]">"id"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-[#98C379]">"plate_1"</span>
-            </div>
-            <div class="pl-10">
-              <span class="text-zinc-500">}</span>
-            </div>
-            <div class="pl-5">
-              <span class="text-zinc-500">]</span>
-            </div>
-            <div class="text-zinc-500">}</div>
+            <div class="pl-10 text-white/50">}</div>
+            <div class="pl-5 text-white/50">]</div>
+            <div class="text-white/50">}</div>
           </div>
         </div>
         <div class="mt-8">
-          <h3 class="text-lg font-semibold text-white">
+          <h3
+            class="font-display text-lg font-extrabold tracking-tight text-ink"
+          >
             Video detection response
           </h3>
-          <p class="mt-2">
+          <p class="mt-2 text-sm leading-7 text-ink/60">
             Video detections are returned as a list of frame results. Each
             result contains the frame number, timestamp, and detections found on
             that frame.
           </p>
           <div
-            class="mt-4 overflow-x-auto rounded-2xl border border-white/10 bg-[#090b10] p-5 font-mono text-xs leading-6"
+            class="mt-4 overflow-x-auto rounded-lg border-2 border-ink bg-ink p-5 font-mono text-xs leading-6 text-white shadow-[3px_3px_0_#16171a]"
           >
-            <div class="text-zinc-500">[</div>
-            <div class="pl-5">
-              <span class="text-zinc-500">{</span>
+            <div class="text-white/50">[</div>
+            <div class="pl-5 text-white/50">{</div>
+            <div class="pl-10">
+              <span class="text-[#FFB7E5]">"frame"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CB4FF]">0</span>
+              <span class="text-white/50">,</span>
             </div>
             <div class="pl-10">
-              <span class="text-[#E4B1D6]">"frame"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-blue-300">0</span>
-              <span class="text-zinc-500">,</span>
+              <span class="text-[#FFB7E5]">"timestamp"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CB4FF]">0.0</span>
+              <span class="text-white/50">,</span>
             </div>
             <div class="pl-10">
-              <span class="text-[#E4B1D6]">"timestamp"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-blue-300">0.0</span>
-              <span class="text-zinc-500">,</span>
-            </div>
-            <div class="pl-10">
-              <span class="text-[#E4B1D6]">"detections"</span>
-              <span class="text-zinc-500">: {</span>
+              <span class="text-[#FFB7E5]">"detections"</span>
+              <span class="text-white/50">: {</span>
             </div>
             <div class="pl-15 ml-5">
-              <span class="text-[#E4B1D6]">"faces"</span>
-              <span class="text-zinc-500">: [</span>
+              <span class="text-[#FFB7E5]">"faces"</span>
+              <span class="text-white/50">: [</span>
             </div>
-            <div class="pl-20 ml-5">
-              <span class="text-zinc-500">{</span>
+            <div class="pl-20 ml-5 text-white/50">{</div>
+            <div class="pl-25 ml-5">
+              <span class="text-[#FFB7E5]">"x1"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CB4FF]">120</span>
+              <span class="text-white/50">,</span>
             </div>
             <div class="pl-25 ml-5">
-              <span class="text-[#E4B1D6]">"x1"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-blue-300">120</span>
-              <span class="text-zinc-500">,</span>
+              <span class="text-[#FFB7E5]">"y1"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CB4FF]">80</span>
+              <span class="text-white/50">,</span>
             </div>
             <div class="pl-25 ml-5">
-              <span class="text-[#E4B1D6]">"y1"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-blue-300">80</span>
-              <span class="text-zinc-500">,</span>
+              <span class="text-[#FFB7E5]">"x2"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CB4FF]">260</span>
+              <span class="text-white/50">,</span>
             </div>
             <div class="pl-25 ml-5">
-              <span class="text-[#E4B1D6]">"x2"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-blue-300">260</span>
-              <span class="text-zinc-500">,</span>
+              <span class="text-[#FFB7E5]">"y2"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CB4FF]">240</span>
+              <span class="text-white/50">,</span>
             </div>
             <div class="pl-25 ml-5">
-              <span class="text-[#E4B1D6]">"y2"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-blue-300">240</span>
-              <span class="text-zinc-500">,</span>
+              <span class="text-[#FFB7E5]">"confidence"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CB4FF]">0.94</span>
+              <span class="text-white/50">,</span>
             </div>
             <div class="pl-25 ml-5">
-              <span class="text-[#E4B1D6]">"confidence"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-blue-300">0.94</span>
-              <span class="text-zinc-500">,</span>
+              <span class="text-[#FFB7E5]">"id"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CE99A]">"face_1"</span>
             </div>
-            <div class="pl-25 ml-5">
-              <span class="text-[#E4B1D6]">"id"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-[#98C379]">"face_1"</span>
-            </div>
-            <div class="pl-20 ml-5">
-              <span class="text-zinc-500">}</span>
-            </div>
-            <div class="pl-15 ml-5">
-              <span class="text-zinc-500">]</span>
-            </div>
-            <div class="pl-10">
-              <span class="text-zinc-500">}</span>
-            </div>
-            <div class="pl-5">
-              <span class="text-zinc-500">}</span>
-            </div>
-            <div class="text-zinc-500">]</div>
+            <div class="pl-20 ml-5 text-white/50">}</div>
+            <div class="pl-15 ml-5 text-white/50">]</div>
+            <div class="pl-10 text-white/50">}</div>
+            <div class="pl-5 text-white/50">}</div>
+            <div class="text-white/50">]</div>
           </div>
         </div>
         <div class="mt-8">
-          <h3 class="text-lg font-semibold text-white">
+          <h3
+            class="font-display text-lg font-extrabold tracking-tight text-ink"
+          >
             Document detection response
           </h3>
-          <p class="mt-2">
+          <p class="mt-2 text-sm leading-7 text-ink/60">
             Document detections are returned as a list of page results. Each
             page contains detections grouped by target and a
-            <code class="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300"
+            <code
+              class="rounded border border-ink/15 bg-paper-2 px-1.5 py-0.5 font-mono text-xs text-ink"
               >page</code
             >
             number identifying the page where the detections were found.
           </p>
           <div
-            class="mt-4 overflow-x-auto rounded-2xl border border-white/10 bg-[#090b10] p-5 font-mono text-xs leading-6"
+            class="mt-4 overflow-x-auto rounded-lg border-2 border-ink bg-ink p-5 font-mono text-xs leading-6 text-white shadow-[3px_3px_0_#16171a]"
           >
-            <div class="text-zinc-500">[</div>
-            <div class="pl-5">
-              <span class="text-zinc-500">{</span>
-            </div>
+            <div class="text-white/50">[</div>
+            <div class="pl-5 text-white/50">{</div>
             <div class="pl-10">
-              <span class="text-[#E4B1D6]">"text"</span>
-              <span class="text-zinc-500">: [</span>
+              <span class="text-[#FFB7E5]">"text"</span>
+              <span class="text-white/50">: [</span>
             </div>
-            <div class="pl-15 ml-5">
-              <span class="text-zinc-500">{</span>
+            <div class="pl-15 ml-5 text-white/50">{</div>
+            <div class="pl-20 ml-5">
+              <span class="text-[#FFB7E5]">"x1"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CB4FF]">120</span>
+              <span class="text-white/50">,</span>
             </div>
             <div class="pl-20 ml-5">
-              <span class="text-[#E4B1D6]">"x1"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-blue-300">120</span>
-              <span class="text-zinc-500">,</span>
+              <span class="text-[#FFB7E5]">"y1"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CB4FF]">180</span>
+              <span class="text-white/50">,</span>
             </div>
             <div class="pl-20 ml-5">
-              <span class="text-[#E4B1D6]">"y1"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-blue-300">180</span>
-              <span class="text-zinc-500">,</span>
+              <span class="text-[#FFB7E5]">"x2"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CB4FF]">520</span>
+              <span class="text-white/50">,</span>
             </div>
             <div class="pl-20 ml-5">
-              <span class="text-[#E4B1D6]">"x2"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-blue-300">520</span>
-              <span class="text-zinc-500">,</span>
+              <span class="text-[#FFB7E5]">"y2"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CB4FF]">220</span>
+              <span class="text-white/50">,</span>
             </div>
             <div class="pl-20 ml-5">
-              <span class="text-[#E4B1D6]">"y2"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-blue-300">220</span>
-              <span class="text-zinc-500">,</span>
+              <span class="text-[#FFB7E5]">"confidence"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CB4FF]">0.97</span>
+              <span class="text-white/50">,</span>
             </div>
             <div class="pl-20 ml-5">
-              <span class="text-[#E4B1D6]">"confidence"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-blue-300">0.97</span>
-              <span class="text-zinc-500">,</span>
+              <span class="text-[#FFB7E5]">"id"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CE99A]">"token_1"</span>
             </div>
-            <div class="pl-20 ml-5">
-              <span class="text-[#E4B1D6]">"id"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-[#98C379]">"token_1"</span>
-            </div>
-            <div class="pl-15 ml-5">
-              <span class="text-zinc-500">}</span>
-            </div>
+            <div class="pl-15 ml-5 text-white/50">}</div>
+            <div class="pl-10 text-white/50">],</div>
             <div class="pl-10">
-              <span class="text-zinc-500">],</span>
+              <span class="text-[#FFB7E5]">"pii"</span>
+              <span class="text-white/50">: [</span>
             </div>
+            <div class="pl-15 ml-5 text-white/50">{</div>
+            <div class="pl-20 ml-5">
+              <span class="text-[#FFB7E5]">"x1"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CB4FF]">120</span>
+              <span class="text-white/50">,</span>
+            </div>
+            <div class="pl-20 ml-5">
+              <span class="text-[#FFB7E5]">"y1"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CB4FF]">180</span>
+              <span class="text-white/50">,</span>
+            </div>
+            <div class="pl-20 ml-5">
+              <span class="text-[#FFB7E5]">"x2"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CB4FF]">520</span>
+              <span class="text-white/50">,</span>
+            </div>
+            <div class="pl-20 ml-5">
+              <span class="text-[#FFB7E5]">"y2"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CB4FF]">220</span>
+              <span class="text-white/50">,</span>
+            </div>
+            <div class="pl-20 ml-5">
+              <span class="text-[#FFB7E5]">"confidence"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CB4FF]">0.97</span>
+              <span class="text-white/50">,</span>
+            </div>
+            <div class="pl-20 ml-5">
+              <span class="text-[#FFB7E5]">"id"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CE99A]">"pii_1"</span>
+            </div>
+            <div class="pl-15 ml-5 text-white/50">}</div>
+            <div class="pl-10 text-white/50">],</div>
             <div class="pl-10">
-              <span class="text-[#E4B1D6]">"pii"</span>
-              <span class="text-zinc-500">: [</span>
+              <span class="text-[#FFB7E5]">"page"</span>
+              <span class="text-white/50">:</span>
+              <span class="text-[#8CB4FF]">1</span>
             </div>
-            <div class="pl-15 ml-5">
-              <span class="text-zinc-500">{</span>
-            </div>
-            <div class="pl-20 ml-5">
-              <span class="text-[#E4B1D6]">"x1"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-blue-300">120</span>
-              <span class="text-zinc-500">,</span>
-            </div>
-            <div class="pl-20 ml-5">
-              <span class="text-[#E4B1D6]">"y1"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-blue-300">180</span>
-              <span class="text-zinc-500">,</span>
-            </div>
-            <div class="pl-20 ml-5">
-              <span class="text-[#E4B1D6]">"x2"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-blue-300">520</span>
-              <span class="text-zinc-500">,</span>
-            </div>
-            <div class="pl-20 ml-5">
-              <span class="text-[#E4B1D6]">"y2"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-blue-300">220</span>
-              <span class="text-zinc-500">,</span>
-            </div>
-            <div class="pl-20 ml-5">
-              <span class="text-[#E4B1D6]">"confidence"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-blue-300">0.97</span>
-              <span class="text-zinc-500">,</span>
-            </div>
-            <div class="pl-20 ml-5">
-              <span class="text-[#E4B1D6]">"id"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-[#98C379]">"pii_1"</span>
-            </div>
-            <div class="pl-15 ml-5">
-              <span class="text-zinc-500">}</span>
-            </div>
-            <div class="pl-10">
-              <span class="text-zinc-500">],</span>
-            </div>
-            <div class="pl-10">
-              <span class="text-[#E4B1D6]">"page"</span>
-              <span class="text-zinc-500">:</span>
-              <span class="text-blue-300">1</span>
-            </div>
-            <div class="pl-5">
-              <span class="text-zinc-500">}</span>
-            </div>
-            <div class="text-zinc-500">]</div>
+            <div class="pl-5 text-white/50">}</div>
+            <div class="text-white/50">]</div>
           </div>
         </div>
         <div
-          class="mt-6 rounded-xl border border-white/10 bg-white/3 px-4 py-4 text-sm text-zinc-500"
+          class="mt-6 rounded-lg border-2 border-ink bg-paper-2 px-4 py-4 text-sm leading-6 text-ink/60"
         >
-          <span class="text-zinc-300">Note:</span>
-          Detection coordinates are returned in the original image or page
-          coordinate system. For video responses, the
-          <code class="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300"
+          <span class="font-bold text-ink">Note:</span> Detection coordinates
+          are returned in the original image or page coordinate system. For
+          video responses, the
+          <code
+            class="rounded border border-ink/15 bg-paper px-1.5 py-0.5 font-mono text-xs text-ink"
             >frame</code
           >
           and
-          <code class="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300"
+          <code
+            class="rounded border border-ink/15 bg-paper px-1.5 py-0.5 font-mono text-xs text-ink"
             >timestamp</code
           >
           identify when the detections occurred.
         </div>
       </section>
-      <section id="selected-detections">
-        <p class="text-sm text-zinc-500">Selective anonymization</p>
-        <h2 class="mt-1 text-2xl font-semibold text-white">
+      <section
+        id="selected-detections"
+        class="rounded-xl border-2 border-ink bg-paper p-6 shadow-[3px_3px_0_#16171a] sm:p-8"
+      >
+        <p
+          class="font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+        >
+          Selective anonymization
+        </p>
+        <h2
+          class="mt-1 font-display text-2xl font-extrabold tracking-tight text-ink"
+        >
           Selected Detections
         </h2>
-        <p class="mt-3">
+        <p class="mt-3 text-sm leading-7 text-ink/60">
           The
-          <code class="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300"
+          <code
+            class="rounded border border-ink/15 bg-paper-2 px-1.5 py-0.5 font-mono text-xs text-ink"
             >anonymize-selected</code
           >
           endpoints allow you to anonymize only specific detections instead of
           automatically anonymizing everything detected in the file.
         </p>
-        <div class="mt-6 space-y-8">
-          <div>
-            <div class="mb-3">
+        <div class="mt-8">
+          <div class="mb-3 flex flex-wrap items-center gap-2">
+            <span
+              class="rounded-md border-2 border-ink bg-hot px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-wider text-white"
+            >
+              POST
+            </span>
+            <span class="font-mono text-sm font-bold text-ink">
+              /images/anonymize-selected
+            </span>
+          </div>
+          <p class="text-sm leading-7 text-ink/60">
+            Anonymizes only the detections supplied by the client. The
+            detections are provided through the
+            <code
+              class="rounded border border-ink/15 bg-paper-2 px-1.5 py-0.5 font-mono text-xs text-ink"
+              >detections</code
+            >
+            multipart form field.
+          </p>
+          <div class="mt-5 overflow-hidden rounded-lg border-2 border-ink">
+            <div
+              class="grid grid-cols-[140px_1fr_100px] border-b-2 border-ink bg-paper-2 px-4 py-3"
+            >
               <span
-                class="rounded-md bg-white/5 px-2 py-1 font-mono text-xs text-[#E4B1D6]"
-                >POST</span
+                class="font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
               >
-              <span class="ml-2 font-mono text-sm text-zinc-200">
-                /images/anonymize-selected
+                Field
+              </span>
+              <span
+                class="font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+              >
+                Description
+              </span>
+              <span
+                class="font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+              >
+                Required
               </span>
             </div>
-            <p>
-              Anonymizes only the detections supplied by the client. The
-              detections are provided through the
-              <code class="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300"
-                >detections</code
-              >
-              multipart form field.
+            <div
+              class="grid grid-cols-[140px_1fr_100px] border-b border-ink/10 px-4 py-4"
+            >
+              <code class="font-mono text-sm font-bold text-ink">target</code>
+              <span class="text-sm text-ink/60">
+                The type of information being anonymized.
+              </span>
+              <span class="text-sm font-bold text-ink">Yes</span>
+            </div>
+            <div
+              class="grid grid-cols-[140px_1fr_100px] border-b border-ink/10 px-4 py-4"
+            >
+              <code class="font-mono text-sm font-bold text-ink">x1</code>
+              <span class="text-sm text-ink/60">
+                Left coordinate of the detection.
+              </span>
+              <span class="text-sm font-bold text-ink">Yes</span>
+            </div>
+            <div
+              class="grid grid-cols-[140px_1fr_100px] border-b border-ink/10 px-4 py-4"
+            >
+              <code class="font-mono text-sm font-bold text-ink">y1</code>
+              <span class="text-sm text-ink/60">
+                Top coordinate of the detection.
+              </span>
+              <span class="text-sm font-bold text-ink">Yes</span>
+            </div>
+            <div
+              class="grid grid-cols-[140px_1fr_100px] border-b border-ink/10 px-4 py-4"
+            >
+              <code class="font-mono text-sm font-bold text-ink">x2</code>
+              <span class="text-sm text-ink/60">
+                Right coordinate of the detection.
+              </span>
+              <span class="text-sm font-bold text-ink">Yes</span>
+            </div>
+            <div
+              class="grid grid-cols-[140px_1fr_100px] border-b border-ink/10 px-4 py-4"
+            >
+              <code class="font-mono text-sm font-bold text-ink">y2</code>
+              <span class="text-sm text-ink/60">
+                Bottom coordinate of the detection.
+              </span>
+              <span class="text-sm font-bold text-ink">Yes</span>
+            </div>
+            <div
+              class="grid grid-cols-[140px_1fr_100px] border-b border-ink/10 px-4 py-4"
+            >
+              <code class="font-mono text-sm font-bold text-ink">
+                confidence
+              </code>
+              <span class="text-sm text-ink/60">
+                Optional detection confidence score.
+              </span>
+              <span class="text-sm font-bold text-ink/50">No</span>
+            </div>
+            <div class="grid grid-cols-[140px_1fr_100px] px-4 py-4">
+              <code class="font-mono text-sm font-bold text-ink">id</code>
+              <span class="text-sm text-ink/60">
+                Optional identifier for the detection.
+              </span>
+              <span class="text-sm font-bold text-ink/50">No</span>
+            </div>
+          </div>
+          <div class="mt-5">
+            <p
+              class="mb-2 font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+            >
+              Detection format
             </p>
             <div
-              class="mt-5 overflow-hidden rounded-2xl border border-white/10"
+              class="overflow-x-auto rounded-lg border-2 border-ink bg-ink p-5 font-mono text-xs leading-6 text-white shadow-[3px_3px_0_#16171a]"
             >
-              <div
-                class="grid grid-cols-[140px_1fr_120px] border-b border-white/10 bg-white/3 px-4 py-3"
-              >
-                <span class="font-mono text-xs text-zinc-500">Field</span>
-                <span class="font-mono text-xs text-zinc-500">Description</span>
-                <span class="font-mono text-xs text-zinc-500">Required</span>
+              <div class="text-white/50">[</div>
+              <div class="pl-5 text-white/50">{</div>
+              <div class="pl-10">
+                <span class="text-[#FFB7E5]">"target"</span>
+                <span class="text-white/50">:</span>
+                <span class="text-[#8CE99A]">"faces"</span>
+                <span class="text-white/50">,</span>
               </div>
-              <div
-                class="grid grid-cols-[140px_1fr_120px] border-b border-white/10 px-4 py-4"
-              >
-                <code class="text-zinc-300">target</code>
-                <span>The type of information being anonymized.</span>
-                <span class="text-zinc-500">Yes</span>
+              <div class="pl-10">
+                <span class="text-[#FFB7E5]">"x1"</span>
+                <span class="text-white/50">:</span>
+                <span class="text-[#8CB4FF]">0.25</span>
+                <span class="text-white/50">,</span>
               </div>
-              <div
-                class="grid grid-cols-[140px_1fr_120px] border-b border-white/10 px-4 py-4"
-              >
-                <code class="text-zinc-300">x1</code>
-                <span>Left coordinate of the detection.</span>
-                <span class="text-zinc-500">Yes</span>
+              <div class="pl-10">
+                <span class="text-[#FFB7E5]">"y1"</span>
+                <span class="text-white/50">:</span>
+                <span class="text-[#8CB4FF]">0.15</span>
+                <span class="text-white/50">,</span>
               </div>
-              <div
-                class="grid grid-cols-[140px_1fr_120px] border-b border-white/10 px-4 py-4"
-              >
-                <code class="text-zinc-300">y1</code>
-                <span>Top coordinate of the detection.</span>
-                <span class="text-zinc-500">Yes</span>
+              <div class="pl-10">
+                <span class="text-[#FFB7E5]">"x2"</span>
+                <span class="text-white/50">:</span>
+                <span class="text-[#8CB4FF]">0.45</span>
+                <span class="text-white/50">,</span>
               </div>
-              <div
-                class="grid grid-cols-[140px_1fr_120px] border-b border-white/10 px-4 py-4"
-              >
-                <code class="text-zinc-300">x2</code>
-                <span>Right coordinate of the detection.</span>
-                <span class="text-zinc-500">Yes</span>
+              <div class="pl-10">
+                <span class="text-[#FFB7E5]">"y2"</span>
+                <span class="text-white/50">:</span>
+                <span class="text-[#8CB4FF]">0.50</span>
               </div>
-              <div
-                class="grid grid-cols-[140px_1fr_120px] border-b border-white/10 px-4 py-4"
-              >
-                <code class="text-zinc-300">y2</code>
-                <span>Bottom coordinate of the detection.</span>
-                <span class="text-zinc-500">Yes</span>
-              </div>
-              <div
-                class="grid grid-cols-[140px_1fr_120px] border-b border-white/10 px-4 py-4"
-              >
-                <code class="text-zinc-300">confidence</code>
-                <span>Optional detection confidence score.</span>
-                <span class="text-zinc-500">No</span>
-              </div>
-              <div class="grid grid-cols-[140px_1fr_120px] px-4 py-4">
-                <code class="text-zinc-300">id</code>
-                <span>Optional identifier for the detection.</span>
-                <span class="text-zinc-500">No</span>
-              </div>
+              <div class="pl-5 text-white/50">}</div>
+              <div class="text-white/50">]</div>
             </div>
-            <div class="mt-5">
-              <p class="mb-2 text-xs uppercase tracking-wider text-zinc-500">
-                Detection format
-              </p>
-              <div
-                class="overflow-x-auto rounded-2xl border border-white/10 bg-[#090b10] p-5 font-mono text-xs leading-6"
-              >
-                <div class="text-zinc-500">[</div>
-                <div class="pl-5">
-                  <span class="text-zinc-500">{</span>
-                </div>
-                <div class="pl-10">
-                  <span class="text-[#E4B1D6]">"target"</span>
-                  <span class="text-zinc-500">:</span>
-                  <span class="text-[#98C379]">"faces"</span>
-                  <span class="text-zinc-500">,</span>
-                </div>
-                <div class="pl-10">
-                  <span class="text-[#E4B1D6]">"x1"</span>
-                  <span class="text-zinc-500">:</span>
-                  <span class="text-blue-300">0.25</span>
-                  <span class="text-zinc-500">,</span>
-                </div>
-                <div class="pl-10">
-                  <span class="text-[#E4B1D6]">"y1"</span>
-                  <span class="text-zinc-500">:</span>
-                  <span class="text-blue-300">0.15</span>
-                  <span class="text-zinc-500">,</span>
-                </div>
-                <div class="pl-10">
-                  <span class="text-[#E4B1D6]">"x2"</span>
-                  <span class="text-zinc-500">:</span>
-                  <span class="text-blue-300">0.45</span>
-                  <span class="text-zinc-500">,</span>
-                </div>
-                <div class="pl-10">
-                  <span class="text-[#E4B1D6]">"y2"</span>
-                  <span class="text-zinc-500">:</span>
-                  <span class="text-blue-300">0.50</span>
-                </div>
-                <div class="pl-5">
-                  <span class="text-zinc-500">}</span>
-                </div>
-                <div class="text-zinc-500">]</div>
+          </div>
+          <div class="mt-5">
+            <p
+              class="mb-2 font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+            >
+              Example request
+            </p>
+            <div
+              class="overflow-x-auto rounded-lg border-2 border-ink bg-ink p-5 font-mono text-xs leading-6 text-white shadow-[3px_3px_0_#16171a]"
+            >
+              <div>
+                <span class="font-bold text-hot">curl</span>
+                <span class="text-white"> -X POST \</span>
               </div>
-            </div>
-            <div class="mt-5">
-              <p class="mb-2 text-xs uppercase tracking-wider text-zinc-500">
-                Example request
-              </p>
-              <div
-                class="overflow-x-auto rounded-2xl border border-white/10 bg-[#090b10] p-5 font-mono text-xs leading-6"
-              >
-                <div>
-                  <span class="text-[#E4B1D6]">curl</span>
-                  <span class="text-zinc-200">-X POST \</span>
-                </div>
-                <div class="pl-5 text-[#98C379]">
-                  "https://blurstuff.up.railway.app/api/v1/images/anonymize-selected?mode=blur&padding=0.2"
-                  \
-                </div>
-                <div class="pl-5">
-                  <span class="text-zinc-200">-F</span>
-                  <span class="text-[#98C379]">"file=@image.jpg"</span>
-                  \
-                </div>
-                <div class="pl-5">
-                  <span class="text-zinc-200">-F</span>
-                  <span class="text-[#98C379]">
-                    'detections=[{"target":"faces","x1":0.25,"y1":0.15,"x2":0.45,"y2":0.50}]'
-                  </span>
-                </div>
+              <div class="pl-5">
+                <span class="text-[#8CE99A]"
+                  >"https://blurstuff.up.railway.app/api/v1/images/anonymize-selected?mode=blur&amp;padding=0.2"</span
+                >
+                <span class="text-white"> \</span>
+              </div>
+              <div class="pl-5">
+                <span class="text-white">-F</span>
+                <span class="text-[#8CE99A]"> "file=@image.jpg"</span>
+                <span class="text-white"> \</span>
+              </div>
+              <div class="pl-5">
+                <span class="text-white">-F</span>
+                <span class="text-[#8CE99A]">
+                  'detections=[{"target":"faces","x1":0.25,"y1":0.15,"x2":0.45,"y2":0.50}]'
+                </span>
               </div>
             </div>
           </div>
-          <div>
-            <div class="mb-3">
-              <span
-                class="rounded-md bg-white/5 px-2 py-1 font-mono text-xs text-[#E4B1D6]"
-                >POST</span
-              >
-              <span class="ml-2 font-mono text-sm text-zinc-200">
-                /documents/anonymize-selected
-              </span>
-            </div>
-            <p>
-              Anonymizes only the selected detections in a document. The
-              detection format follows the same structure used by image
-              selective anonymization.
+        </div>
+        <div class="mt-10 border-t-2 border-ink/10 pt-8">
+          <div class="mb-3 flex flex-wrap items-center gap-2">
+            <span
+              class="rounded-md border-2 border-ink bg-hot px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-wider text-white"
+            >
+              POST
+            </span>
+            <span class="font-mono text-sm font-bold text-ink">
+              /documents/anonymize-selected
+            </span>
+          </div>
+          <p class="text-sm leading-7 text-ink/60">
+            Anonymizes only the selected detections in a document. The detection
+            format follows the same structure used by image selective
+            anonymization.
+          </p>
+          <div
+            class="mt-5 rounded-lg border-2 border-ink bg-paper-2 px-4 py-4 text-sm leading-6 text-ink/60"
+          >
+            <span class="font-bold text-ink">Coordinates:</span> normalized
+            bounding-box coordinates between 0 and 1.
+          </div>
+          <div class="mt-5">
+            <p
+              class="mb-2 font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+            >
+              Example detection
             </p>
             <div
-              class="mt-5 rounded-xl border border-white/10 bg-white/3 px-4 py-4 text-xs text-zinc-500"
+              class="overflow-x-auto rounded-lg border-2 border-ink bg-ink p-5 font-mono text-xs leading-6 text-white shadow-[3px_3px_0_#16171a]"
             >
-              Coordinates are validated as normalized bounding-box coordinates
-              between 0 and 1.
-            </div>
-            <div class="mt-5">
-              <p class="mb-2 text-xs uppercase tracking-wider text-zinc-500">
-                Example detection
-              </p>
-              <div
-                class="overflow-x-auto rounded-2xl border border-white/10 bg-[#090b10] p-5 font-mono text-xs leading-6"
-              >
-                <div class="text-zinc-500">[</div>
-                <div class="pl-5">
-                  <span class="text-zinc-500">{</span>
-                </div>
-                <div class="pl-10">
-                  <span class="text-[#E4B1D6]">"target"</span>
-                  <span class="text-zinc-500">:</span>
-                  <span class="text-[#98C379]">"pii"</span>
-                  <span class="text-zinc-500">,</span>
-                </div>
-                <div class="pl-10">
-                  <span class="text-[#E4B1D6]">"x1"</span>
-                  <span class="text-zinc-500">:</span>
-                  <span class="text-blue-300">0.10</span>
-                  <span class="text-zinc-500">,</span>
-                </div>
-                <div class="pl-10">
-                  <span class="text-[#E4B1D6]">"y1"</span>
-                  <span class="text-zinc-500">:</span>
-                  <span class="text-blue-300">0.30</span>
-                  <span class="text-zinc-500">,</span>
-                </div>
-                <div class="pl-10">
-                  <span class="text-[#E4B1D6]">"x2"</span>
-                  <span class="text-zinc-500">:</span>
-                  <span class="text-blue-300">0.80</span>
-                  <span class="text-zinc-500">,</span>
-                </div>
-                <div class="pl-10">
-                  <span class="text-[#E4B1D6]">"y2"</span>
-                  <span class="text-zinc-500">:</span>
-                  <span class="text-blue-300">0.40</span>
-                </div>
-                <div class="pl-5">
-                  <span class="text-zinc-500">}</span>
-                </div>
-                <div class="text-zinc-500">]</div>
+              <div class="text-white/50">[</div>
+              <div class="pl-5 text-white/50">{</div>
+              <div class="pl-10">
+                <span class="text-[#FFB7E5]">"target"</span>
+                <span class="text-white/50">:</span>
+                <span class="text-[#8CE99A]">"pii"</span>
+                <span class="text-white/50">,</span>
               </div>
+              <div class="pl-10">
+                <span class="text-[#FFB7E5]">"x1"</span>
+                <span class="text-white/50">:</span>
+                <span class="text-[#8CB4FF]">0.10</span>
+                <span class="text-white/50">,</span>
+              </div>
+              <div class="pl-10">
+                <span class="text-[#FFB7E5]">"y1"</span>
+                <span class="text-white/50">:</span>
+                <span class="text-[#8CB4FF]">0.30</span>
+                <span class="text-white/50">,</span>
+              </div>
+              <div class="pl-10">
+                <span class="text-[#FFB7E5]">"x2"</span>
+                <span class="text-white/50">:</span>
+                <span class="text-[#8CB4FF]">0.80</span>
+                <span class="text-white/50">,</span>
+              </div>
+              <div class="pl-10">
+                <span class="text-[#FFB7E5]">"y2"</span>
+                <span class="text-white/50">:</span>
+                <span class="text-[#8CB4FF]">0.40</span>
+              </div>
+              <div class="pl-5 text-white/50">}</div>
+              <div class="text-white/50">]</div>
             </div>
-            <div class="mt-5">
-              <p class="mb-2 text-xs uppercase tracking-wider text-zinc-500">
-                Example request
-              </p>
-              <div
-                class="overflow-x-auto rounded-2xl border border-white/10 bg-[#090b10] p-5 font-mono text-xs leading-6"
-              >
-                <div>
-                  <span class="text-[#E4B1D6]">curl</span>
-                  <span class="text-zinc-200">-X POST \</span>
-                </div>
-                <div class="pl-5 text-[#98C379]">
-                  "https://blurstuff.up.railway.app/api/v1/documents/anonymize-selected?mode=blur"
-                  \
-                </div>
-                <div class="pl-5">
-                  <span class="text-zinc-200">-F</span>
-                  <span class="text-[#98C379]">"file=@document.pdf"</span>
-                  \
-                </div>
-                <div class="pl-5">
-                  <span class="text-zinc-200">-F</span>
-                  <span class="text-[#98C379]">
-                    'detections=[{"target":"pii","x1":0.10,"y1":0.30,"x2":0.80,"y2":0.40}]'
-                  </span>
-                </div>
+          </div>
+          <div class="mt-5">
+            <p
+              class="mb-2 font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+            >
+              Example request
+            </p>
+            <div
+              class="overflow-x-auto rounded-lg border-2 border-ink bg-ink p-5 font-mono text-xs leading-6 text-white shadow-[3px_3px_0_#16171a]"
+            >
+              <div>
+                <span class="font-bold text-hot">curl</span>
+                <span class="text-white"> -X POST \</span>
+              </div>
+              <div class="pl-5">
+                <span class="text-[#8CE99A]"
+                  >"https://blurstuff.up.railway.app/api/v1/documents/anonymize-selected?mode=blur"</span
+                >
+                <span class="text-white"> \</span>
+              </div>
+              <div class="pl-5">
+                <span class="text-white">-F</span>
+                <span class="text-[#8CE99A]"> "file=@document.pdf"</span>
+                <span class="text-white"> \</span>
+              </div>
+              <div class="pl-5">
+                <span class="text-white">-F</span>
+                <span class="text-[#8CE99A]">
+                  'detections=[{"target":"pii","x1":0.10,"y1":0.30,"x2":0.80,"y2":0.40}]'
+                </span>
               </div>
             </div>
           </div>
         </div>
       </section>
-      <section id="targets">
-        <p class="text-sm text-zinc-500">Detection</p>
-        <h2 class="mt-1 text-2xl font-semibold text-white">
+      <section
+        id="targets"
+        class="rounded-xl border-2 border-ink bg-paper p-6 shadow-[3px_3px_0_#16171a] sm:p-8"
+      >
+        <p
+          class="font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+        >
+          Detection
+        </p>
+        <h2
+          class="mt-1 font-display text-2xl font-extrabold tracking-tight text-ink"
+        >
           Detection Targets
         </h2>
-        <p class="mt-3">
+        <p class="mt-3 text-sm leading-7 text-ink/60">
           Use the
-          <code class="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300"
+          <code
+            class="rounded border border-ink/15 bg-paper-2 px-1.5 py-0.5 font-mono text-xs text-ink"
             >targets</code
           >
           query parameter to choose what Blur Stuff should detect.
         </p>
-        <p class="mt-3">
+        <p class="mt-3 text-sm leading-7 text-ink/60">
           Multiple targets can be provided as a comma-separated list. If
           omitted, the API defaults to
-          <code class="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300"
+          <code
+            class="rounded border border-ink/15 bg-paper-2 px-1.5 py-0.5 font-mono text-xs text-ink"
             >faces</code
           >.
         </p>
-        <div class="mt-6 overflow-hidden rounded-2xl border border-white/10">
+        <div class="mt-6 grid gap-3 sm:grid-cols-2">
           <div
-            class="grid grid-cols-[160px_1fr] border-b border-white/10 bg-white/3 px-4 py-3"
+            class="rounded-lg border-2 border-ink bg-paper-2 px-4 py-4 shadow-[2px_2px_0_#16171a]"
           >
-            <span class="text-xs text-zinc-500"> Target </span>
-            <span class="text-xs text-zinc-500"> Value </span>
+            <p class="font-display font-extrabold text-ink">Faces</p>
+            <code class="mt-1 block font-mono text-xs text-ink/50">faces</code>
           </div>
           <div
-            class="grid grid-cols-[160px_1fr] border-b border-white/10 px-4 py-4"
+            class="rounded-lg border-2 border-ink bg-paper-2 px-4 py-4 shadow-[2px_2px_0_#16171a]"
           >
-            <span class="text-zinc-300"> Faces </span>
-            <code class="text-zinc-400"> faces </code>
+            <p class="font-display font-extrabold text-ink">License plates</p>
+            <code class="mt-1 block font-mono text-xs text-ink/50">
+              plates
+            </code>
           </div>
           <div
-            class="grid grid-cols-[160px_1fr] border-b border-white/10 px-4 py-4"
+            class="rounded-lg border-2 border-ink bg-paper-2 px-4 py-4 shadow-[2px_2px_0_#16171a]"
           >
-            <span class="text-zinc-300"> License plates </span>
-            <code class="text-zinc-400"> plates </code>
+            <p class="font-display font-extrabold text-ink">Text</p>
+            <code class="mt-1 block font-mono text-xs text-ink/50">text</code>
           </div>
           <div
-            class="grid grid-cols-[160px_1fr] border-b border-white/10 px-4 py-4"
+            class="rounded-lg border-2 border-ink bg-paper-2 px-4 py-4 shadow-[2px_2px_0_#16171a]"
           >
-            <span class="text-zinc-300"> Text </span>
-            <code class="text-zinc-400"> text </code>
-          </div>
-          <div class="grid grid-cols-[160px_1fr] px-4 py-4">
-            <span class="text-zinc-300"> Personal information </span>
-            <code class="text-zinc-400"> pii </code>
+            <p class="font-display font-extrabold text-ink">
+              Personal information
+            </p>
+            <code class="mt-1 block font-mono text-xs text-ink/50">pii</code>
           </div>
         </div>
-        <div
-          class="mt-5 rounded-xl border border-white/10 bg-white/3 px-4 py-4"
-        >
-          <p class="text-xs uppercase tracking-wider text-zinc-500">
+        <div class="mt-5 rounded-lg border-2 border-ink bg-paper-2 px-4 py-4">
+          <p
+            class="font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+          >
             Important
           </p>
-          <p class="mt-2 text-sm text-zinc-400">
-            <code class="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300"
+          <p class="mt-2 text-sm leading-6 text-ink/60">
+            <code
+              class="rounded border border-ink/15 bg-paper px-1.5 py-0.5 font-mono text-xs text-ink"
               >text</code
             >
             and
-            <code class="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300"
+            <code
+              class="rounded border border-ink/15 bg-paper px-1.5 py-0.5 font-mono text-xs text-ink"
               >pii</code
             >
             cannot be used together.
           </p>
         </div>
       </section>
-      <section id="modes">
-        <p class="text-sm text-zinc-500">Anonymization</p>
-        <h2 class="mt-1 text-2xl font-semibold text-white">
+      <section
+        id="modes"
+        class="rounded-xl border-2 border-ink bg-paper p-6 shadow-[3px_3px_0_#16171a] sm:p-8"
+      >
+        <p
+          class="font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+        >
+          Anonymization
+        </p>
+        <h2
+          class="mt-1 font-display text-2xl font-extrabold tracking-tight text-ink"
+        >
           Anonymization Modes
         </h2>
-        <p class="mt-3">
+        <p class="mt-3 text-sm leading-7 text-ink/60">
           Anonymization endpoints support several ways of hiding detected
           information. Use the
-          <code class="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300"
+          <code
+            class="rounded border border-ink/15 bg-paper-2 px-1.5 py-0.5 font-mono text-xs text-ink"
             >mode</code
           >
           query parameter.
         </p>
-        <div class="mt-6 grid gap-3 sm:grid-cols-2">
-          <div class="rounded-xl border border-white/10 bg-white/3 px-4 py-3">
-            <p class="text-zinc-200">Blur</p>
-            <p class="mt-1 text-xs text-zinc-500">Blurs the detected region.</p>
+        <div class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div
+            class="rounded-lg border-2 border-ink bg-paper-2 px-4 py-4 shadow-[2px_2px_0_#16171a]"
+          >
+            <p class="font-display font-extrabold text-ink">Blur</p>
+            <p class="mt-1 text-xs leading-5 text-ink/50">
+              Blurs the detected region.
+            </p>
           </div>
-          <div class="rounded-xl border border-white/10 bg-white/3 px-4 py-3">
-            <p class="text-zinc-200">Pixelate</p>
-            <p class="mt-1 text-xs text-zinc-500">
+          <div
+            class="rounded-lg border-2 border-ink bg-paper-2 px-4 py-4 shadow-[2px_2px_0_#16171a]"
+          >
+            <p class="font-display font-extrabold text-ink">Pixelate</p>
+            <p class="mt-1 text-xs leading-5 text-ink/50">
               Pixelates the detected region.
             </p>
           </div>
-          <div class="rounded-xl border border-white/10 bg-white/3 px-4 py-3">
-            <p class="text-zinc-200">Solid</p>
-            <p class="mt-1 text-xs text-zinc-500">
+          <div
+            class="rounded-lg border-2 border-ink bg-paper-2 px-4 py-4 shadow-[2px_2px_0_#16171a]"
+          >
+            <p class="font-display font-extrabold text-ink">Solid</p>
+            <p class="mt-1 text-xs leading-5 text-ink/50">
               Covers the region with a solid block.
             </p>
           </div>
-          <div class="rounded-xl border border-white/10 bg-white/3 px-4 py-3">
-            <p class="text-zinc-200">Noise</p>
-            <p class="mt-1 text-xs text-zinc-500">
+          <div
+            class="rounded-lg border-2 border-ink bg-paper-2 px-4 py-4 shadow-[2px_2px_0_#16171a]"
+          >
+            <p class="font-display font-extrabold text-ink">Noise</p>
+            <p class="mt-1 text-xs leading-5 text-ink/50">
               Replaces the region with generated noise.
             </p>
           </div>
-          <div class="rounded-xl border border-white/10 bg-white/3 px-4 py-3">
-            <p class="text-zinc-200">Emoji</p>
-            <p class="mt-1 text-xs text-zinc-500">
+          <div
+            class="rounded-lg border-2 border-ink bg-paper-2 px-4 py-4 shadow-[2px_2px_0_#16171a]"
+          >
+            <p class="font-display font-extrabold text-ink">Emoji</p>
+            <p class="mt-1 text-xs leading-5 text-ink/50">
               Covers the detected region with an emoji.
             </p>
           </div>
-          <div class="rounded-xl border border-white/10 bg-white/3 px-4 py-3">
-            <p class="text-zinc-200">Inpaint</p>
-            <p class="mt-1 text-xs text-zinc-500">
+          <div
+            class="rounded-lg border-2 border-ink bg-paper-2 px-4 py-4 shadow-[2px_2px_0_#16171a]"
+          >
+            <p class="font-display font-extrabold text-ink">Inpaint</p>
+            <p class="mt-1 text-xs leading-5 text-ink/50">
               Attempts to fill the detected region.
             </p>
           </div>
         </div>
-        <p class="mt-5 text-sm text-zinc-500">
+        <p class="mt-5 text-sm leading-6 text-ink/50">
           Default:
-          <code class="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300">
+          <code
+            class="rounded border border-ink/15 bg-paper-2 px-1.5 py-0.5 font-mono text-xs text-ink"
+          >
             pixelate
           </code>
         </p>
       </section>
-      <section id="padding">
-        <p class="text-sm text-zinc-500">Anonymization</p>
-        <h2 class="mt-1 text-2xl font-semibold text-white">Padding</h2>
-        <p class="mt-3">
+      <section
+        id="padding"
+        class="rounded-xl border-2 border-ink bg-paper p-6 shadow-[3px_3px_0_#16171a] sm:p-8"
+      >
+        <p
+          class="font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+        >
+          Anonymization
+        </p>
+        <h2
+          class="mt-1 font-display text-2xl font-extrabold tracking-tight text-ink"
+        >
+          Padding
+        </h2>
+        <p class="mt-3 text-sm leading-7 text-ink/60">
           Use the
-          <code class="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300"
+          <code
+            class="rounded border border-ink/15 bg-paper-2 px-1.5 py-0.5 font-mono text-xs text-ink"
             >padding</code
           >
           query parameter to expand the detected bounding box before applying
           anonymization.
         </p>
-        <div class="mt-6 overflow-hidden rounded-2xl border border-white/10">
+        <div class="mt-6 overflow-hidden rounded-lg border-2 border-ink">
           <div
-            class="grid grid-cols-[160px_1fr] border-b border-white/10 bg-white/3 px-4 py-3"
+            class="grid grid-cols-[160px_1fr] border-b-2 border-ink bg-paper-2 px-4 py-3"
           >
-            <span class="text-xs text-zinc-500"> Property </span>
-            <span class="text-xs text-zinc-500"> Value </span>
+            <span
+              class="font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+            >
+              Property
+            </span>
+            <span
+              class="font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+            >
+              Value
+            </span>
           </div>
           <div
-            class="grid grid-cols-[160px_1fr] border-b border-white/10 px-4 py-4"
+            class="grid grid-cols-[160px_1fr] border-b border-ink/10 px-4 py-4"
           >
-            <span class="text-zinc-300"> Type </span>
-            <code class="text-zinc-400"> float </code>
+            <span class="text-sm font-bold text-ink">Type</span>
+            <code class="font-mono text-sm text-ink/60">float</code>
           </div>
           <div
-            class="grid grid-cols-[160px_1fr] border-b border-white/10 px-4 py-4"
+            class="grid grid-cols-[160px_1fr] border-b border-ink/10 px-4 py-4"
           >
-            <span class="text-zinc-300"> Minimum </span>
-            <code class="text-zinc-400"> 0.0 </code>
+            <span class="text-sm font-bold text-ink">Minimum</span>
+            <code class="font-mono text-sm text-ink/60">0.0</code>
           </div>
           <div
-            class="grid grid-cols-[160px_1fr] border-b border-white/10 px-4 py-4"
+            class="grid grid-cols-[160px_1fr] border-b border-ink/10 px-4 py-4"
           >
-            <span class="text-zinc-300"> Maximum </span>
-            <code class="text-zinc-400"> 1.0 </code>
+            <span class="text-sm font-bold text-ink">Maximum</span>
+            <code class="font-mono text-sm text-ink/60">1.0</code>
           </div>
           <div class="grid grid-cols-[160px_1fr] px-4 py-4">
-            <span class="text-zinc-300"> Default </span>
-            <code class="text-zinc-400"> 0.2 </code>
+            <span class="text-sm font-bold text-ink">Default</span>
+            <code class="font-mono text-sm text-ink/60">0.2</code>
           </div>
         </div>
         <div
-          class="mt-5 overflow-x-auto rounded-xl border border-white/10 bg-[#090b10] p-4 font-mono text-xs text-zinc-300"
+          class="mt-5 overflow-x-auto rounded-lg border-2 border-ink bg-ink p-4 font-mono text-xs text-white shadow-[3px_3px_0_#16171a]"
         >
-          /images/anonymize?targets=faces&mode=blur&padding=0.2
+          /images/anonymize?targets=faces&amp;mode=blur&amp;padding=0.2
         </div>
       </section>
-      <section id="images">
-        <p class="text-sm text-zinc-500">Endpoints</p>
-        <h2 class="mt-1 text-2xl font-semibold text-white">Images</h2>
-        <p class="mt-3">
+      <section
+        id="images"
+        class="rounded-xl border-2 border-ink bg-paper p-6 shadow-[3px_3px_0_#16171a] sm:p-8"
+      >
+        <p
+          class="font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+        >
+          Endpoints
+        </p>
+        <h2
+          class="mt-1 font-display text-2xl font-extrabold tracking-tight text-ink"
+        >
+          Images
+        </h2>
+        <p class="mt-3 text-sm leading-7 text-ink/60">
           Detect and anonymize sensitive information in images.
         </p>
-        <div class="mt-6 space-y-8">
-          <div>
-            <div class="mb-3">
-              <span
-                class="rounded-md bg-white/5 px-2 py-1 font-mono text-xs text-[#E4B1D6]"
-                >POST</span
-              >
-              <span class="ml-2 font-mono text-sm text-zinc-200">
-                /images/preview
-              </span>
+        <div class="mt-6 space-y-3">
+          <div
+            class="rounded-lg border-2 border-ink bg-paper-2 p-5 shadow-[2px_2px_0_#16171a]"
+          >
+            <p
+              class="mb-3 font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+            >
+              Preview
+            </p>
+            <div class="font-mono text-sm">
+              <span class="font-bold text-hot">POST</span>
+              <span class="text-ink"> /api/v1/images/preview</span>
             </div>
-            <p>Generates a preview representation of an uploaded image.</p>
+            <p class="mt-3 text-sm leading-6 text-ink/60">
+              Generates a preview representation of an uploaded image.
+            </p>
           </div>
-          <div>
-            <div class="mb-3">
-              <span
-                class="rounded-md bg-white/5 px-2 py-1 font-mono text-xs text-[#E4B1D6]"
-                >POST</span
-              >
-              <span class="ml-2 font-mono text-sm text-zinc-200">
-                /images/detect
-              </span>
+          <div
+            class="rounded-lg border-2 border-ink bg-paper-2 p-5 shadow-[2px_2px_0_#16171a]"
+          >
+            <p
+              class="mb-3 font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+            >
+              Detect
+            </p>
+            <div class="font-mono text-sm">
+              <span class="font-bold text-hot">POST</span>
+              <span class="text-ink"> /api/v1/images/detect</span>
             </div>
-            <p>
+            <p class="mt-3 text-sm leading-6 text-ink/60">
               Detects sensitive information in an uploaded image and returns the
               detected regions.
             </p>
             <div
-              class="mt-4 overflow-x-auto rounded-xl border border-white/10 bg-[#090b10] p-4 font-mono text-xs text-zinc-300"
+              class="mt-4 overflow-x-auto rounded-lg border-2 border-ink bg-ink p-4 font-mono text-xs text-white"
             >
               POST /api/v1/images/detect?targets=faces,plates
             </div>
           </div>
-          <div>
-            <div class="mb-3">
-              <span
-                class="rounded-md bg-white/5 px-2 py-1 font-mono text-xs text-[#E4B1D6]"
-                >POST</span
-              >
-              <span class="ml-2 font-mono text-sm text-zinc-200">
-                /images/anonymize
-              </span>
+          <div
+            class="rounded-lg border-2 border-ink bg-paper-2 p-5 shadow-[2px_2px_0_#16171a]"
+          >
+            <p
+              class="mb-3 font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+            >
+              Anonymize
+            </p>
+            <div class="font-mono text-sm">
+              <span class="font-bold text-hot">POST</span>
+              <span class="text-ink"> /api/v1/images/anonymize</span>
             </div>
-            <p>
+            <p class="mt-3 text-sm leading-6 text-ink/60">
               Detects and anonymizes the selected targets in an uploaded image.
             </p>
             <div
-              class="mt-4 overflow-x-auto rounded-xl border border-white/10 bg-[#090b10] p-4 font-mono text-xs text-zinc-300"
+              class="mt-4 overflow-x-auto rounded-lg border-2 border-ink bg-ink p-4 font-mono text-xs text-white"
             >
               POST
-              /api/v1/images/anonymize?targets=faces&mode=pixelate&padding=0.2
+              /api/v1/images/anonymize?targets=faces&amp;mode=pixelate&amp;padding=0.2
             </div>
           </div>
-          <div>
-            <div class="mb-3">
-              <span
-                class="rounded-md bg-white/5 px-2 py-1 font-mono text-xs text-[#E4B1D6]"
-                >POST</span
-              >
-              <span class="ml-2 font-mono text-sm text-zinc-200">
-                /images/anonymize-selected
-              </span>
-            </div>
-            <p>Anonymizes only the detections selected by the client.</p>
-            <div
-              class="mt-4 overflow-x-auto rounded-xl border border-white/10 bg-[#090b10] p-4 font-mono text-xs text-zinc-300"
+          <div
+            class="rounded-lg border-2 border-ink bg-paper-2 p-5 shadow-[2px_2px_0_#16171a]"
+          >
+            <p
+              class="mb-3 font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
             >
-              POST /api/v1/images/anonymize-selected?mode=blur&padding=0.2
+              Anonymize selected
+            </p>
+            <div class="font-mono text-sm">
+              <span class="font-bold text-hot">POST</span>
+              <span class="text-ink"> /api/v1/images/anonymize-selected </span>
             </div>
-            <p class="mt-3">
+            <p class="mt-3 text-sm leading-6 text-ink/60">
+              Anonymizes only the detections selected by the client.
+            </p>
+            <div
+              class="mt-4 overflow-x-auto rounded-lg border-2 border-ink bg-ink p-4 font-mono text-xs text-white"
+            >
+              POST /api/v1/images/anonymize-selected?mode=blur&amp;padding=0.2
+            </div>
+            <p class="mt-3 text-sm leading-6 text-ink/50">
               Selected detections must be supplied through the
-              <code class="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300"
+              <code
+                class="rounded border border-ink/15 bg-paper px-1.5 py-0.5 font-mono text-xs text-ink"
                 >detections</code
               >
               form field as JSON.
@@ -1129,150 +1306,244 @@ og_title %}API Documentation - Blur Stuff{% endblock %} {% block content %}
           </div>
         </div>
       </section>
-      <section id="videos">
-        <p class="text-sm text-zinc-500">Endpoints</p>
-        <h2 class="mt-1 text-2xl font-semibold text-white">Videos</h2>
-        <p class="mt-3">
+      <section
+        id="videos"
+        class="rounded-xl border-2 border-ink bg-paper p-6 shadow-[3px_3px_0_#16171a] sm:p-8"
+      >
+        <p
+          class="font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+        >
+          Endpoints
+        </p>
+        <h2
+          class="mt-1 font-display text-2xl font-extrabold tracking-tight text-ink"
+        >
+          Videos
+        </h2>
+        <p class="mt-3 text-sm leading-7 text-ink/60">
           Detect and anonymize sensitive information in video files.
         </p>
-        <div class="mt-6 space-y-8">
-          <div>
-            <div class="mb-3">
-              <span
-                class="rounded-md bg-white/5 px-2 py-1 font-mono text-xs text-[#E4B1D6]"
-                >POST</span
-              >
-              <span class="ml-2 font-mono text-sm text-zinc-200">
-                /videos/detect
-              </span>
+        <div class="mt-6 space-y-3">
+          <div
+            class="rounded-lg border-2 border-ink bg-paper-2 p-5 shadow-[2px_2px_0_#16171a]"
+          >
+            <p
+              class="mb-3 font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+            >
+              Detect
+            </p>
+            <div class="font-mono text-sm">
+              <span class="font-bold text-hot">POST</span>
+              <span class="text-ink"> /api/v1/videos/detect</span>
             </div>
-            <p>Detects sensitive information throughout a video.</p>
+            <p class="mt-3 text-sm leading-6 text-ink/60">
+              Detects sensitive information throughout a video.
+            </p>
           </div>
-          <div>
-            <div class="mb-3">
-              <span
-                class="rounded-md bg-white/5 px-2 py-1 font-mono text-xs text-[#E4B1D6]"
-                >POST</span
-              >
-              <span class="ml-2 font-mono text-sm text-zinc-200">
-                /videos/anonymize
-              </span>
+          <div
+            class="rounded-lg border-2 border-ink bg-paper-2 p-5 shadow-[2px_2px_0_#16171a]"
+          >
+            <p
+              class="mb-3 font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+            >
+              Anonymize
+            </p>
+            <div class="font-mono text-sm">
+              <span class="font-bold text-hot">POST</span>
+              <span class="text-ink"> /api/v1/videos/anonymize</span>
             </div>
-            <p>
+            <p class="mt-3 text-sm leading-6 text-ink/60">
               Detects and anonymizes sensitive information throughout a video.
             </p>
             <div
-              class="mt-4 overflow-x-auto rounded-xl border border-white/10 bg-[#090b10] p-4 font-mono text-xs text-zinc-300"
+              class="mt-4 overflow-x-auto rounded-lg border-2 border-ink bg-ink p-4 font-mono text-xs text-white"
             >
-              POST /api/v1/videos/anonymize?targets=faces&mode=blur
+              POST /api/v1/videos/anonymize?targets=faces&amp;mode=blur
             </div>
           </div>
         </div>
       </section>
-      <section id="documents">
-        <p class="text-sm text-zinc-500">Endpoints</p>
-        <h2 class="mt-1 text-2xl font-semibold text-white">Documents</h2>
-        <p class="mt-3">
+      <section
+        id="documents"
+        class="rounded-xl border-2 border-ink bg-paper p-6 shadow-[3px_3px_0_#16171a] sm:p-8"
+      >
+        <p
+          class="font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+        >
+          Endpoints
+        </p>
+        <h2
+          class="mt-1 font-display text-2xl font-extrabold tracking-tight text-ink"
+        >
+          Documents
+        </h2>
+        <p class="mt-3 text-sm leading-7 text-ink/60">
           Process supported documents and anonymize sensitive information.
         </p>
-        <div class="mt-6 space-y-8">
-          <div>
-            <div class="mb-3">
-              <span
-                class="rounded-md bg-white/5 px-2 py-1 font-mono text-xs text-[#E4B1D6]"
-                >POST</span
-              >
-              <span class="ml-2 font-mono text-sm text-zinc-200">
-                /documents/detect
-              </span>
+        <div class="mt-6 space-y-3">
+          <div
+            class="rounded-lg border-2 border-ink bg-paper-2 p-5 shadow-[2px_2px_0_#16171a]"
+          >
+            <p
+              class="mb-3 font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+            >
+              Detect
+            </p>
+            <div class="font-mono text-sm">
+              <span class="font-bold text-hot">POST</span>
+              <span class="text-ink"> /api/v1/documents/detect</span>
             </div>
-            <p>
+            <p class="mt-3 text-sm leading-6 text-ink/60">
               Detects text and potentially sensitive information in a document.
             </p>
           </div>
-          <div>
-            <div class="mb-3">
-              <span
-                class="rounded-md bg-white/5 px-2 py-1 font-mono text-xs text-[#E4B1D6]"
-                >POST</span
-              >
-              <span class="ml-2 font-mono text-sm text-zinc-200">
-                /documents/anonymize
-              </span>
+          <div
+            class="rounded-lg border-2 border-ink bg-paper-2 p-5 shadow-[2px_2px_0_#16171a]"
+          >
+            <p
+              class="mb-3 font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+            >
+              Anonymize
+            </p>
+            <div class="font-mono text-sm">
+              <span class="font-bold text-hot">POST</span>
+              <span class="text-ink"> /api/v1/documents/anonymize</span>
             </div>
-            <p>Detects and anonymizes sensitive information in a document.</p>
+            <p class="mt-3 text-sm leading-6 text-ink/60">
+              Detects and anonymizes sensitive information in a document.
+            </p>
           </div>
-          <div>
-            <div class="mb-3">
-              <span
-                class="rounded-md bg-white/5 px-2 py-1 font-mono text-xs text-[#E4B1D6]"
-                >POST</span
-              >
-              <span class="ml-2 font-mono text-sm text-zinc-200">
-                /documents/anonymize-selected
+          <div
+            class="rounded-lg border-2 border-ink bg-paper-2 p-5 shadow-[2px_2px_0_#16171a]"
+          >
+            <p
+              class="mb-3 font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+            >
+              Anonymize selected
+            </p>
+            <div class="font-mono text-sm">
+              <span class="font-bold text-hot">POST</span>
+              <span class="text-ink">
+                /api/v1/documents/anonymize-selected
               </span>
             </div>
-            <p>Anonymizes only the selected detections in a document.</p>
+            <p class="mt-3 text-sm leading-6 text-ink/60">
+              Anonymizes only the selected detections in a document.
+            </p>
           </div>
         </div>
       </section>
-      <section id="health">
-        <p class="text-sm text-zinc-500">Infrastructure</p>
-        <h2 class="mt-1 text-2xl font-semibold text-white">
+      <section
+        id="health"
+        class="rounded-xl border-2 border-ink bg-paper p-6 shadow-[3px_3px_0_#16171a] sm:p-8"
+      >
+        <p
+          class="font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+        >
+          Infrastructure
+        </p>
+        <h2
+          class="mt-1 font-display text-2xl font-extrabold tracking-tight text-ink"
+        >
           Health & Readiness
         </h2>
-        <div class="mt-6 space-y-6">
-          <div>
-            <div class="mb-3 font-mono text-sm">
-              <span class="text-[#E4B1D6]"> GET </span>
-              <span class="ml-2 text-zinc-200"> /health </span>
+        <p class="mt-3 text-sm leading-7 text-ink/60">
+          Check whether the API is running and whether its detection models are
+          ready.
+        </p>
+        <div class="mt-6 grid gap-3 md:grid-cols-2">
+          <div
+            class="rounded-lg border-2 border-ink bg-paper-2 p-5 shadow-[2px_2px_0_#16171a]"
+          >
+            <p
+              class="mb-3 font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+            >
+              Health
+            </p>
+            <div class="font-mono text-sm">
+              <span class="font-bold text-hot">GET</span>
+              <span class="text-ink"> /api/v1/health</span>
             </div>
-            <p>Returns whether the API is running.</p>
+            <p class="mt-3 text-sm leading-6 text-ink/60">
+              Returns whether the API is running.
+            </p>
           </div>
-          <div>
-            <div class="mb-3 font-mono text-sm">
-              <span class="text-[#E4B1D6]"> GET </span>
-              <span class="ml-2 text-zinc-200"> /health/ready </span>
+          <div
+            class="rounded-lg border-2 border-ink bg-paper-2 p-5 shadow-[2px_2px_0_#16171a]"
+          >
+            <p
+              class="mb-3 font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+            >
+              Readiness
+            </p>
+            <div class="font-mono text-sm">
+              <span class="font-bold text-hot">GET</span>
+              <span class="text-ink"> /api/v1/health/ready</span>
             </div>
-            <p>
+            <p class="mt-3 text-sm leading-6 text-ink/60">
               Checks whether the detection models are ready to process requests.
             </p>
           </div>
         </div>
       </section>
-      <section id="errors">
-        <p class="text-sm text-zinc-500">Reference</p>
-        <h2 class="mt-1 text-2xl font-semibold text-white">Errors</h2>
-        <p class="mt-3">
+      <section
+        id="errors"
+        class="rounded-xl border-2 border-ink bg-paper p-6 shadow-[3px_3px_0_#16171a] sm:p-8"
+      >
+        <p
+          class="font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+        >
+          Reference
+        </p>
+        <h2
+          class="mt-1 font-display text-2xl font-extrabold tracking-tight text-ink"
+        >
+          Errors
+        </h2>
+        <p class="mt-3 text-sm leading-7 text-ink/60">
           When a request cannot be processed, the API returns an appropriate
           HTTP status code along with an error response.
         </p>
-        <div class="mt-6 overflow-hidden rounded-2xl border border-white/10">
+        <div class="mt-6 overflow-hidden rounded-lg border-2 border-ink">
           <div
-            class="grid grid-cols-[120px_1fr] border-b border-white/10 bg-white/3 px-4 py-3"
+            class="grid grid-cols-[120px_1fr] border-b-2 border-ink bg-paper-2 px-4 py-3"
           >
-            <span class="text-xs text-zinc-500"> Status </span>
-            <span class="text-xs text-zinc-500"> Meaning </span>
+            <span
+              class="font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+            >
+              Status
+            </span>
+            <span
+              class="font-mono text-[10px] font-bold uppercase tracking-wider text-ink/40"
+            >
+              Meaning
+            </span>
           </div>
           <div
-            class="grid grid-cols-[120px_1fr] border-b border-white/10 px-4 py-4"
+            class="grid grid-cols-[120px_1fr] border-b border-ink/10 px-4 py-4"
           >
-            <code class="text-zinc-300"> 400 </code>
-            <span> Invalid request or unsupported input. </span>
+            <code class="font-mono text-sm font-bold text-ink">400</code>
+            <span class="text-sm text-ink/60">
+              Invalid request or unsupported input.
+            </span>
           </div>
           <div
-            class="grid grid-cols-[120px_1fr] border-b border-white/10 px-4 py-4"
+            class="grid grid-cols-[120px_1fr] border-b border-ink/10 px-4 py-4"
           >
-            <code class="text-zinc-300"> 500 </code>
-            <span> Failed to encode or generate the requested output. </span>
+            <code class="font-mono text-sm font-bold text-ink">500</code>
+            <span class="text-sm text-ink/60">
+              Failed to encode or generate the requested output.
+            </span>
           </div>
           <div class="grid grid-cols-[120px_1fr] px-4 py-4">
-            <code class="text-zinc-300"> 503 </code>
-            <span> Service or detection models are unavailable. </span>
+            <code class="font-mono text-sm font-bold text-ink">503</code>
+            <span class="text-sm text-ink/60">
+              Service or detection models are unavailable.
+            </span>
           </div>
         </div>
         <div
-          class="mt-6 overflow-x-auto rounded-xl border border-white/10 bg-[#090b10] p-4 font-mono text-xs text-zinc-300"
+          class="mt-6 overflow-x-auto rounded-lg border-2 border-ink bg-ink p-4 font-mono text-xs text-white shadow-[3px_3px_0_#16171a]"
         >
           {"error": "example"}
         </div>

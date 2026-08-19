@@ -1,37 +1,25 @@
-<header class="sticky top-0 z-100 px-6 pt-6">
+<header class="fixed inset-x-0 top-0 z-50 text-ink">
   <nav
-    x-data="{ x: 0, y: 0 }"
-    @mousemove="
-        const r = $el.getBoundingClientRect();
-        $el.style.setProperty('--x', `${$event.clientX - r.left}px`);
-        $el.style.setProperty('--y', `${$event.clientY - r.top}px`);
-    "
-    @mouseleave="x = -1000; y = -1000"
-    class="group relative overflow-hidden mx-auto flex h-15 max-w-7xl items-center rounded-full border border-white/12 bg-zinc-900/20 px-5 backdrop-blur-xl"
+    class="relative flex h-18 w-full items-center border-b-2 border-ink bg-paper px-5 shadow-[0_4px_0_#16171a] md:px-8"
   >
-    <div
-      class="pointer-events-none absolute inset-0 rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-      style="
-        background: radial-gradient(
-          320px circle at var(--x) var(--y),
-          rgba(255, 255, 255, 0.06) 0%,
-          rgba(255, 255, 255, 0.03) 35%,
-          transparent 75%
-        );
-      "
-    ></div>
     <a
       href="{{ url_for('frontend.index') }}"
-      class="flex items-center gap-1 font-semibold text-white"
+      class="group flex shrink-0 items-center gap-2 font-display text-lg font-extrabold tracking-tight"
     >
-      {% include "components/icons/logo.svg" %}
-      <span class="text-lg tracking-tight">Blur Stuff</span>
+      <span
+        class="flex h-8 w-8 -rotate-6 items-center justify-center rounded-lg bg-ink text-paper transition-transform duration-150 group-hover:rotate-0"
+      >
+        {% include "components/icons/logo.svg" %}
+      </span>
+      <span>Blur Stuff</span>
     </a>
-    <ul class="mx-auto flex items-center gap-10">
+    <ul
+      class="absolute left-1/2 hidden -translate-x-1/2 items-center gap-7 text-sm font-semibold md:flex"
+    >
       <li>
         <a
           href="{{ url_for('frontend.api') }}"
-          class="text-sm font-medium text-zinc-400 transition hover:text-white"
+          class="opacity-60 transition-opacity duration-150 hover:opacity-100"
         >
           API
         </a>
@@ -39,7 +27,7 @@
       <li>
         <a
           href="{{ url_for('frontend.docs') }}"
-          class="text-sm font-medium text-zinc-400 transition hover:text-white"
+          class="opacity-60 transition-opacity duration-150 hover:opacity-100"
         >
           Docs
         </a>
@@ -47,22 +35,18 @@
       <li>
         <a
           href="{{ url_for('frontend.about') }}"
-          class="text-sm font-medium text-zinc-400 transition hover:text-white"
+          class="opacity-60 transition-opacity duration-150 hover:opacity-100"
         >
           About
         </a>
       </li>
     </ul>
-    <div class="flex items-center">
-      <a
-        href="{{ url_for('frontend.detect') }}"
-        class="flex items-center gap-2 rounded-full bg-white px-5 py-2 text-sm font-medium text-black transition hover:bg-zinc-200"
-      >
-        <span
-          ><span>{{ upload_button_text | default("Upload Files") }}</span></span
-        >
-        {% include "components/icons/upload.svg" %}
-      </a>
-    </div>
+    <a
+      href="{{ url_for('frontend.detect') }}"
+      class="stamp-button ml-auto inline-flex items-center gap-2 rounded-full border-2 border-ink bg-ink px-4 py-2.5 font-mono text-xs font-bold uppercase tracking-wide text-paper shadow-[3px_3px_0_rgba(0,0,0,0.35)] sm:px-5"
+    >
+      <span>{{ upload_button_text }}</span>
+      {% include "components/icons/upload.svg" %}
+    </a>
   </nav>
 </header>

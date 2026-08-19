@@ -788,14 +788,12 @@ function resultsApp() {
       const percentage = `${(confidence * 100).toFixed(1)}%`;
       if (confidence >= 0.8) return `${percentage} confidence · High`;
       if (confidence >= 0.5) return `${percentage} confidence · Medium`;
-
       return `${percentage} confidence · Low`;
     },
     confidenceClass(confidence) {
-      if (confidence >= 0.8) return "text-emerald-400";
-      if (confidence >= 0.5) return "text-amber-400";
-
-      return "text-red-400";
+      if (confidence >= 0.8) return "text-emerald-700";
+      if (confidence >= 0.5) return "text-amber-700";
+      return "text-hot";
     },
     detectionGroups() {
       const empty = {
@@ -1333,7 +1331,6 @@ function completePage() {
     isLoading: true,
     error: null,
     isDownloading: false,
-
     async init() {
       try {
         const storedFile = await getCurrentUpload();
@@ -1419,14 +1416,25 @@ function completePage() {
 
       return "document";
     },
-    move(event) {
-      if (!this.dragging || !this.$refs.wrapper) return;
+    updatePosition(clientX) {
+      if (!this.$refs.wrapper) return;
 
       const rect = this.$refs.wrapper.getBoundingClientRect();
       this.position = Math.min(
         100,
-        Math.max(0, ((event.clientX - rect.left) / rect.width) * 100),
+        Math.max(0, ((clientX - rect.left) / rect.width) * 100),
       );
+    },
+    move(event) {
+      if (!this.dragging) return;
+      this.updatePosition(event.clientX);
+    },
+    startDrag(event) {
+      this.dragging = true;
+      this.updatePosition(event.clientX);
+    },
+    stopDrag() {
+      this.dragging = false;
     },
     download() {
       if (!this.processedUrl || this.isDownloading) return;

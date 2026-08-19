@@ -1,110 +1,113 @@
-<section class="pb-10">
-  <div
-    x-data
-    @mousemove.window="
-        document.documentElement.style.setProperty('--mx', `${$event.clientX}px`);
-        document.documentElement.style.setProperty('--my', `${$event.clientY}px`);
-    "
-    class="fixed inset-0 -z-50 pointer-events-none"
-  >
-    <div
-      class="absolute inset-0"
-      style="
-        background-image:
-          linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-          linear-gradient(
-            90deg,
-            rgba(255, 255, 255, 0.025) 1px,
-            transparent 1px
-          );
-        background-size: 50px 50px;
-      "
-    ></div>
-    <div
-      class="absolute inset-0"
-      style="
-        background-image:
-          linear-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
-        background-size: 50px 50px;
-
-        mask-image: radial-gradient(
-          220px circle at var(--mx, -1000px) var(--my, -1000px),
-          black 0%,
-          transparent 100%
-        );
-
-        -webkit-mask-image: radial-gradient(
-          220px circle at var(--mx, -1000px) var(--my, -1000px),
-          black 0%,
-          transparent 100%
-        );
-      "
-    ></div>
-  </div>
-  <div class="relative">
-    <div
-      class="pointer-events-none absolute left-1/2 top-0 -z-10 h-125 w-200 -translate-x-1/2 rounded-full bg-indigo-500/10 blur-[120px]"
-    ></div>
-    <div
-      class="mx-auto flex max-w-5xl flex-col items-center px-6 pt-20 text-center"
-    >
+<section
+  class="relative flex min-h-svh items-center overflow-hidden border-b-[1.5px] border-dashed border-ink/30 text-ink"
+>
+  <div class="mx-auto w-full max-w-7xl px-6 py-20">
+    <div class="mb-10 flex justify-center -translate-y-10">
       <div
-        class="mb-8 flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-zinc-300 backdrop-blur-xl"
+        class="inline-flex items-center gap-2 rounded-full border-2 border-ink bg-paper px-4 py-2 font-mono text-[0.68rem] font-bold uppercase tracking-[0.08em] shadow-[2px_2px_0_#16171a]"
       >
-        {% include "components/icons/lock1.svg" %}
+        <span class="h-2 w-2 rounded-full bg-hot"></span>
         <span>Privacy-first</span>
-        {% include "components/icons/dot.svg" %}
+        <span class="text-ink/30">·</span>
         <span>No data stored</span>
-        {% include "components/icons/dot.svg" %}
+        <span class="text-ink/30">·</span>
         <span>Open source friendly</span>
       </div>
-      <h1
-        class="max-w-4xl text-5xl font-bold tracking-tight text-white md:text-7xl"
-      >
-        Anonymize faces, plates,
-        <br />
-        text, and PII
-        <span
-          class="bg-linear-to-r from-indigo-400 via-purple-400 to-indigo-500 bg-clip-text text-transparent transition-all duration-300 hover:drop-shadow-[0_0_25px_rgba(99,102,241,0.6)]"
+    </div>
+    <div
+      class="grid grid-cols-1 items-center gap-12 md:grid-cols-[1.15fr_0.85fr] md:gap-16"
+    >
+      <div>
+        <h1
+          class="font-display text-[clamp(3rem,7vw,5rem)] font-extrabold leading-[0.98] tracking-[-0.03em]"
         >
-          in seconds.
-        </span>
-      </h1>
-      <p class="mt-8 max-w-2xl text-lg leading-relaxed text-zinc-400">
-        Blur Stuff automatically detects and anonymizes
-        <br class="hidden md:block" />
-        sensitive information in images, videos, and documents
-        <br class="hidden md:block" />
-        — locally and securely.
-      </p>
-      <div class="mt-10 flex items-center gap-4">
-        <a
-          href="{{ url_for('frontend.detect') }}"
-          class="flex items-center gap-2 rounded-xl bg-white px-7 py-3 text-sm font-semibold text-black transition hover:bg-zinc-200"
+          Faces. Plates. Text.
+          <span class="mt-2 block">
+            <button
+              type="button"
+              class="redact group relative inline-block cursor-pointer border-0 bg-transparent p-0 align-baseline font-inherit"
+            >
+              <span class="text-hot">GONE.</span>
+              <span class="redact-bar" aria-hidden="true"></span>
+            </button>
+          </span>
+        </h1>
+        <p class="mt-7 max-w-xl text-base leading-7 text-ink/75 md:text-lg">
+          Blur Stuff automatically detects and anonymizes sensitive information
+          in images, videos, and documents.
+          <strong class="font-semibold text-ink"> Nothing gets stored. </strong>
+        </p>
+        <div class="mt-10 flex flex-col items-center max-w-fit">
+          <div class="flex flex-wrap justify-center gap-6">
+            <a
+              href="{{ url_for('frontend.detect') }}"
+              class="stamp-button ml-auto inline-flex items-center gap-2 rounded-full border-2 border-ink bg-ink px-4 py-2.5 font-mono text-xs font-bold uppercase tracking-wide text-paper shadow-[3px_3px_0_rgba(0,0,0,0.35)] sm:px-5"
+            >
+              {% include "components/icons/upload.svg" %}
+              <span>Upload Files</span>
+            </a>
+            <a
+              href="{{ url_for('frontend.docs') }}"
+              class="inline-flex items-center gap-2 rounded-full border-2 border-ink bg-transparent px-5 py-3 font-mono text-sm font-semibold transition-colors duration-150 hover:bg-ink/5"
+            >
+              {% include "components/icons/code.svg" %}
+              <span>Read the API docs</span>
+            </a>
+          </div>
+          <div
+            class="mt-6 text-center font-mono text-[0.65rem] font-bold uppercase tracking-[0.08em] text-ink/45"
+          >
+            PNG · JPG · TIFF · HEIC · MP4 · PDF · and more
+          </div>
+        </div>
+      </div>
+      <div class="relative mx-auto hidden h-105 w-full max-w-120 md:block">
+        <div
+          class="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-hot/10 blur-3xl"
+        ></div>
+        <div
+          class="absolute left-[5%] top-5 z-20 w-60 -rotate-6 rounded-md border-2 border-ink bg-paper p-2.5 pb-9 shadow-[4px_4px_0_#16171a] transition-transform duration-300 hover:-translate-y-1 hover:-rotate-2"
         >
-          <span>Upload Files</span>
-          {% include "components/icons/upload.svg" %}
-        </a>
-        <a
-          href="#"
-          class="flex items-center gap-1 rounded-xl border border-white/15 bg-white/5 px-7 py-3 text-sm font-medium text-white backdrop-blur transition hover:bg-white/10"
+          <div
+            class="absolute left-1/2 -top-3.25 z-10 h-6 w-18 -translate-x-1/2 rotate-[-4deg] border border-ink/20 bg-white/60"
+          ></div>
+          <div
+            class="relative flex h-48 items-center justify-center overflow-hidden rounded-sm bg-linear-to-br from-blue-100 to-indigo-100"
+          >
+            <img
+              src="{{ url_for('frontend.static', filename='images/car.png') }}"
+              alt="Car with visible license plate"
+              class="h-full w-full object-cover"
+            />
+          </div>
+          <span
+            class="absolute bottom-2.5 left-3 font-mono text-[0.65rem] font-bold uppercase tracking-wide"
+          >
+            Before
+          </span>
+        </div>
+        <div
+          class="absolute bottom-5 right-[3%] w-60 rotate-[5deg] rounded-md border-2 border-ink bg-paper p-2.5 pb-9 shadow-[4px_4px_0_#16171a] transition-transform duration-300 hover:-translate-y-1 hover:rotate-2"
         >
-          {% include "components/icons/code.svg" %}
-          <span>View API Docs</span>
-        </a>
+          <div
+            class="absolute left-1/2 -top-3.25 z-10 h-6 w-18 -translate-x-1/2 rotate-3 border border-ink/20 bg-white/60"
+          ></div>
+          <div
+            class="relative flex h-48 items-center justify-center overflow-hidden rounded-sm bg-linear-to-br from-rose-100 to-pink-50"
+          >
+            <img
+              src="{{ url_for('frontend.static', filename='images/car-anonymized.png') }}"
+              alt="Car with visible license plate"
+              class="h-full w-full object-cover"
+            />
+          </div>
+          <span
+            class="absolute bottom-2.5 left-3 font-mono text-[0.65rem] font-bold uppercase tracking-wide"
+          >
+            After
+          </span>
+        </div>
       </div>
-      <div class="mt-8 flex items-center justify-center text-sm text-zinc-500">
-        <span>Images</span>
-        {% include "components/icons/dot.svg" %}
-        <span>Videos</span>
-        {% include "components/icons/dot.svg" %}
-        <span>Documents</span>
-      </div>
-      <div class="text-sm text-zinc-500">
-        PNG, JPG, TIFF, HEIC, MP4, PDF and more
-      </div>
-      {% include "components/upload-box.html" %}
     </div>
   </div>
 </section>

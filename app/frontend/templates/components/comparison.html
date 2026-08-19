@@ -1,93 +1,100 @@
-<section class="mx-auto mt-12 max-w-7xl px-6">
+<section class="mx-auto mt-20 max-w-7xl px-6">
   <div
     x-data="{
       position: 50,
       dragging: false,
-
+      updatePosition(clientX) {
+        const rect = this.$refs.slider.getBoundingClientRect();
+        let percentage = ((clientX - rect.left) / rect.width) * 100;
+        this.position = Math.min(100, Math.max(0, percentage));
+      },
+      startDrag(event) {
+        this.dragging = true;
+        this.updatePosition(event.clientX);
+      },
       move(event) {
         if (!this.dragging) return;
-
-        const rect = this.$refs.wrapper.getBoundingClientRect();
-
-        this.position = Math.min(
-          100,
-          Math.max(
-            0,
-            ((event.clientX - rect.left) / rect.width) * 100
-          )
-        );
+        this.updatePosition(event.clientX);
+      },
+      stopDrag() {
+        this.dragging = false;
       }
     }"
-    @mousemove.window="move($event)"
-    @mouseup.window="dragging = false"
-    @mouseleave.window="dragging = false"
-    class="rounded-3xl border border-white/10 bg-white/3 p-5 backdrop-blur-xl"
+    @pointermove.window="move($event)"
+    @pointerup.window="stopDrag()"
+    @pointercancel.window="stopDrag()"
   >
-    <h2 class="mb-5 text-center text-xl font-semibold text-white">
-      See it in action
-    </h2>
     <div
-      x-ref="wrapper"
-      class="relative overflow-hidden rounded-2xl border border-white/10 select-none"
+      class="relative rounded-2xl border-2 border-ink bg-paper p-5 shadow-[4px_4px_0_#16171a] sm:p-6"
     >
-      <img
-        src="{{ url_for('frontend.static', filename='images/anonymized.jpg') }}"
-        alt="Anonymized."
-        draggable="false"
-        class="h-105 w-full object-cover"
-      />
-      <div
-        class="absolute inset-0 overflow-hidden"
-        :style="`clip-path: inset(0 ${100-position}% 0 0)`"
-        style="clip-path: inset(0 50% 0 0)"
+      <h2
+        class="mb-5 mt-1 text-center font-display text-[1.5rem] font-extrabold tracking-[-0.02em] text-ink"
       >
-        <img
-          src="{{ url_for('frontend.static', filename='images/original.jpg') }}"
-          alt="Original."
-          draggable="false"
-          class="h-105 w-full object-cover"
-        />
-      </div>
+        See it in action
+      </h2>
       <div
-        x-show="position > 10"
-        x-transition.opacity
-        class="absolute left-4 top-4 rounded-lg bg-black/60 px-3 py-1 text-sm text-white backdrop-blur"
+        x-ref="slider"
+        @pointerdown="startDrag($event)"
+        class="relative h-80 cursor-ew-resize select-none overflow-hidden rounded-[10px] border-2 border-ink bg-linear-to-br from-blue-100 to-indigo-100 touch-none sm:h-95"
       >
-        Original
-      </div>
-      <div
-        x-show="position < 87"
-        x-transition.opacity
-        class="absolute right-4 top-4 rounded-lg bg-black/60 px-3 py-1 text-sm text-white backdrop-blur"
-      >
-        Anonymized
-      </div>
-      <div
-        class="absolute top-0 bottom-0 w-0.5 bg-white"
-        :style="`left:${position}%`"
-        style="left: 50%"
-      ></div>
-      <div
-        class="absolute top-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 cursor-ew-resize items-center justify-center rounded-full border border-white/20 bg-black/70 text-xl text-white backdrop-blur transition hover:scale-110"
-        :style="`left:${position}%`"
-        style="left: 50%"
-        @mousedown="dragging = true"
-      >
-        {% include "components/icons/move.svg" %}
-      </div>
-    </div>
-    <div class="mt-6 text-center">
-      <a
-        href="{{ url_for('frontend.detect') }}"
-        class="group inline-flex items-center gap-2 text-indigo-400 transition-colors duration-300 hover:text-indigo-300"
-      >
-        <span>Try it now</span>
-        <span
-          class="transition-transform duration-300 group-hover:translate-x-1"
+        <div class="absolute inset-0 flex items-center justify-center">
+          <img
+            src="{{ url_for('frontend.static', filename='images/original.jpg') }}"
+            alt="Original image"
+            draggable="false"
+            class="h-full w-full object-cover"
+          />
+        </div>
+        <div
+          class="absolute inset-0 overflow-hidden bg-linear-to-br from-rose-100 to-pink-50"
+          :style="`clip-path: inset(0 0 0 ${position}%)`"
         >
-          {% include "components/icons/arrow-right.svg" %}
-        </span>
-      </a>
+          <img
+            src="{{ url_for('frontend.static', filename='images/anonymized.jpg') }}"
+            alt="Anonymized image"
+            draggable="false"
+            class="h-full w-full object-cover"
+          />
+        </div>
+        <div
+          x-show="position > 10"
+          x-transition.opacity.duration.150ms
+          class="absolute left-3.5 top-3.5 rounded-md border-2 border-ink bg-paper/95 px-2.5 py-1 font-mono text-[0.68rem] font-bold uppercase tracking-wider text-ink"
+        >
+          Original
+        </div>
+        <div
+          x-show="position < 87"
+          x-transition.opacity.duration.150ms
+          class="absolute right-3.5 top-3.5 rounded-md border-2 border-ink bg-paper/95 px-2.5 py-1 font-mono text-[0.68rem] font-bold uppercase tracking-wider text-ink"
+        >
+          Redacted
+        </div>
+        <div
+          class="absolute bottom-0 top-0 w-0.75 -translate-x-1/2 bg-ink"
+          :style="`left: ${position}%`"
+        >
+          <div
+            @pointerdown.stop="startDrag($event)"
+            class="absolute left-1/2 top-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 cursor-ew-resize items-center justify-center rounded-full border-2 border-ink bg-background font-mono text-sm font-bold text-ink shadow-[2px_2px_0_#16171a] transition-transform duration-150 hover:scale-110 active:scale-95"
+          >
+            {% include "components/icons/move.svg" %}
+          </div>
+        </div>
+      </div>
+      <div class="mt-5 text-center">
+        <a
+          href="{{ url_for('frontend.detect') }}"
+          class="group inline-flex items-center gap-2 rounded-full border-2 border-ink bg-transparent px-5 py-2.5 font-mono text-xs font-bold uppercase tracking-wide text-ink transition-[transform,background-color] duration-150 ease-out hover:bg-ink/5"
+        >
+          <span>Try it now</span>
+          <span
+            class="transition-transform duration-150 ease-out group-hover:translate-x-1"
+          >
+            {% include "components/icons/arrow-right.svg" %}
+          </span>
+        </a>
+      </div>
     </div>
   </div>
 </section>
