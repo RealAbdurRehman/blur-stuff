@@ -95,9 +95,8 @@ You can learn more about the API in the [API documentation](https://blurstuff.up
 
 ### Working
 
-- Face and license plate detection and anonymization
-- Text and PII detection and anonymization
-- Image, video and document processing
+- Face, license plate, text, and PII detection and anonymization
+- Support for images (including GIFs), videos, and documents (PDFs and also Word documents)
 - Selective anonymization (to some extent)
 
 ### In Progress
